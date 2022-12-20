@@ -35,7 +35,7 @@ namespace VisualizeNetwork
 
         protected override double getP_i(List<Node> nodes, int i)
         {
-            if(mode == Mode.IEE_LEACH_B) return base.getP_i();
+            if (mode == Mode.IEE_LEACH_B) return base.getP_i();
 
             // ラウンド数に応じたCH選出確立を計算
             double E_t = CalcTotalEnergy(nodes);
@@ -47,48 +47,46 @@ namespace VisualizeNetwork
             return P_i;
         }
 
-        protected override void CH_election(List<Node> nodes)
+        protected override void CHElection(List<Node> nodes)
         {
             CHIDs.Clear();
-            //CHNumList.Add(0);
             CHNum = 0;
             if (mode == Mode.IEE_LEACH_B) ResetUnqualifiedRound(nodes);
+            CHElectionHelper(nodes);
+            //double T;
+            //for (int i = 0; i < nodes.Count; i++)
+            //{
+            //    Node node = nodes[i];
+            //    if (!node.IsAlive) continue;// ノードが死んでたら次
 
-            double T;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node node = nodes[i];
-                if (!node.Alive) continue;// ノードが死んでたら次
+            //    // ラウンド数に応じたCH選出確立を計算
+            //    double P_i = getP_i(nodes, i);
+            //    T = P_i / (1 - P_i * ((Round - 1) % (1 / P_i)));
+            //    node.Pi = P_i;
 
-                // ラウンド数に応じたCH選出確立を計算
-                double P_i = getP_i(nodes, i);
-                T = P_i / (1 - P_i * ((Round - 1) % (1 / P_i)));
+            //    if (node.UnqualifiedRound == 0 && T > rand.NextDouble())//CH
+            //    {
+            //        node.T = T;
+            //        node.MemberNum = 1;
+            //        node.UnqualifiedRound = (int)Math.Round(1 / P_i);
+            //        CHIDs.Add(i);
+            //        CHNum++;
+            //        node.IsCH = true;
+            //        node.HasCHCnt++;
+            //        nodes[i] = node;
+            //        continue;
+            //    }
 
-                node.MemberNum = 0;
-                node.headID = -1;
-                node.IsCH = false;
-                if (node.unqualifiedRound == 0 && T > rand.NextDouble())//CH
-                {
-                    node.MemberNum = 1;
-                    node.unqualifiedRound = (int)Math.Round(1 / P_i);
-                    CHIDs.Add(i);
-                    CHNum++;
-                    node.IsCH = true;
-                    node.hasCHCnt++;
-                    nodes[i] = node;
-                    continue;
-                }
-
-                //非CH
-                if (node.unqualifiedRound > 0)
-                {
-                    node.unqualifiedRound--;
-                }
-                nodes[i] = node;
-            }
+            //    //非CH
+            //    if (node.UnqualifiedRound > 0)
+            //    {
+            //        node.UnqualifiedRound--;
+            //    }
+            //    nodes[i] = node;
+            //}
         }
 
-        //public override void CH_election(List<Node> nodes)
+        //public override void CHElection(List<Node> nodes)
         //{
         //    CHIDs.Clear();
         //    CHNumList.Add(0);
@@ -101,7 +99,7 @@ namespace VisualizeNetwork
         //    for (int i = 0; i < nodes.Count; i++)
         //    {
         //        Node node = nodes[i];
-        //        if (!node.Alive) continue;// ノードが死んでたら次
+        //        if (!node.IsAlive) continue;// ノードが死んでたら次
 
         //        // ラウンド数に応じたCH選出確立を計算
         //        double E_t = CalcTotalEnergy(nodes);
@@ -123,7 +121,7 @@ namespace VisualizeNetwork
         //        T = P_i / (1 - P_i * (Round % (int)Math.Round(1 / P_i)));
 
         //        node.MemberNum = 0;
-        //        node.headID = -1;
+        //        node.CHID = -1;
         //        node.IsCH = false;
         //        if (P_i > rand.NextDouble())//CH
         //        //if (hasBeenCH[i] == 0 && T > rand.NextDouble())//CH
@@ -148,7 +146,7 @@ namespace VisualizeNetwork
         {
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (!nodes[i].Alive) continue;
+                if (!nodes[i].IsAlive) continue;
                 Node node = nodes[i];
                 Node head = node;
                 double distMin = double.MaxValue;
@@ -165,14 +163,14 @@ namespace VisualizeNetwork
                 //if (dist2(BS, node) < distMin || Math.Sqrt(dist2(BS, node)) < Sim.d_0)
                 if (Dist2(BS, node) < distMin && mode != Mode.IEE_LEACH_A)
                 {
-                    node.headID = -1;
+                    node.CHID = -1;
                     nodes[i] = node;
                     return;
                 }
-                node.headID = head.ID;
+                node.CHID = head.ID;
                 nodes[i] = node;
                 head.MemberNum += 1;
-                nodes[node.headID] = head;
+                nodes[node.CHID] = head;
             }
         }
 
@@ -180,7 +178,7 @@ namespace VisualizeNetwork
         //{
         //    for (int i = 0; i < nodes.Count; i++)
         //    {
-        //        if (!nodes[i].Alive) continue;
+        //        if (!nodes[i].IsAlive) continue;
         //        double assignedTime, sendMessageBit, dist, energyTX;
         //        Node node = nodes[i];
 
@@ -193,7 +191,7 @@ namespace VisualizeNetwork
         //            dist = Math.Sqrt(Sim.Dist2(BS, node));
         //            energyTX = Sim.E_TX(sendMessageBit, dist)+Sim.E_DA* sendMessageBit *node.MemberNum;
         //        }
-        //        else if (node.headID == -1)//member→BS
+        //        else if (node.CHID == -1)//member→BS
         //        {
         //            sendMessageBit = Sim.packetSize;
         //            dist = Math.Sqrt(Sim.Dist2(BS, node));
@@ -201,7 +199,7 @@ namespace VisualizeNetwork
         //        }
         //        else//member→CH
         //        {
-        //            Node head = nodes[node.headID];
+        //            Node head = nodes[node.CHID];
         //            //assignedTime = (double)Sim.INTERVAL / head.MemberNum;
         //            //sendMessageBit = Sim.bandwidth * assignedTime;
 
@@ -211,7 +209,7 @@ namespace VisualizeNetwork
         //            //head.E_r -= Sim.E_RX(sendMessageBit);
         //            ConsumeEnergy(Sim.E_RX(sendMessageBit), ref head);
         //            //head.ConsumeEnergy(Sim.E_RX(sendMessageBit), this);
-        //            nodes[node.headID] = head;
+        //            nodes[node.CHID] = head;
         //        }
         //        //node.E_r -= energyTX;
         //        ConsumeEnergy(energyTX, ref node);

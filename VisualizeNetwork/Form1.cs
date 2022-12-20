@@ -2,33 +2,25 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-using MathNet.Numerics.Statistics;
-
 namespace VisualizeNetwork
 {
     public partial class Form1 : Form
     {
-        private float canvasW, canvasH;
+        private readonly float canvasW, canvasH;
         private double minX, maxX, minY, maxY;
         private double rw, rh;
-        private Graphics g;
+        private readonly Graphics g;
         private List<List<Node>> nodesList;
         private List<Sim> algorithms;
         private bool isPlaying;
         private int round;
         private int playSpeed = 1;
         CancellationTokenSource cts;
-        private Direct direct;
-        private LEACH leach;
-        private IEE_LEACH iee_leach;
-        private IEE_LEACH iee_leach_a;
-        private IEE_LEACH iee_leach_b;
 
         public Form1()
         {
@@ -37,14 +29,16 @@ namespace VisualizeNetwork
             canvasH = pictureBox1.Size.Height;
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
-            trackBar1.Maximum = Sim.R;
+            TrackBar1.Maximum = Sim.R;
             trackBar2.Maximum = 100;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofDialog = new OpenFileDialog();
-            ofDialog.Title = "座標ファイルを選択";
+            OpenFileDialog ofDialog = new OpenFileDialog
+            {
+                Title = "座標ファイルを選択"
+            };
 
             if (ofDialog.ShowDialog() == DialogResult.OK)
             {
@@ -147,20 +141,19 @@ namespace VisualizeNetwork
 
             round = 1;
             label2.Text = "ラウンド：" + round;
-            trackBar1.Value = 1;
+            TrackBar1.Value = 1;
             isPlaying = false;
 
-            direct = new Direct();
-            leach = new LEACH();
-            iee_leach = new IEE_LEACH(Mode.IEE_LEACH);
-            iee_leach_a = new IEE_LEACH(Mode.IEE_LEACH_A);
-            iee_leach_b = new IEE_LEACH(Mode.IEE_LEACH_B);
-            algorithms = new List<Sim>();
-            algorithms.Add(direct);
-            algorithms.Add(leach);
-            algorithms.Add(iee_leach);
-            algorithms.Add(iee_leach_a);
-            algorithms.Add(iee_leach_b);
+            // 各アルゴリズムのインスタンスを生成してリストに格納
+            algorithms = new List<Sim>
+            {
+                new Direct(),
+                new LEACH(),
+                new IEE_LEACH(Mode.IEE_LEACH),
+                new IEE_LEACH(Mode.IEE_LEACH_A),
+                new IEE_LEACH(Mode.IEE_LEACH_B)
+            };
+
             //クラスタリングをRラウンド実行
             resultTable.Rows.Clear();
             cmbBoxAlg.Items.Clear();
@@ -173,26 +166,28 @@ namespace VisualizeNetwork
                 {
                     mean += sim.CHNumList[j];
                 }
-                mean = mean / sim.FDN;
+                mean /= sim.FDN;
                 for (int j = 0; j < sim.FDN; j++)
                 {
                     stdDev += Math.Pow((sim.CHNumList[j] - mean), 2);
                 }
-                stdDev = Math.Sqrt(stdDev/Sim.N);
+                stdDev = Math.Sqrt(stdDev / Sim.N);
                 resultTable.Rows.Add(sim.AlgoName, sim.FDN, sim.LDN, Math.Round(mean, 2), Math.Round(stdDev, 2));
                 cmbBoxAlg.Items.Add(sim.AlgoName);
             }
             nodesList = algorithms[0].nodesList;
             cmbBoxAlg.SelectedIndex = 0;
 
-            paint(g, nodesList[0]);
+            RefreshPaint(g, nodesList[0]);
             g.Dispose();
 
             DrawChart();
         }
 
+        // グラフを描画
         private void DrawChart()
         {
+            // 生存ノード数のグラフの設定
             chartAliveNums.ChartAreas.Clear();
             chartAliveNums.Series.Clear();
             ChartArea chartArea = new ChartArea("chartArea");
@@ -202,6 +197,7 @@ namespace VisualizeNetwork
             chartArea.AxisY.Title = "Number of nodes alive";
             chartAliveNums.ChartAreas.Add(chartArea);
 
+            // クラスタヘッド数のグラフの設定
             chartNumCH.ChartAreas.Clear();
             chartNumCH.Series.Clear();
             ChartArea chartArea1 = new ChartArea("chartArea1");
@@ -212,19 +208,25 @@ namespace VisualizeNetwork
 
             foreach (Sim sim in algorithms)
             {
-                Series series = new Series();
-                series.ChartType = SeriesChartType.Line;
-                series.LegendText = sim.AlgoName;
+                // 生存ノード数のグラフを描く
+                Series series = new Series
+                {
+                    ChartType = SeriesChartType.Line,
+                    LegendText = sim.AlgoName
+                };
                 for (int i = 0; i < sim.AliveNumList.Count; i++)
                 {
                     series.Points.AddXY(i, sim.AliveNumList[i]);
                 }
-                chartAliveNums.Series.Add(series); 
+                chartAliveNums.Series.Add(series);
 
-                series = new Series();
-                series.ChartType = SeriesChartType.Line;
-                series.LegendText = sim.AlgoName;
-                for (int i = 0; i < sim.CHNumList.Count; i+=50)
+                // クラスタヘッド数のグラフを描く
+                series = new Series
+                {
+                    ChartType = SeriesChartType.Line,
+                    LegendText = sim.AlgoName
+                };
+                for (int i = 0; i < sim.CHNumList.Count; i += 50)
                 {
                     series.Points.AddXY(i, sim.CHNumList[i]);
                 }
@@ -232,14 +234,14 @@ namespace VisualizeNetwork
             }
         }
 
-        private async void paint(Graphics g, List<Node> nodes)
+        private async void RefreshPaint(Graphics g, List<Node> nodes)
         {
             // 座標リストからノードを描画する
             g = Graphics.FromImage(pictureBox1.Image);
             g.Clear(Color.White);
-            paintNodes(g, nodes);
-            paintEdges(g, nodes);
-            paintLine(g);
+            PaintNodes(g, nodes);
+            PaintEdges(g, nodes);
+            PaintLine(g);
             pictureBox1.Invalidate();
             pictureBox1.Refresh();
             g.Dispose();
@@ -247,22 +249,22 @@ namespace VisualizeNetwork
             RefreshTable(nodes);
         }
 
-        private void paintNodes(Graphics g, List<Node> nodes)
+        private void PaintNodes(Graphics g, List<Node> nodes)
         {
             Pen pen;
             foreach (Node node in nodes)
             {
-                if (node.Alive)
+                if (node.IsAlive)
                     if (node.IsCH) pen = new Pen(Color.Blue);
                     else pen = new Pen(Color.Black);
                 else
                     pen = new Pen(Color.Red);
-                Point p = normalize(node);
+                Point p = Normalize(node);
                 lock (g)
                 {
                     g.DrawEllipse(pen, (int)(p.X - 5), (int)(p.Y - 5), 10, 10);
-                    if(node.IsCH) g.FillPie(Brushes.Blue, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r / Sim.E_init * 360));
-                    else g.FillPie(Brushes.Gray, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r/Sim.E_init*360));
+                    if (node.IsCH) g.FillPie(Brushes.Blue, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r / Sim.E_init * 360));
+                    else g.FillPie(Brushes.Gray, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r / Sim.E_init * 360));
                 }
             }
             return;
@@ -274,115 +276,123 @@ namespace VisualizeNetwork
             double sumEnergy = 0;
             double sumCmsEnergy = 0;
             double sumHasCHCnt = 0;
+            int qualifiedNodeNum = 0;
+            double sumPi = 0;
+            double sumT = 0;
             int numCH = 0;
             for (int i = 0; i < Sim.N; i++)
             {
-                string CHID = nodes[i].headID.ToString();
-                if (nodes[i].IsCH)
+                Node node = nodes[i];
+                string CHID = node.CHID.ToString();
+                if (node.IsCH)
                 {
                     CHID = "CH";
                     numCH++;
                 }
-                else if (nodes[i].headID == -1) CHID = "BS";
-                tableEnergy.Rows.Add(i, CHID, Math.Round(nodes[i].E_r, 5),
-                    Math.Round(nodes[i].cmsEnergy, 5), nodes[i].hasCHCnt, nodes[i].unqualifiedRound);
-                if (nodes[i].unqualifiedRound == 0)
-                    tableEnergy.Rows[tableEnergy.Rows.Count-1].Cells[5].Style.ForeColor = Color.Red;
-                sumEnergy += nodes[i].E_r;
-                sumCmsEnergy += nodes[i].cmsEnergy;
-                sumHasCHCnt += nodes[i].hasCHCnt;
+                else if (node.CHID == -1) CHID = "BS";
+
+                tableEnergy.Rows.Add(i, CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
+                    node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 2), Math.Round(node.T, 2));
+                if (node.UnqualifiedRound == 0)
+                    tableEnergy.Rows[tableEnergy.Rows.Count - 1].Cells[5].Style.ForeColor = Color.Red;
+                sumEnergy += node.E_r;
+                sumCmsEnergy += node.CmsEnergy;
+                sumHasCHCnt += node.HasCHCnt;
+                sumPi += node.Pi;
+                sumT += node.T;
+                if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
             }
-            tableEnergy.Rows.Insert(0, "合計", numCH, Math.Round(sumEnergy, 5),
-                Math.Round(sumCmsEnergy, 5), sumHasCHCnt, "-");
+            tableEnergy.Rows.Insert(0, "合計", numCH, Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
+                sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 2), Math.Round(sumT, 2));
         }
 
-        private void paintEdges(Graphics g, List<Node> nodes)
+        private void PaintEdges(Graphics g, List<Node> nodes)
         {
             Pen p = new Pen(Color.Black);
             foreach (Node node in nodes)
             {
-                if (node.headID == -1)
+                if (node.CHID == -1)
                 {
                     continue;
                 }
-                Node head = nodes[node.headID];
+                Node head = nodes[node.CHID];
                 if (node.ID != head.ID)
                 {
-                    g.DrawLine(p, normalize(node), normalize(head));
+                    g.DrawLine(p, Normalize(node), Normalize(head));
                 }
             }
             return;
         }
 
-        private void paintLine(Graphics g)
+        private void PaintLine(Graphics g)
         {
             Pen pen = new Pen(Color.Gray);
             for (int i = (int)(minX - 10) / 50; i <= (maxX + 10); i += 50)
             {
-                var p = normalize(new Point(i, i));
+                var p = Normalize(new Point(i, i));
                 g.DrawLine(pen, p.X, 0, p.X, canvasH);
             }
             for (int i = (int)(minY - 10) / 50; i <= (maxY + 10); i += 50)
             {
-                var p = normalize(new Point(i, i));
+                var p = Normalize(new Point(i, i));
                 g.DrawLine(pen, 0, p.Y, canvasW, p.Y);
             }
         }
 
-        private Point normalize(Node node)
+        private Point Normalize(Node node)
         {
             return new Point((int)((node.X - minX) * rw * 0.95 + canvasW * 0.025),
                 (int)((node.Y - minY) * rh * 0.95 + canvasH * 0.025));
         }
 
-        private Point normalize(Point point)
+        private Point Normalize(Point point)
         {
             Point p = new Point((int)((point.X - minX) * rw * 0.95 + canvasW * 0.025),
                 (int)((point.Y - minY) * rh * 0.95 + canvasH * 0.025));
             return p;
         }
 
-        private Point revNormalize(Point p)
+        private Point RevNormalize(Point p)
         {
             return new Point((int)((p.X - canvasW * 0.025) / rw / 0.95 + minX),
                 (int)((p.Y - canvasH * 0.025) / rh / 0.95 + minY));
         }
 
-        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        private void PictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = revNormalize(new Point(e.Location.X, e.Location.Y));
+            Point p = RevNormalize(new Point(e.Location.X, e.Location.Y));
             label1.Text = "座標：(" + p.X + ", " + p.Y + ")";
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void TrackBar1_Scroll(object sender, EventArgs e)
         {
-            round = trackBar1.Value;
+            round = TrackBar1.Value;
             label2.Text = "ラウンド：" + round;
             Console.WriteLine(round);
-            paint(g, nodesList[round - 1]);
+            RefreshPaint(g, nodesList[round - 1]);
         }
 
-        private void trackBar2_Scroll(object sender, EventArgs e)
+        private void TrackBar2_Scroll(object sender, EventArgs e)
         {
             playSpeed = trackBar2.Value;
             label3.Text = (playSpeed) + " (round/s)";
         }
 
-        private void cmbBoxAlg_SelectedIndexChanged(object sender, EventArgs e)
+        private void CmbBoxAlg_SelectedIndexChanged(object sender, EventArgs e)
         {
             nodesList = algorithms[cmbBoxAlg.SelectedIndex].nodesList;
-            paint(g, nodesList[round - 1]);
+            RefreshPaint(g, nodesList[round - 1]);
         }
 
-        private void resultTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void ResultTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
             cmbBoxAlg.SelectedIndex = e.RowIndex;
             nodesList = algorithms[e.RowIndex].nodesList;
-            paint(g, nodesList[round - 1]);
+            RefreshPaint(g, nodesList[round - 1]);
         }
 
-        private async void button2_Click(object sender, EventArgs e)
+        private async void Button2_Click(object sender, EventArgs e)
         {
             if (isPlaying)  //停止が押されたとき
             {
@@ -399,7 +409,7 @@ namespace VisualizeNetwork
                 isPlaying = !isPlaying;
                 button2.Text = "停止";
                 cts = new CancellationTokenSource();
-                Task<int> task = playClustering(cts.Token);
+                Task<int> task = PlayClustering(cts.Token);
                 await task;
                 if (task.Result == 0)
                 {
@@ -409,27 +419,27 @@ namespace VisualizeNetwork
             }
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)
         {
             if (round == 1) return;
             round--;
-            trackBar1.Value = round;
+            TrackBar1.Value = round;
             label2.Text = "ラウンド：" + round;
             Console.WriteLine(round);
-            paint(g, nodesList[round - 1]);
+            RefreshPaint(g, nodesList[round - 1]);
         }
 
-        private void btnNext_Click(object sender, EventArgs e)
+        private void BtnNext_Click(object sender, EventArgs e)
         {
             if (round == Sim.R) return;
             round++;
-            trackBar1.Value = round;
+            TrackBar1.Value = round;
             label2.Text = "ラウンド：" + round;
             Console.WriteLine(round);
-            paint(g, nodesList[round - 1]);
+            RefreshPaint(g, nodesList[round - 1]);
         }
 
-        private async Task<int> playClustering(CancellationToken ct)
+        private async Task<int> PlayClustering(CancellationToken ct)
         {
 
             for (; round <= nodesList.Count; round++)
@@ -437,12 +447,12 @@ namespace VisualizeNetwork
                 //ct.ThrowIfCancellationRequested();
                 if (ct.IsCancellationRequested) return -1;
 
-                paint(g, nodesList[round-1]);
+                RefreshPaint(g, nodesList[round - 1]);
                 Console.WriteLine(round);
                 label2.Text = "ラウンド：" + round;
                 label2.Refresh();
-                trackBar1.Value = round;
-                await Task.Delay(1000/playSpeed);
+                TrackBar1.Value = round;
+                await Task.Delay(1000 / playSpeed);
             }
             round = 100;
             return 0;

@@ -1,10 +1,4 @@
-﻿using MathNet.Numerics.Distributions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+﻿using System.Collections.Generic;
 
 namespace VisualizeNetwork
 {
@@ -24,15 +18,10 @@ namespace VisualizeNetwork
         {
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (!nodes[i].Alive) continue;
-                double assignedTime, sendMessageBit, dist, energyTX;
+                if (!nodes[i].IsAlive) continue;
                 Node node = nodes[i];
-
-                sendMessageBit = Sim.packetSize;
-                dist = Math.Sqrt(Sim.Dist2(BS, node));
-                energyTX = Sim.E_TX(sendMessageBit, dist);
-
-                ConsumeEnergy(energyTX, ref node);
+                double energy = CalcEnergyConsumption(node, nodes);
+                ConsumeEnergy(energy, ref node);
                 nodes[i] = node;
             }
         }

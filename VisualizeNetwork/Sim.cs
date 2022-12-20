@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VisualizeNetwork
 {
@@ -22,7 +19,7 @@ namespace VisualizeNetwork
         public List<int> AliveNumList { get; private set; } = new List<int>();  //生存ノード数のリスト
 
         //パラメーター
-        public Node BS = new Node(-1, 50, 125, -1);//BS
+        public static Node BS = new Node(-1, 50, 125, -1);//BS
         public const int N = 100;           //ノード数
         public const int N_CH = 5;          //クラスタヘッド数
         public const int R = 2500;          //シミュレーションラウンド数
@@ -33,7 +30,12 @@ namespace VisualizeNetwork
             for (int i = 0; i < R; i++)
             {
                 nodes = new List<Node>(nodes);
-                ResetNodesParameter(nodes);
+                for (int j = 0; j < N; j++)
+                {
+                    Node node = nodes[j];
+                    node.ResetParameter();
+                    nodes[j] = node;
+                }
 
                 Round++;
                 nodes = OneRound(nodes);
@@ -41,20 +43,6 @@ namespace VisualizeNetwork
                 CHNumList.Add(CHNum);
                 AliveNumList.Add(aliveNum);
             }
-        }
-
-        protected List<Node> ResetNodesParameter(List<Node> nodes)
-        {
-            for (int i = 0; i < N; i++)
-            {
-                Node node = nodes[i];
-                node.cmsEnergy = 0;
-                node.MemberNum = 0;
-                node.headID = -1;
-                node.IsCH = false;
-                nodes[i] = node;
-            }
-            return nodes;
         }
 
         protected abstract List<Node> OneRound(List<Node> nodes);
@@ -70,31 +58,52 @@ namespace VisualizeNetwork
         public const double bandwidth = 4000;    //(bits/s)
         public const double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 
-        protected static double E_TX(double m, double d)
+        private static double E_TX(double m, double d)
         {
             if (d <= d_0)
                 return m * E_elec + m * e_fs * Math.Pow(d, 2);
             else
                 return m * E_elec + m * e_mp * Math.Pow(d, 4);
         }
-        protected static double E_RX(double m)
+        private static double E_RX(double m)
         {
             return m * E_elec;
         }
 
+        protected static double CalcEnergyConsumption(Node node, List<Node> nodes)
+        {
+            double sendMessageBit = packetSize;
+            double energy;
+
+            Node addressNode;
+            if (node.CHID == -1) addressNode = BS;
+            else addressNode = nodes[node.CHID];
+            double dist = Math.Sqrt(Dist2(addressNode, node));
+            if (node.IsCH)
+            {
+                energy = E_TX(sendMessageBit, dist) + E_DA * sendMessageBit * node.MemberNum 
+                    + E_RX(sendMessageBit) * node.MemberNum;
+            }
+            else
+            {
+                energy = E_TX(sendMessageBit, dist);
+            }
+            return energy;
+        }
+
         protected void ConsumeEnergy(double energy, ref Node node)
         {
-            if (!node.Alive) return;
+            if (!node.IsAlive) return;
             node.E_r -= energy;
-            node.cmsEnergy += energy;
+            node.CmsEnergy += energy;
             if (node.E_r <= 0)
             {
-                node.Alive = false;
+                node.IsAlive = false;
                 node.E_r = 0;
                 aliveNum--;
                 if (aliveNum == Sim.N - 1) FDN = Round;
                 else if (aliveNum == 0) LDN = Round;
-                node.headID = node.ID;
+                node.CHID = node.ID;
             }
         }
 

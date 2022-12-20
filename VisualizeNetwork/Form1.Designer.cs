@@ -37,7 +37,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.TrackBar1 = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
@@ -61,10 +61,12 @@
             this.残量E = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.消費E = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CH回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Statics = new System.Windows.Forms.TabPage();
             this.CH無資格期間 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Pi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.T = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Statics = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartAliveNums)).BeginInit();
@@ -85,7 +87,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(764, 750);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseMove);
             // 
             // button1
             // 
@@ -96,7 +98,7 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "ファイルを選択";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // label1
             // 
@@ -108,17 +110,17 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "座標：";
             // 
-            // trackBar1
+            // TrackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(128, 9);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Minimum = 1;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(650, 69);
-            this.trackBar1.TabIndex = 3;
-            this.trackBar1.Value = 1;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.TrackBar1.Location = new System.Drawing.Point(128, 9);
+            this.TrackBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.TrackBar1.Maximum = 100;
+            this.TrackBar1.Minimum = 1;
+            this.TrackBar1.Name = "TrackBar1";
+            this.TrackBar1.Size = new System.Drawing.Size(650, 69);
+            this.TrackBar1.TabIndex = 3;
+            this.TrackBar1.Value = 1;
+            this.TrackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
             // 
             // label2
             // 
@@ -139,7 +141,7 @@
             this.button2.TabIndex = 5;
             this.button2.Text = "再生";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // trackBar2
             // 
@@ -150,7 +152,7 @@
             this.trackBar2.Size = new System.Drawing.Size(338, 69);
             this.trackBar2.TabIndex = 6;
             this.trackBar2.Value = 1;
-            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            this.trackBar2.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
             // 
             // label3
             // 
@@ -183,7 +185,7 @@
             this.resultTable.RowTemplate.Height = 27;
             this.resultTable.Size = new System.Drawing.Size(1030, 202);
             this.resultTable.TabIndex = 8;
-            this.resultTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resultTable_CellDoubleClick);
+            this.resultTable.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultTable_CellDoubleClick);
             // 
             // algorithm
             // 
@@ -233,7 +235,7 @@
             this.btnBack.TabIndex = 9;
             this.btnBack.Text = "前";
             this.btnBack.UseVisualStyleBackColor = true;
-            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            this.btnBack.Click += new System.EventHandler(this.BtnBack_Click);
             // 
             // btnNext
             // 
@@ -243,7 +245,7 @@
             this.btnNext.TabIndex = 10;
             this.btnNext.Text = "次";
             this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
             // 
             // cmbBoxAlg
             // 
@@ -253,7 +255,7 @@
             this.cmbBoxAlg.Name = "cmbBoxAlg";
             this.cmbBoxAlg.Size = new System.Drawing.Size(166, 26);
             this.cmbBoxAlg.TabIndex = 11;
-            this.cmbBoxAlg.SelectedIndexChanged += new System.EventHandler(this.cmbBoxAlg_SelectedIndexChanged);
+            this.cmbBoxAlg.SelectedIndexChanged += new System.EventHandler(this.CmbBoxAlg_SelectedIndexChanged);
             // 
             // chartAliveNums
             // 
@@ -326,7 +328,9 @@
             this.残量E,
             this.消費E,
             this.CH回数,
-            this.CH無資格期間});
+            this.CH無資格期間,
+            this.Pi,
+            this.T});
             this.tableEnergy.Location = new System.Drawing.Point(775, 53);
             this.tableEnergy.Margin = new System.Windows.Forms.Padding(2);
             this.tableEnergy.Name = "tableEnergy";
@@ -334,7 +338,7 @@
             this.tableEnergy.RowHeadersVisible = false;
             this.tableEnergy.RowHeadersWidth = 82;
             this.tableEnergy.RowTemplate.Height = 33;
-            this.tableEnergy.Size = new System.Drawing.Size(697, 750);
+            this.tableEnergy.Size = new System.Drawing.Size(826, 750);
             this.tableEnergy.TabIndex = 12;
             // 
             // nodeID
@@ -359,7 +363,7 @@
             this.残量E.MinimumWidth = 10;
             this.残量E.Name = "残量E";
             this.残量E.ReadOnly = true;
-            this.残量E.Width = 90;
+            this.残量E.Width = 75;
             // 
             // 消費E
             // 
@@ -367,7 +371,7 @@
             this.消費E.MinimumWidth = 10;
             this.消費E.Name = "消費E";
             this.消費E.ReadOnly = true;
-            this.消費E.Width = 90;
+            this.消費E.Width = 75;
             // 
             // CH回数
             // 
@@ -375,7 +379,31 @@
             this.CH回数.MinimumWidth = 8;
             this.CH回数.Name = "CH回数";
             this.CH回数.ReadOnly = true;
-            this.CH回数.Width = 104;
+            this.CH回数.Width = 81;
+            // 
+            // CH無資格期間
+            // 
+            this.CH無資格期間.HeaderText = "CH無資格期間";
+            this.CH無資格期間.MinimumWidth = 8;
+            this.CH無資格期間.Name = "CH無資格期間";
+            this.CH無資格期間.ReadOnly = true;
+            this.CH無資格期間.Width = 113;
+            // 
+            // Pi
+            // 
+            this.Pi.HeaderText = "Pi";
+            this.Pi.MinimumWidth = 8;
+            this.Pi.Name = "Pi";
+            this.Pi.ReadOnly = true;
+            this.Pi.Width = 59;
+            // 
+            // T
+            // 
+            this.T.HeaderText = "T";
+            this.T.MinimumWidth = 8;
+            this.T.Name = "T";
+            this.T.ReadOnly = true;
+            this.T.Width = 55;
             // 
             // Statics
             // 
@@ -389,14 +417,6 @@
             this.Statics.TabIndex = 1;
             this.Statics.Text = "Statics";
             this.Statics.UseVisualStyleBackColor = true;
-            // 
-            // CH無資格期間
-            // 
-            this.CH無資格期間.HeaderText = "CH無資格期間";
-            this.CH無資格期間.MinimumWidth = 8;
-            this.CH無資格期間.Name = "CH無資格期間";
-            this.CH無資格期間.ReadOnly = true;
-            this.CH無資格期間.Width = 113;
             // 
             // Form1
             // 
@@ -412,7 +432,7 @@
             this.Controls.Add(this.trackBar2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.TrackBar1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -420,7 +440,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartAliveNums)).EndInit();
@@ -439,7 +459,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar TrackBar1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TrackBar trackBar2;
@@ -465,6 +485,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn 消費E;
         private System.Windows.Forms.DataGridViewTextBoxColumn CH回数;
         private System.Windows.Forms.DataGridViewTextBoxColumn CH無資格期間;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Pi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn T;
     }
 }
 
