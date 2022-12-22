@@ -4,7 +4,7 @@ namespace VisualizeNetwork
 {
     internal class Direct : Sim
     {
-        public Direct()
+        public Direct(Form1 form1) : base(form1)
         {
             AlgoName = "Direct";
         }

@@ -6,17 +6,12 @@ namespace VisualizeNetwork
     internal class LEACH : Sim
     {
         protected const double P = (double)N_CH / N;
-        private double T, P_i;
         protected Random rand = new Random();
         protected List<int> CHIDs = new List<int>();    //CHのリスト
 
-        public LEACH()
+        public LEACH(Form1 form1) : base(form1)
         {
             AlgoName = "LEACH";
-            for (int i = 0; i < N; i++)
-            {
-                //hasBeenCHCnt.Add(0);
-            }
         }
 
         protected override List<Node> OneRound(List<Node> nodes)
@@ -27,12 +22,7 @@ namespace VisualizeNetwork
             return nodes;
         }
 
-        protected virtual double getP_i(List<Node> nodes = null, int i = 0)
-        {
-            return P;
-        }
-
-        protected void ResetUnqualifiedRound(List<Node> nodes)
+        protected virtual void ResetUnqualifiedRound(List<Node> nodes)
         {
             if (Round % (1 / P) == 1)   // 1/Pラウンドごとに、(1,21,41,...ラウンド時に)
             {
@@ -46,39 +36,35 @@ namespace VisualizeNetwork
             }
         }
 
-        protected void CHElectionHelper(List<Node> nodes)
+        protected virtual double GetPi(List<Node> nodes, int i)
         {
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node node = nodes[i];
-                if (!node.IsAlive) continue;// ノードが死んでたら次
-
-                // ラウンド数に応じたCH選出確立を計算
-                P_i = getP_i(nodes, i);
-                T = P_i / (1 - P_i * ((Round - 1) % (1 / P_i)));
-                node.Pi = P_i;
-
-                if (node.UnqualifiedRound == 0) node.T = T;
-                if (node.UnqualifiedRound == 0 && T > rand.NextDouble())//CH
-                {
-                    node.MemberNum = 1;
-                    node.UnqualifiedRound = (int)Math.Round(1 / P_i) - 1;
-                    CHIDs.Add(i);
-                    CHNum++;
-                    node.IsCH = true;
-                    node.HasCHCnt++;
-                    nodes[i] = node;
-                    continue;
-                }
-
-                //非CH
-                if (node.UnqualifiedRound > 0)
-                {
-                    node.UnqualifiedRound--;
-                }
-                nodes[i] = node;
-            }
+            if (nodes[i].UnqualifiedRound == 0) // CHの資格あり
+                return P / (1 - P * ((Round - 1) % (1 / P)));
+            return 0;
         }
+
+        //protected Node CHElectionHelper(Node node)
+        //{
+        //    //if (node.UnqualifiedRound == 0) // CHの資格あり
+        //    //{
+        //    node.T = T;
+        //    if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
+        //    {
+        //        node.MemberNum = 1;
+
+        //        node.UnqualifiedRound = (int)Math.Round(1 / node.Pi);
+        //        CHIDs.Add(node.ID);
+        //        CHNum++;
+        //        node.IsCH = true;
+        //        node.HasCHCnt++;
+        //    }
+        //    //}
+        //    if (node.UnqualifiedRound > 0) // CHの資格なし
+        //    {
+        //        node.UnqualifiedRound--;
+        //    }
+        //    return node;
+        //}
 
         /// <summary>
         /// 引数をもとにクラスタヘッドを選出し、クラスタヘッドフラグを立てる
@@ -89,37 +75,30 @@ namespace VisualizeNetwork
             CHIDs.Clear();
             CHNum = 0;
             ResetUnqualifiedRound(nodes);
-            CHElectionHelper(nodes);
-            //for (int i = 0; i < nodes.Count; i++)
-            //{
-            //    Node node = nodes[i];
-            //    if (!node.IsAlive) continue;// ノードが死んでたら次
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+                if (!node.IsAlive) continue;// ノードが死んでたら次
 
-            //    // ラウンド数に応じたCH選出確立を計算
-            //    P_i = getP_i(nodes, i);
-            //    T = P_i / (1 - P_i * ((Round - 1) % (1 / P_i)));
-            //    node.Pi = P_i;
-
-            //    if (node.UnqualifiedRound == 0 && T > rand.NextDouble())//CH
-            //    {
-            //        node.T = T;
-            //        node.MemberNum = 1;
-            //        node.UnqualifiedRound = (int)Math.Round(1 / P_i);
-            //        CHIDs.Add(i);
-            //        CHNum++;
-            //        node.IsCH = true;
-            //        node.HasCHCnt++;
-            //        nodes[i] = node;
-            //        continue;
-            //    }
-
-            //    //非CH
-            //    if (node.UnqualifiedRound > 0)
-            //    {
-            //        node.UnqualifiedRound--;
-            //    }
-            //    nodes[i] = node;
-            //}
+                // ラウンド数に応じたCH選出確立を計算
+                if (node.IsAlive) node.Pi = GetPi(nodes, i);
+                if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
+                {
+                    node.MemberNum = 1;
+                    node.UnqualifiedRound = (int)Math.Round(1 / node.Pi);
+                    CHIDs.Add(node.ID);
+                    CHNum++;
+                    node.IsCH = true;
+                    node.HasCHCnt++;
+                }
+                //}
+                if (node.UnqualifiedRound > 0) // CHの資格なし
+                {
+                    node.UnqualifiedRound--;
+                }
+                nodes[i] = node;
+                //nodes[i] = CHElectionHelper(node);
+            }
         }
 
         /// <summary>
@@ -196,7 +175,6 @@ namespace VisualizeNetwork
                 //}
 
                 double energy = CalcEnergyConsumption(node, nodes);
-                //node.ConsumeEnergy(energyTX, this);
                 ConsumeEnergy(energy, ref node);
                 nodes[i] = node;
             }

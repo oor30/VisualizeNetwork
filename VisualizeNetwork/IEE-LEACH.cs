@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace VisualizeNetwork
 {
@@ -12,133 +7,64 @@ namespace VisualizeNetwork
     {
         IEE_LEACH,
         IEE_LEACH_A,
-        IEE_LEACH_B
+        IEE_LEACH_B,
+        My_IEE_LEACH_B
     }
 
     internal class IEE_LEACH : LEACH
     {
-        private Mode mode;
-        private List<int> lastCHRound = new List<int>();
+        private readonly Mode mode;
 
-
-        public IEE_LEACH(Mode mode)
+        public IEE_LEACH(Form1 form1, Mode mode) : base(form1)
         {
             this.mode = mode;
             if (mode == Mode.IEE_LEACH) AlgoName = "IEE-LEACH";
             else if (mode == Mode.IEE_LEACH_A) AlgoName = "IEE-LEACH-A";
             else if (mode == Mode.IEE_LEACH_B) AlgoName = "IEE-LEACH-B";
-            for (int i = 0; i < N; i++)
-            {
-                lastCHRound.Add(-1000);
-            }
+            else if (mode == Mode.My_IEE_LEACH_B) AlgoName = "My-IEE-LEACH-B";
         }
 
-        protected override double getP_i(List<Node> nodes, int i)
+        protected override void ResetUnqualifiedRound(List<Node> nodes)
         {
-            if (mode == Mode.IEE_LEACH_B) return base.getP_i();
+            if (mode == Mode.IEE_LEACH_B || mode == Mode.My_IEE_LEACH_B) base.ResetUnqualifiedRound(nodes);
+        }
+
+        protected override double GetPi(List<Node> nodes, int i)
+        {
+            if (mode == Mode.IEE_LEACH_B || mode == Mode.My_IEE_LEACH_B)
+            {
+                return base.GetPi(nodes, i);
+            }
 
             // ラウンド数に応じたCH選出確立を計算
             double E_t = CalcTotalEnergy(nodes);
             double E_a = E_t / N;
             //double E_a = (E_t * (1 - (double)Round/R))/CH_candidate;
-            double P_i = P * (nodes[i].E_r / E_a);
-            //double P_i = P * CH_candidate * node.E_r * Sim.E_init / (E_t * E_a);
-            //P_i = Math.Min(1, P_i);
-            return P_i;
+            double Pi = P * (nodes[i].E_r / E_a);
+            //double Pi = P * CH_candidate * node.E_r * Sim.E_init / (E_t * E_a);
+            Pi = Math.Min(1, Pi);
+            return Pi;
         }
 
-        protected override void CHElection(List<Node> nodes)
-        {
-            CHIDs.Clear();
-            CHNum = 0;
-            if (mode == Mode.IEE_LEACH_B) ResetUnqualifiedRound(nodes);
-            CHElectionHelper(nodes);
-            //double T;
-            //for (int i = 0; i < nodes.Count; i++)
-            //{
-            //    Node node = nodes[i];
-            //    if (!node.IsAlive) continue;// ノードが死んでたら次
-
-            //    // ラウンド数に応じたCH選出確立を計算
-            //    double P_i = getP_i(nodes, i);
-            //    T = P_i / (1 - P_i * ((Round - 1) % (1 / P_i)));
-            //    node.Pi = P_i;
-
-            //    if (node.UnqualifiedRound == 0 && T > rand.NextDouble())//CH
-            //    {
-            //        node.T = T;
-            //        node.MemberNum = 1;
-            //        node.UnqualifiedRound = (int)Math.Round(1 / P_i);
-            //        CHIDs.Add(i);
-            //        CHNum++;
-            //        node.IsCH = true;
-            //        node.HasCHCnt++;
-            //        nodes[i] = node;
-            //        continue;
-            //    }
-
-            //    //非CH
-            //    if (node.UnqualifiedRound > 0)
-            //    {
-            //        node.UnqualifiedRound--;
-            //    }
-            //    nodes[i] = node;
-            //}
-        }
-
-        //public override void CHElection(List<Node> nodes)
+        //protected override void CHElection(List<Node> nodes)
         //{
         //    CHIDs.Clear();
-        //    CHNumList.Add(0);
-        //    if (Round % (1 / P) == 0)   // 1/Pラウンドごとに、
-        //    {
-        //        for (int i = 0; i < N; i++)
-        //            hasBeenCH[i] = 0;   // CHになる確立を等しくする
-        //    }
-
+        //    CHNum = 0;
+        //    //if (mode == Mode.IEE_LEACH_B || mode == Mode.My_IEE_LEACH_B) ResetUnqualifiedRound(nodes);
+        //    ResetUnqualifiedRound(nodes);
         //    for (int i = 0; i < nodes.Count; i++)
         //    {
         //        Node node = nodes[i];
         //        if (!node.IsAlive) continue;// ノードが死んでたら次
 
-        //        // ラウンド数に応じたCH選出確立を計算
-        //        double E_t = CalcTotalEnergy(nodes);
-        //        double E_a = E_t/N;
-        //        //double E_a = (E_t * (1 - (double)Round/R))/CH_candidate;
-        //        double T;
-        //        double P_i;
-        //        if (mode == 0 || mode == 1)
-        //        {
-        //            P_i = P * (node.E_r / E_a);
-        //            //double P_i = P * CH_candidate * node.E_r * Sim.E_init / (E_t * E_a);
-        //            P_i = Math.Min(1, P_i);
-        //        }
-        //        else
-        //        {
-        //            //T = P / (1 - P * (Round % (1 / P)));
-        //            P_i = P;
-        //        }
-        //        T = P_i / (1 - P_i * (Round % (int)Math.Round(1 / P_i)));
 
-        //        node.MemberNum = 0;
-        //        node.CHID = -1;
-        //        node.IsCH = false;
-        //        if (P_i > rand.NextDouble())//CH
-        //        //if (hasBeenCH[i] == 0 && T > rand.NextDouble())//CH
-        //            {
-        //            node.MemberNum = 1;
-        //            hasBeenCH[i] = (int)Math.Floor(1 / P_i);
-        //            CHIDs.Add(i);
-        //            hasBeenCHCnt[i]++;
-        //            CHNumList[CHNumList.Count - 1]++;
-        //            node.IsCH = true;
-        //            nodes[i] = node;
-        //            continue;
-        //        }
+        //        Pi = GetP_i(nodes, i);
+        //        T = Pi;
+        //        if (T > 20)
+        //            Console.WriteLine(T);
+        //        node.Pi = Pi;
 
-        //        //非CH
-        //        if (hasBeenCH[i] > 0) hasBeenCH[i] -= 1;
-        //        nodes[i] = node;
+        //        nodes[i] = CHElectionHelper(node);
         //    }
         //}
 
@@ -161,7 +87,13 @@ namespace VisualizeNetwork
                     }
                 }
                 //if (dist2(BS, node) < distMin || Math.Sqrt(dist2(BS, node)) < Sim.d_0)
-                if (Dist2(BS, node) < distMin && mode != Mode.IEE_LEACH_A)
+                if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                {
+                    node.CHID = -1;
+                    nodes[i] = node;
+                    return;
+                }
+                else if (mode == Mode.My_IEE_LEACH_B && DirectIsMoreEfficient(node, head))
                 {
                     node.CHID = -1;
                     nodes[i] = node;
@@ -172,6 +104,17 @@ namespace VisualizeNetwork
                 head.MemberNum += 1;
                 nodes[node.CHID] = head;
             }
+        }
+
+        private bool DirectIsMoreEfficient(Node node, Node head)
+        {
+            double energyDirect, energyViaCH;
+            double distDirect = Math.Sqrt(Dist2(BS, node));
+            double distToCH = Math.Sqrt(Dist2(head, node));
+            energyDirect = E_TX(packetSize, distDirect);
+            energyViaCH = E_TX(packetSize, distToCH) + E_DA * packetSize + E_RX(packetSize);
+            if (energyDirect < energyViaCH) return true;
+            else return false;
         }
 
         //public override void SteadyState(List<Node> nodes)

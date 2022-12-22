@@ -37,7 +37,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // labelCoordinate
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(93, 101);
@@ -46,7 +46,7 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "ノード数：";
             // 
-            // label2
+            // labelRound
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(97, 146);
@@ -55,7 +55,7 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "最小値：";
             // 
-            // label3
+            // labelPlaySpeed
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(97, 191);

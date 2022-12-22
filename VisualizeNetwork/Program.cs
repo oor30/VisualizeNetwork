@@ -44,9 +44,9 @@ namespace VisualizeNetwork
         public int HasCHCnt { get; set; }           // CHになった回数
         public int UnqualifiedRound { get; set; }   // あと何ラウンドCHになる資格がないか
         public double Pi { get; set; }
-        public double T { get; set; }
+        private static Random R = new Random();
 
-        public Node(int ID, double X, double Y, int CHID) : this()
+        public Node(int ID, double X, double Y, int CHID, bool ConstInitialEnergy = true) : this()
         {
             this.ID = ID;
             this.X = X;
@@ -55,7 +55,8 @@ namespace VisualizeNetwork
             HasCHCnt = 0;
             UnqualifiedRound = 0;
             IsAlive = true;
-            E_r = Sim.E_init;   //(J)残量エネルギー(初期値：0.5J)
+            if (ConstInitialEnergy) E_r = Sim.E_init;   //(J)残量エネルギー(初期値：0.5J)
+            else E_r = R.NextDouble()/2 + 0.5;
         }
 
         public void ResetParameter()    // ラウンドごとに行うパラメータの初期化処理
@@ -64,7 +65,6 @@ namespace VisualizeNetwork
             MemberNum = 0;
             CHID = -1;
             IsCH = false;
-            T = 0;
             Pi = 0;
         }
     }

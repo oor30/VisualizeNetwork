@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using MathNet.Numerics.Statistics;
+
 namespace VisualizeNetwork
 {
     public abstract class Sim
@@ -10,23 +12,39 @@ namespace VisualizeNetwork
         public int Round { get; private set; } = 0;   //現在のラウンド数
         protected int CHNum = 0;        //CH数
         protected int aliveNum = N;     //生存ノード数
-        public List<List<Node>> nodesList = new List<List<Node>>(); //全ラウンド分のノードリスト
+        protected double EnergyConsumption = 0;
+        protected List<Node> nodes;
+        public readonly List<List<Node>> nodesList = new List<List<Node>>(); //全ラウンド分のノードリスト
+        protected Form1 form1 = null;
 
         //シミュレーションを評価する指標
         public int FDN { get; private set; } = 0;
         public int LDN { get; private set; } = 0;
-        public List<int> CHNumList { get; private set; } = new List<int>();     //CH数のリスト
-        public List<int> AliveNumList { get; private set; } = new List<int>();  //生存ノード数のリスト
+        public double CHMean { get; private set; } = 0;
+        public double CHSD { get; private set; } = 0;
+        public double AveEnergyConsumption { get; private set; } = 0;
+        public int CollectedDataNum { get; private set; } = 0;
+        public int ReceivedDataNumAtBS { get; private set; } = 0;
+        public List<int> AliveNumList { get; } = new List<int>();  //生存ノード数のリスト
+        public List<int> CHNumList { get; } = new List<int>();     //CH数のリスト
+        public List<int> CollectedDataNumList { get; } = new List<int>();
+        public List<double> TotalEnergyConsumptionList { get; } = new List<double>();
 
         //パラメーター
         public static Node BS = new Node(-1, 50, 125, -1);//BS
         public const int N = 100;           //ノード数
         public const int N_CH = 5;          //クラスタヘッド数
-        public const int R = 2500;          //シミュレーションラウンド数
+        public const int R = 3500;          //シミュレーションラウンド数
         public const int INTERVAL = 20;     //(s/Round)
 
-        public void Run(List<Node> nodes)
+        public Sim(Form1 form1)
         {
+            this.form1 = form1;
+        }
+
+        public void Run(List<Node> initialNodes)
+        {
+            nodes = initialNodes;
             for (int i = 0; i < R; i++)
             {
                 nodes = new List<Node>(nodes);
@@ -38,11 +56,17 @@ namespace VisualizeNetwork
                 }
 
                 Round++;
+                EnergyConsumption = 0;
                 nodes = OneRound(nodes);
                 nodesList.Add(nodes);
-                CHNumList.Add(CHNum);
                 AliveNumList.Add(aliveNum);
+                CHNumList.Add(CHNum);
+                CollectedDataNum += aliveNum;
+                CollectedDataNumList.Add(CollectedDataNum);
+                if (i == 0) TotalEnergyConsumptionList.Add(EnergyConsumption);
+                else TotalEnergyConsumptionList.Add(TotalEnergyConsumptionList[i - 1] + EnergyConsumption);
             }
+            FinalizeSimulation();
         }
 
         protected abstract List<Node> OneRound(List<Node> nodes);
@@ -58,14 +82,14 @@ namespace VisualizeNetwork
         public const double bandwidth = 4000;    //(bits/s)
         public const double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 
-        private static double E_TX(double m, double d)
+        protected static double E_TX(double m, double d)
         {
             if (d <= d_0)
                 return m * E_elec + m * e_fs * Math.Pow(d, 2);
             else
                 return m * E_elec + m * e_mp * Math.Pow(d, 4);
         }
-        private static double E_RX(double m)
+        protected static double E_RX(double m)
         {
             return m * E_elec;
         }
@@ -81,7 +105,7 @@ namespace VisualizeNetwork
             double dist = Math.Sqrt(Dist2(addressNode, node));
             if (node.IsCH)
             {
-                energy = E_TX(sendMessageBit, dist) + E_DA * sendMessageBit * node.MemberNum 
+                energy = E_TX(sendMessageBit, dist) + E_DA * sendMessageBit * node.MemberNum
                     + E_RX(sendMessageBit) * node.MemberNum;
             }
             else
@@ -94,8 +118,11 @@ namespace VisualizeNetwork
         protected void ConsumeEnergy(double energy, ref Node node)
         {
             if (!node.IsAlive) return;
+            energy = Math.Min(energy, node.E_r);
             node.E_r -= energy;
             node.CmsEnergy += energy;
+            EnergyConsumption += energy;
+            if (node.CHID == -1) ReceivedDataNumAtBS++;
             if (node.E_r <= 0)
             {
                 node.IsAlive = false;
@@ -110,6 +137,26 @@ namespace VisualizeNetwork
         protected static double Dist2(Node a, Node b)
         {
             return Math.Pow((a.X - b.X), 2) + Math.Pow((a.Y - b.Y), 2);
+        }
+
+        protected void FinalizeSimulation()
+        {
+            for (int j = 0; j < FDN; j++)
+            {
+                CHMean += CHNumList[j];
+                foreach (Node node in nodesList[j])
+                {
+                    AveEnergyConsumption += node.CmsEnergy;
+                }
+            }
+            CHMean /= FDN;
+            AveEnergyConsumption /= FDN;
+
+            for (int j = 0; j < FDN; j++)
+            {
+                CHSD += Math.Pow((CHNumList[j] - CHMean), 2);
+            }
+            CHSD = Math.Sqrt(CHSD / N);
         }
     }
 }
