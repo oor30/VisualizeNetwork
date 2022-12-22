@@ -4,7 +4,7 @@ namespace VisualizeNetwork
 {
     internal class Direct : Sim
     {
-        public Direct(Form1 form1) : base(form1)
+        public Direct()
         {
             AlgoName = "Direct";
         }
@@ -14,7 +14,7 @@ namespace VisualizeNetwork
             return nodes;
         }
 
-        public virtual void SteadyState(List<Node> nodes)
+        private void SteadyState(List<Node> nodes)
         {
             for (int i = 0; i < nodes.Count; i++)
             {

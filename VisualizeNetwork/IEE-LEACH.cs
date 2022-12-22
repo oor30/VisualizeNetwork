@@ -15,7 +15,7 @@ namespace VisualizeNetwork
     {
         private readonly Mode mode;
 
-        public IEE_LEACH(Form1 form1, Mode mode) : base(form1)
+        public IEE_LEACH(Mode mode)
         {
             this.mode = mode;
             if (mode == Mode.IEE_LEACH) AlgoName = "IEE-LEACH";
@@ -46,28 +46,6 @@ namespace VisualizeNetwork
             return Pi;
         }
 
-        //protected override void CHElection(List<Node> nodes)
-        //{
-        //    CHIDs.Clear();
-        //    CHNum = 0;
-        //    //if (mode == Mode.IEE_LEACH_B || mode == Mode.My_IEE_LEACH_B) ResetUnqualifiedRound(nodes);
-        //    ResetUnqualifiedRound(nodes);
-        //    for (int i = 0; i < nodes.Count; i++)
-        //    {
-        //        Node node = nodes[i];
-        //        if (!node.IsAlive) continue;// ノードが死んでたら次
-
-
-        //        Pi = GetP_i(nodes, i);
-        //        T = Pi;
-        //        if (T > 20)
-        //            Console.WriteLine(T);
-        //        node.Pi = Pi;
-
-        //        nodes[i] = CHElectionHelper(node);
-        //    }
-        //}
-
         protected override void ClusterFormation(List<Node> nodes)
         {
             for (int i = 0; i < nodes.Count; i++)
@@ -86,7 +64,6 @@ namespace VisualizeNetwork
                         distMin = dist;
                     }
                 }
-                //if (dist2(BS, node) < distMin || Math.Sqrt(dist2(BS, node)) < Sim.d_0)
                 if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 {
                     node.CHID = -1;
@@ -116,50 +93,6 @@ namespace VisualizeNetwork
             if (energyDirect < energyViaCH) return true;
             else return false;
         }
-
-        //public override void SteadyState(List<Node> nodes)
-        //{
-        //    for (int i = 0; i < nodes.Count; i++)
-        //    {
-        //        if (!nodes[i].IsAlive) continue;
-        //        double assignedTime, sendMessageBit, dist, energyTX;
-        //        Node node = nodes[i];
-
-        //        if (node.IsCH)  //CH→BS
-        //        {
-        //            //assignedTime = (double)Sim.INTERVAL / node.MemberNum;
-        //            //sendMessageBit = Sim.bandwidth * assignedTime;
-
-        //            sendMessageBit = Sim.packetSize;
-        //            dist = Math.Sqrt(Sim.Dist2(BS, node));
-        //            energyTX = Sim.E_TX(sendMessageBit, dist)+Sim.E_DA* sendMessageBit *node.MemberNum;
-        //        }
-        //        else if (node.CHID == -1)//member→BS
-        //        {
-        //            sendMessageBit = Sim.packetSize;
-        //            dist = Math.Sqrt(Sim.Dist2(BS, node));
-        //            energyTX = Sim.E_TX(sendMessageBit, dist);
-        //        }
-        //        else//member→CH
-        //        {
-        //            Node head = nodes[node.CHID];
-        //            //assignedTime = (double)Sim.INTERVAL / head.MemberNum;
-        //            //sendMessageBit = Sim.bandwidth * assignedTime;
-
-        //            sendMessageBit = Sim.packetSize;
-        //            dist = Math.Sqrt(Sim.Dist2(head, node));
-        //            energyTX = Sim.E_TX(sendMessageBit, dist);
-        //            //head.E_r -= Sim.E_RX(sendMessageBit);
-        //            ConsumeEnergy(Sim.E_RX(sendMessageBit), ref head);
-        //            //head.ConsumeEnergy(Sim.E_RX(sendMessageBit), this);
-        //            nodes[node.CHID] = head;
-        //        }
-        //        //node.E_r -= energyTX;
-        //        ConsumeEnergy(energyTX, ref node);
-        //        //node.ConsumeEnergy(energyTX, this);
-        //        nodes[i] = node;
-        //    }
-        //}
 
         private double CalcTotalEnergy(List<Node> nodes)
         {

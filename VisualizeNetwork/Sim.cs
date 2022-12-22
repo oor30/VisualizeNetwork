@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using MathNet.Numerics.Statistics;
-
 namespace VisualizeNetwork
 {
-    public abstract class Sim
+    internal abstract class Sim
     {
         // 変数
-        public string AlgoName { get; protected set; }     //アルゴリズム名
-        public int Round { get; private set; } = 0;   //現在のラウンド数
-        protected int CHNum = 0;        //CH数
-        protected int aliveNum = N;     //生存ノード数
-        protected double EnergyConsumption = 0;
-        protected List<Node> nodes;
-        public readonly List<List<Node>> nodesList = new List<List<Node>>(); //全ラウンド分のノードリスト
-        protected Form1 form1 = null;
+        public string AlgoName { get; protected set; }     // アルゴリズム名
+        public int Round { get; private set; } = 0;   // 現在のラウンド数
+        protected int CHNum = 0;        // CH数
+        protected int aliveNum = N;     // 生存ノード数
+        private double EnergyConsumption = 0;   // エネルギー消費量
+        protected List<Node> nodes;             // ノードリスト
+
+        // 全ラウンド分のノードリスト
+        public readonly List<List<Node>> nodesList = new List<List<Node>>();
 
         //シミュレーションを評価する指標
         public int FDN { get; private set; } = 0;
@@ -36,11 +35,6 @@ namespace VisualizeNetwork
         public const int N_CH = 5;          //クラスタヘッド数
         public const int R = 3500;          //シミュレーションラウンド数
         public const int INTERVAL = 20;     //(s/Round)
-
-        public Sim(Form1 form1)
-        {
-            this.form1 = form1;
-        }
 
         public void Run(List<Node> initialNodes)
         {

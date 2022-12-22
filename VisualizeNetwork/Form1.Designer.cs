@@ -28,23 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.pictureBoxNodeMap = new System.Windows.Forms.PictureBox();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend12 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.labelCoordinate = new System.Windows.Forms.Label();
             this.trackBarRound = new System.Windows.Forms.TrackBar();
             this.labelRound = new System.Windows.Forms.Label();
-            this.btnPlayPose = new System.Windows.Forms.Button();
             this.trackBarPlaySpeed = new System.Windows.Forms.TrackBar();
             this.labelPlaySpeed = new System.Windows.Forms.Label();
             this.resultTable = new System.Windows.Forms.DataGridView();
@@ -55,12 +49,10 @@
             this.CHsd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.平均消費量 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BS受信回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnBack = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
             this.cmbBoxAlgo = new System.Windows.Forms.ComboBox();
             this.chartAliveNums = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartNumCH = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl = new System.Windows.Forms.TabControl();
             this.Simulation = new System.Windows.Forms.TabPage();
             this.tableEnergy = new System.Windows.Forms.DataGridView();
             this.nodeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -68,49 +60,56 @@
             this.残量E = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.消費E = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CH回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CH無資格期間 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CH資格 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Pi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pictureBoxNodeMap = new System.Windows.Forms.PictureBox();
             this.Chart1 = new System.Windows.Forms.TabPage();
             this.Chart2 = new System.Windows.Forms.TabPage();
             this.chartTotalEnergyConsumption = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartReceivedData = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.設定 = new System.Windows.Forms.TabPage();
+            this.btnApply = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownBSY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBSX = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBoxInitialEnergy = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownInitialEnergy = new System.Windows.Forms.NumericUpDown();
             this.radioButtonRand = new System.Windows.Forms.RadioButton();
             this.radioButtonConst = new System.Windows.Forms.RadioButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.開くOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNodeMap)).BeginInit();
+            this.labelProcessing = new System.Windows.Forms.Label();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.btnBack = new System.Windows.Forms.Button();
+            this.btnPlayPose = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartAliveNums)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartNumCH)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.tabControl.SuspendLayout();
             this.Simulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tableEnergy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNodeMap)).BeginInit();
             this.Chart1.SuspendLayout();
             this.Chart2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTotalEnergyConsumption)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartReceivedData)).BeginInit();
             this.設定.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBSY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBSX)).BeginInit();
             this.groupBoxInitialEnergy.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInitialEnergy)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pictureBoxNodeMap
-            // 
-            this.pictureBoxNodeMap.BackColor = System.Drawing.SystemColors.Window;
-            this.pictureBoxNodeMap.Location = new System.Drawing.Point(0, 53);
-            this.pictureBoxNodeMap.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxNodeMap.MaximumSize = new System.Drawing.Size(768, 750);
-            this.pictureBoxNodeMap.Name = "pictureBoxNodeMap";
-            this.pictureBoxNodeMap.Size = new System.Drawing.Size(764, 750);
-            this.pictureBoxNodeMap.TabIndex = 0;
-            this.pictureBoxNodeMap.TabStop = false;
-            this.pictureBoxNodeMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxNodeMap_MouseMove);
             // 
             // labelCoordinate
             // 
@@ -121,6 +120,7 @@
             this.labelCoordinate.Size = new System.Drawing.Size(53, 18);
             this.labelCoordinate.TabIndex = 2;
             this.labelCoordinate.Text = "座標：";
+            this.labelCoordinate.Visible = false;
             // 
             // trackBarRound
             // 
@@ -137,27 +137,16 @@
             // labelRound
             // 
             this.labelRound.AutoSize = true;
-            this.labelRound.Location = new System.Drawing.Point(27, 58);
+            this.labelRound.Location = new System.Drawing.Point(19, 56);
             this.labelRound.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRound.Name = "labelRound";
             this.labelRound.Size = new System.Drawing.Size(77, 18);
             this.labelRound.TabIndex = 4;
             this.labelRound.Text = "ラウンド：1";
             // 
-            // btnPlayPose
-            // 
-            this.btnPlayPose.Location = new System.Drawing.Point(70, 102);
-            this.btnPlayPose.Margin = new System.Windows.Forms.Padding(2);
-            this.btnPlayPose.Name = "btnPlayPose";
-            this.btnPlayPose.Size = new System.Drawing.Size(77, 33);
-            this.btnPlayPose.TabIndex = 5;
-            this.btnPlayPose.Text = "再生";
-            this.btnPlayPose.UseVisualStyleBackColor = true;
-            this.btnPlayPose.Click += new System.EventHandler(this.BtnPlayPose_Click);
-            // 
             // trackBarPlaySpeed
             // 
-            this.trackBarPlaySpeed.Location = new System.Drawing.Point(218, 102);
+            this.trackBarPlaySpeed.Location = new System.Drawing.Point(211, 120);
             this.trackBarPlaySpeed.Margin = new System.Windows.Forms.Padding(2);
             this.trackBarPlaySpeed.Minimum = 1;
             this.trackBarPlaySpeed.Name = "trackBarPlaySpeed";
@@ -169,7 +158,7 @@
             // labelPlaySpeed
             // 
             this.labelPlaySpeed.AutoSize = true;
-            this.labelPlaySpeed.Location = new System.Drawing.Point(562, 110);
+            this.labelPlaySpeed.Location = new System.Drawing.Point(553, 136);
             this.labelPlaySpeed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelPlaySpeed.Name = "labelPlaySpeed";
             this.labelPlaySpeed.Size = new System.Drawing.Size(91, 18);
@@ -191,7 +180,7 @@
             this.CHsd,
             this.平均消費量,
             this.BS受信回数});
-            this.resultTable.Location = new System.Drawing.Point(12, 1001);
+            this.resultTable.Location = new System.Drawing.Point(12, 1034);
             this.resultTable.Name = "resultTable";
             this.resultTable.ReadOnly = true;
             this.resultTable.RowHeadersWidth = 62;
@@ -256,26 +245,6 @@
             this.BS受信回数.ReadOnly = true;
             this.BS受信回数.Width = 140;
             // 
-            // btnBack
-            // 
-            this.btnBack.Location = new System.Drawing.Point(13, 102);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(52, 33);
-            this.btnBack.TabIndex = 9;
-            this.btnBack.Text = "前(&B)";
-            this.btnBack.UseVisualStyleBackColor = true;
-            this.btnBack.Click += new System.EventHandler(this.BtnBack_Click);
-            // 
-            // btnNext
-            // 
-            this.btnNext.Location = new System.Drawing.Point(152, 102);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(52, 33);
-            this.btnNext.TabIndex = 10;
-            this.btnNext.Text = "次(&N)";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
-            // 
             // cmbBoxAlgo
             // 
             this.cmbBoxAlgo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -288,49 +257,37 @@
             // 
             // chartAliveNums
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartAliveNums.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.chartAliveNums.Legends.Add(legend1);
+            legend9.Enabled = false;
+            legend9.Name = "Legend1";
+            this.chartAliveNums.Legends.Add(legend9);
             this.chartAliveNums.Location = new System.Drawing.Point(5, 5);
             this.chartAliveNums.Name = "chartAliveNums";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartAliveNums.Series.Add(series1);
             this.chartAliveNums.Size = new System.Drawing.Size(754, 750);
             this.chartAliveNums.TabIndex = 12;
             this.chartAliveNums.Text = "v";
             // 
             // chartNumCH
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartNumCH.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartNumCH.Legends.Add(legend2);
+            legend10.Name = "Legend1";
+            this.chartNumCH.Legends.Add(legend10);
             this.chartNumCH.Location = new System.Drawing.Point(765, 5);
             this.chartNumCH.Name = "chartNumCH";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartNumCH.Series.Add(series2);
-            this.chartNumCH.Size = new System.Drawing.Size(786, 750);
+            this.chartNumCH.Size = new System.Drawing.Size(965, 750);
             this.chartNumCH.TabIndex = 13;
             this.chartNumCH.Text = "v";
             // 
-            // tabControl1
+            // tabControl
             // 
-            this.tabControl1.Controls.Add(this.Simulation);
-            this.tabControl1.Controls.Add(this.Chart1);
-            this.tabControl1.Controls.Add(this.Chart2);
-            this.tabControl1.Controls.Add(this.設定);
-            this.tabControl1.Location = new System.Drawing.Point(13, 153);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1577, 843);
-            this.tabControl1.TabIndex = 14;
+            this.tabControl.Controls.Add(this.Simulation);
+            this.tabControl.Controls.Add(this.Chart1);
+            this.tabControl.Controls.Add(this.Chart2);
+            this.tabControl.Controls.Add(this.設定);
+            this.tabControl.Location = new System.Drawing.Point(12, 186);
+            this.tabControl.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1743, 843);
+            this.tabControl.TabIndex = 14;
             // 
             // Simulation
             // 
@@ -342,7 +299,7 @@
             this.Simulation.Margin = new System.Windows.Forms.Padding(2);
             this.Simulation.Name = "Simulation";
             this.Simulation.Padding = new System.Windows.Forms.Padding(2);
-            this.Simulation.Size = new System.Drawing.Size(1569, 811);
+            this.Simulation.Size = new System.Drawing.Size(1735, 811);
             this.Simulation.TabIndex = 0;
             this.Simulation.Text = "Simulation";
             this.Simulation.UseVisualStyleBackColor = true;
@@ -360,7 +317,7 @@
             this.残量E,
             this.消費E,
             this.CH回数,
-            this.CH無資格期間,
+            this.CH資格,
             this.Pi});
             this.tableEnergy.Location = new System.Drawing.Point(775, 53);
             this.tableEnergy.Margin = new System.Windows.Forms.Padding(2);
@@ -413,13 +370,13 @@
             this.CH回数.ReadOnly = true;
             this.CH回数.Width = 104;
             // 
-            // CH無資格期間
+            // CH資格
             // 
-            this.CH無資格期間.HeaderText = "CH無資格期間";
-            this.CH無資格期間.MinimumWidth = 8;
-            this.CH無資格期間.Name = "CH無資格期間";
-            this.CH無資格期間.ReadOnly = true;
-            this.CH無資格期間.Width = 158;
+            this.CH資格.HeaderText = "CH資格";
+            this.CH資格.MinimumWidth = 8;
+            this.CH資格.Name = "CH資格";
+            this.CH資格.ReadOnly = true;
+            this.CH資格.Width = 104;
             // 
             // Pi
             // 
@@ -429,6 +386,20 @@
             this.Pi.ReadOnly = true;
             this.Pi.Width = 59;
             // 
+            // pictureBoxNodeMap
+            // 
+            this.pictureBoxNodeMap.BackColor = System.Drawing.SystemColors.Window;
+            this.pictureBoxNodeMap.Location = new System.Drawing.Point(4, 53);
+            this.pictureBoxNodeMap.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxNodeMap.MaximumSize = new System.Drawing.Size(768, 750);
+            this.pictureBoxNodeMap.Name = "pictureBoxNodeMap";
+            this.pictureBoxNodeMap.Size = new System.Drawing.Size(764, 750);
+            this.pictureBoxNodeMap.TabIndex = 0;
+            this.pictureBoxNodeMap.TabStop = false;
+            this.pictureBoxNodeMap.MouseEnter += new System.EventHandler(this.PictureBoxNodeMap_MouseEnter);
+            this.pictureBoxNodeMap.MouseLeave += new System.EventHandler(this.PictureBoxNodeMap_MouseLeave);
+            this.pictureBoxNodeMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxNodeMap_MouseMove);
+            // 
             // Chart1
             // 
             this.Chart1.Controls.Add(this.chartNumCH);
@@ -437,7 +408,7 @@
             this.Chart1.Margin = new System.Windows.Forms.Padding(2);
             this.Chart1.Name = "Chart1";
             this.Chart1.Padding = new System.Windows.Forms.Padding(2);
-            this.Chart1.Size = new System.Drawing.Size(1569, 811);
+            this.Chart1.Size = new System.Drawing.Size(1735, 811);
             this.Chart1.TabIndex = 1;
             this.Chart1.Text = "Chart1";
             this.Chart1.UseVisualStyleBackColor = true;
@@ -449,65 +420,187 @@
             this.Chart2.Location = new System.Drawing.Point(4, 28);
             this.Chart2.Name = "Chart2";
             this.Chart2.Padding = new System.Windows.Forms.Padding(3);
-            this.Chart2.Size = new System.Drawing.Size(1569, 811);
+            this.Chart2.Size = new System.Drawing.Size(1735, 811);
             this.Chart2.TabIndex = 2;
             this.Chart2.Text = "Chart2";
             this.Chart2.UseVisualStyleBackColor = true;
             // 
             // chartTotalEnergyConsumption
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartTotalEnergyConsumption.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chartTotalEnergyConsumption.Legends.Add(legend3);
+            chartArea5.Name = "ChartArea1";
+            this.chartTotalEnergyConsumption.ChartAreas.Add(chartArea5);
+            legend11.Name = "Legend1";
+            this.chartTotalEnergyConsumption.Legends.Add(legend11);
             this.chartTotalEnergyConsumption.Location = new System.Drawing.Point(766, 6);
             this.chartTotalEnergyConsumption.Name = "chartTotalEnergyConsumption";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chartTotalEnergyConsumption.Series.Add(series3);
-            this.chartTotalEnergyConsumption.Size = new System.Drawing.Size(786, 750);
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chartTotalEnergyConsumption.Series.Add(series5);
+            this.chartTotalEnergyConsumption.Size = new System.Drawing.Size(963, 750);
             this.chartTotalEnergyConsumption.TabIndex = 15;
             this.chartTotalEnergyConsumption.Text = "v";
             // 
             // chartReceivedData
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chartReceivedData.ChartAreas.Add(chartArea4);
-            legend4.Enabled = false;
-            legend4.Name = "Legend1";
-            this.chartReceivedData.Legends.Add(legend4);
+            chartArea6.Name = "ChartArea1";
+            this.chartReceivedData.ChartAreas.Add(chartArea6);
+            legend12.Enabled = false;
+            legend12.Name = "Legend1";
+            this.chartReceivedData.Legends.Add(legend12);
             this.chartReceivedData.Location = new System.Drawing.Point(6, 6);
             this.chartReceivedData.Name = "chartReceivedData";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chartReceivedData.Series.Add(series4);
+            series6.ChartArea = "ChartArea1";
+            series6.Legend = "Legend1";
+            series6.Name = "Series1";
+            this.chartReceivedData.Series.Add(series6);
             this.chartReceivedData.Size = new System.Drawing.Size(754, 750);
             this.chartReceivedData.TabIndex = 14;
             this.chartReceivedData.Text = "v";
+            this.chartReceivedData.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChartReceivedData_MouseMove);
             // 
             // 設定
             // 
+            this.設定.Controls.Add(this.btnApply);
+            this.設定.Controls.Add(this.groupBox1);
             this.設定.Controls.Add(this.groupBoxInitialEnergy);
             this.設定.Location = new System.Drawing.Point(4, 28);
             this.設定.Name = "設定";
             this.設定.Padding = new System.Windows.Forms.Padding(3);
-            this.設定.Size = new System.Drawing.Size(1569, 811);
+            this.設定.Size = new System.Drawing.Size(1735, 811);
             this.設定.TabIndex = 3;
             this.設定.Text = "設定";
             this.設定.UseVisualStyleBackColor = true;
             // 
+            // btnApply
+            // 
+            this.btnApply.Location = new System.Drawing.Point(158, 307);
+            this.btnApply.Name = "btnApply";
+            this.btnApply.Size = new System.Drawing.Size(75, 34);
+            this.btnApply.TabIndex = 2;
+            this.btnApply.Text = "適用";
+            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.BtnApply_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.numericUpDownBSY);
+            this.groupBox1.Controls.Add(this.numericUpDownBSX);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Location = new System.Drawing.Point(40, 172);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(325, 100);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "BSの位置";
+            // 
+            // numericUpDownBSY
+            // 
+            this.numericUpDownBSY.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownBSY.Location = new System.Drawing.Point(87, 62);
+            this.numericUpDownBSY.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownBSY.Name = "numericUpDownBSY";
+            this.numericUpDownBSY.Size = new System.Drawing.Size(120, 25);
+            this.numericUpDownBSY.TabIndex = 3;
+            this.numericUpDownBSY.Value = new decimal(new int[] {
+            125,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownBSX
+            // 
+            this.numericUpDownBSX.Increment = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownBSX.Location = new System.Drawing.Point(87, 34);
+            this.numericUpDownBSX.Name = "numericUpDownBSX";
+            this.numericUpDownBSX.Size = new System.Drawing.Size(120, 25);
+            this.numericUpDownBSX.TabIndex = 2;
+            this.numericUpDownBSX.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 18);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "y座標";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(16, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(52, 18);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "x座標";
+            // 
             // groupBoxInitialEnergy
             // 
+            this.groupBoxInitialEnergy.Controls.Add(this.label1);
+            this.groupBoxInitialEnergy.Controls.Add(this.numericUpDownInitialEnergy);
             this.groupBoxInitialEnergy.Controls.Add(this.radioButtonRand);
             this.groupBoxInitialEnergy.Controls.Add(this.radioButtonConst);
             this.groupBoxInitialEnergy.Location = new System.Drawing.Point(40, 46);
             this.groupBoxInitialEnergy.Name = "groupBoxInitialEnergy";
-            this.groupBoxInitialEnergy.Size = new System.Drawing.Size(163, 79);
+            this.groupBoxInitialEnergy.Size = new System.Drawing.Size(325, 85);
             this.groupBoxInitialEnergy.TabIndex = 0;
             this.groupBoxInitialEnergy.TabStop = false;
             this.groupBoxInitialEnergy.Text = "初期エネルギー";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(269, 28);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(28, 18);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "(J)";
+            // 
+            // numericUpDownInitialEnergy
+            // 
+            this.numericUpDownInitialEnergy.DecimalPlaces = 1;
+            this.numericUpDownInitialEnergy.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownInitialEnergy.Location = new System.Drawing.Point(143, 24);
+            this.numericUpDownInitialEnergy.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownInitialEnergy.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDownInitialEnergy.Name = "numericUpDownInitialEnergy";
+            this.numericUpDownInitialEnergy.Size = new System.Drawing.Size(120, 25);
+            this.numericUpDownInitialEnergy.TabIndex = 2;
+            this.numericUpDownInitialEnergy.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             // 
             // radioButtonRand
             // 
@@ -540,72 +633,142 @@
             this.ファイルFToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1605, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(1791, 33);
             this.menuStrip1.TabIndex = 15;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // ファイルFToolStripMenuItem
             // 
             this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.開くOToolStripMenuItem,
+            this.toolStripMenuItemOpen,
             this.設定SToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
             this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
             this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
             // 
-            // 開くOToolStripMenuItem
+            // toolStripMenuItemOpen
             // 
-            this.開くOToolStripMenuItem.Name = "開くOToolStripMenuItem";
-            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(182, 34);
-            this.開くOToolStripMenuItem.Text = "開く(&O)...";
-            this.開くOToolStripMenuItem.Click += new System.EventHandler(this.Button1_Click);
+            this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(270, 34);
+            this.toolStripMenuItemOpen.Text = "開く(&O)...";
+            this.toolStripMenuItemOpen.Click += new System.EventHandler(this.Button1_Click);
             // 
             // 設定SToolStripMenuItem
             // 
             this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
-            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(182, 34);
+            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.設定SToolStripMenuItem.Text = "設定(&S)...";
+            // 
+            // labelProcessing
+            // 
+            this.labelProcessing.AutoSize = true;
+            this.labelProcessing.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.labelProcessing.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.labelProcessing.Location = new System.Drawing.Point(0, 1275);
+            this.labelProcessing.Name = "labelProcessing";
+            this.labelProcessing.Size = new System.Drawing.Size(124, 18);
+            this.labelProcessing.TabIndex = 16;
+            this.labelProcessing.Text = "labelProcessing";
+            this.labelProcessing.Visible = false;
+            // 
+            // btnNext
+            // 
+            this.btnNext.BackgroundImage = global::VisualizeNetwork.Properties.Resources.次ボタン;
+            this.btnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnNext.FlatAppearance.BorderSize = 0;
+            this.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNext.Location = new System.Drawing.Point(143, 125);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(40, 40);
+            this.btnNext.TabIndex = 10;
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
+            // 
+            // btnBack
+            // 
+            this.btnBack.BackgroundImage = global::VisualizeNetwork.Properties.Resources.前ボタン;
+            this.btnBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnBack.FlatAppearance.BorderSize = 0;
+            this.btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBack.Location = new System.Drawing.Point(16, 125);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(40, 40);
+            this.btnBack.TabIndex = 9;
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.BtnBack_Click);
+            // 
+            // btnPlayPose
+            // 
+            this.btnPlayPose.BackColor = System.Drawing.SystemColors.Control;
+            this.btnPlayPose.BackgroundImage = global::VisualizeNetwork.Properties.Resources.再生ボタン;
+            this.btnPlayPose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPlayPose.FlatAppearance.BorderSize = 0;
+            this.btnPlayPose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPlayPose.Location = new System.Drawing.Point(74, 120);
+            this.btnPlayPose.Margin = new System.Windows.Forms.Padding(2);
+            this.btnPlayPose.Name = "btnPlayPose";
+            this.btnPlayPose.Size = new System.Drawing.Size(50, 50);
+            this.btnPlayPose.TabIndex = 5;
+            this.btnPlayPose.UseVisualStyleBackColor = false;
+            this.btnPlayPose.Click += new System.EventHandler(this.BtnPlayPose_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.trackBarRound);
+            this.panel1.Controls.Add(this.trackBarPlaySpeed);
+            this.panel1.Controls.Add(this.labelRound);
+            this.panel1.Controls.Add(this.labelPlaySpeed);
+            this.panel1.Controls.Add(this.btnPlayPose);
+            this.panel1.Controls.Add(this.btnNext);
+            this.panel1.Controls.Add(this.btnBack);
+            this.panel1.Controls.Add(this.tabControl);
+            this.panel1.Controls.Add(this.resultTable);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1791, 1293);
+            this.panel1.TabIndex = 17;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1605, 1295);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.btnBack);
-            this.Controls.Add(this.resultTable);
-            this.Controls.Add(this.labelPlaySpeed);
-            this.Controls.Add(this.trackBarPlaySpeed);
-            this.Controls.Add(this.btnPlayPose);
-            this.Controls.Add(this.labelRound);
-            this.Controls.Add(this.trackBarRound);
+            this.ClientSize = new System.Drawing.Size(1791, 1293);
+            this.Controls.Add(this.labelProcessing);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(963, 864);
             this.Name = "Form1";
             this.Text = "VisualizeNetwork";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNodeMap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartAliveNums)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartNumCH)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
             this.Simulation.ResumeLayout(false);
             this.Simulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tableEnergy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNodeMap)).EndInit();
             this.Chart1.ResumeLayout(false);
             this.Chart2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartTotalEnergyConsumption)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartReceivedData)).EndInit();
             this.設定.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBSY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBSX)).EndInit();
             this.groupBoxInitialEnergy.ResumeLayout(false);
             this.groupBoxInitialEnergy.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownInitialEnergy)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -626,13 +789,13 @@
         private System.Windows.Forms.ComboBox cmbBoxAlgo;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartAliveNums;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartNumCH;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage Simulation;
         private System.Windows.Forms.TabPage Chart1;
         private System.Windows.Forms.DataGridView tableEnergy;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 開くOToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
         private System.Windows.Forms.ToolStripMenuItem 設定SToolStripMenuItem;
         private System.Windows.Forms.TabPage Chart2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartTotalEnergyConsumption;
@@ -641,13 +804,6 @@
         private System.Windows.Forms.GroupBox groupBoxInitialEnergy;
         private System.Windows.Forms.RadioButton radioButtonRand;
         private System.Windows.Forms.RadioButton radioButtonConst;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nodeID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CHID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 残量E;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 消費E;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CH回数;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CH無資格期間;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Pi;
         private System.Windows.Forms.DataGridViewTextBoxColumn algorithm;
         private System.Windows.Forms.DataGridViewTextBoxColumn FDN;
         private System.Windows.Forms.DataGridViewTextBoxColumn LDN;
@@ -655,6 +811,23 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CHsd;
         private System.Windows.Forms.DataGridViewTextBoxColumn 平均消費量;
         private System.Windows.Forms.DataGridViewTextBoxColumn BS受信回数;
+        private System.Windows.Forms.Label labelProcessing;
+        private System.Windows.Forms.NumericUpDown numericUpDownInitialEnergy;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nodeID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CHID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 残量E;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 消費E;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CH回数;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CH資格;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Pi;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDownBSY;
+        private System.Windows.Forms.NumericUpDown numericUpDownBSX;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnApply;
     }
 }
 

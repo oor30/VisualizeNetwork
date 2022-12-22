@@ -104,5 +104,10 @@
   <ItemGroup>
     <None Include="Resources\再生ボタン.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\前ボタン.png" />
+    <None Include="Resources\次ボタン.png" />
+    <Content Include="Resources\再生停止ボタン.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -9,7 +9,7 @@ namespace VisualizeNetwork
         protected Random rand = new Random();
         protected List<int> CHIDs = new List<int>();    //CHのリスト
 
-        public LEACH(Form1 form1) : base(form1)
+        public LEACH()
         {
             AlgoName = "LEACH";
         }
@@ -43,29 +43,6 @@ namespace VisualizeNetwork
             return 0;
         }
 
-        //protected Node CHElectionHelper(Node node)
-        //{
-        //    //if (node.UnqualifiedRound == 0) // CHの資格あり
-        //    //{
-        //    node.T = T;
-        //    if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
-        //    {
-        //        node.MemberNum = 1;
-
-        //        node.UnqualifiedRound = (int)Math.Round(1 / node.Pi);
-        //        CHIDs.Add(node.ID);
-        //        CHNum++;
-        //        node.IsCH = true;
-        //        node.HasCHCnt++;
-        //    }
-        //    //}
-        //    if (node.UnqualifiedRound > 0) // CHの資格なし
-        //    {
-        //        node.UnqualifiedRound--;
-        //    }
-        //    return node;
-        //}
-
         /// <summary>
         /// 引数をもとにクラスタヘッドを選出し、クラスタヘッドフラグを立てる
         /// </summary>
@@ -97,7 +74,6 @@ namespace VisualizeNetwork
                     node.UnqualifiedRound--;
                 }
                 nodes[i] = node;
-                //nodes[i] = CHElectionHelper(node);
             }
         }
 
@@ -140,40 +116,7 @@ namespace VisualizeNetwork
             for (int i = 0; i < nodes.Count; i++)
             {
                 if (!nodes[i].IsAlive) continue;
-                //double assignedTime;
-                //double sendMessageBit, dist, energyTX;
                 Node node = nodes[i];
-
-                //if (node.IsCH)  //CH→BS
-                //{
-                //    //assignedTime = (double)Sim.INTERVAL / node.MemberNum;
-                //    //sendMessageBit = Sim.bandwidth * assignedTime;
-
-                //    sendMessageBit = Sim.packetSize;
-                //    dist = Math.Sqrt(Sim.Dist2(BS, node));
-                //    energyTX = Sim.E_TX(sendMessageBit, dist) + Sim.E_DA * sendMessageBit * node.MemberNum;
-                //}
-                //else if (node.CHID == -1)//member→BS
-                //{
-                //    sendMessageBit = Sim.packetSize;
-                //    dist = Math.Sqrt(Sim.Dist2(BS, node));
-                //    energyTX = Sim.E_TX(sendMessageBit, dist);
-                //}
-                //else//member→CH
-                //{
-                //    Node head = nodes[node.CHID];
-                //    //assignedTime = (double)Sim.INTERVAL / head.MemberNum;
-                //    //sendMessageBit = Sim.bandwidth * assignedTime;
-
-                //    sendMessageBit = Sim.packetSize;
-                //    dist = Math.Sqrt(Sim.Dist2(head, node));
-                //    energyTX = Sim.E_TX(sendMessageBit, dist);
-                //    //head.E_r -= Sim.E_RX(sendMessageBit);
-                //    ConsumeEnergy(Sim.E_RX(sendMessageBit), ref head);
-                //    //head.ConsumeEnergy(Sim.E_RX(sendMessageBit), this);
-                //    nodes[node.CHID] = head;
-                //}
-
                 double energy = CalcEnergyConsumption(node, nodes);
                 ConsumeEnergy(energy, ref node);
                 nodes[i] = node;
