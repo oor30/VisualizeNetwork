@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Direct.cs" />
+    <Compile Include="Form1Event.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="IEE-LEACH.cs" />
     <Compile Include="LEACH.cs" />
     <Compile Include="ConfigFileDialog.cs">

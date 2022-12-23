@@ -16,25 +16,24 @@ namespace VisualizeNetwork
         // 全ラウンド分のノードリスト
         public readonly List<List<Node>> nodesList = new List<List<Node>>();
 
-        //シミュレーションを評価する指標
+        // シミュレーションを評価する指標
         public int FDN { get; private set; } = 0;
         public int LDN { get; private set; } = 0;
         public double CHMean { get; private set; } = 0;
         public double CHSD { get; private set; } = 0;
         public double AveEnergyConsumption { get; private set; } = 0;
         public int CollectedDataNum { get; private set; } = 0;
-        public int ReceivedDataNumAtBS { get; private set; } = 0;
-        public List<int> AliveNumList { get; } = new List<int>();  //生存ノード数のリスト
-        public List<int> CHNumList { get; } = new List<int>();     //CH数のリスト
+        public List<int> AliveNumList { get; } = new List<int>();   // 生存ノード数のリスト
+        public List<int> CHNumList { get; } = new List<int>();      // CH数のリスト
         public List<int> CollectedDataNumList { get; } = new List<int>();
         public List<double> TotalEnergyConsumptionList { get; } = new List<double>();
 
-        //パラメーター
+        // パラメーター
         public static Node BS = new Node(-1, 50, 125, -1);//BS
-        public const int N = 100;           //ノード数
-        public const int N_CH = 5;          //クラスタヘッド数
-        public const int R = 3500;          //シミュレーションラウンド数
-        public const int INTERVAL = 20;     //(s/Round)
+        public const int N = 100;           // ノード数
+        public const int k = 5;             // クラスタヘッド数
+        public const int R = 3500;          // シミュレーションラウンド数
+        public const int INTERVAL = 20;     // (s/Round)
 
         public void Run(List<Node> initialNodes)
         {
@@ -74,7 +73,7 @@ namespace VisualizeNetwork
         public const double e_mp = 0.0013e-12;  //(pj/bit/m^4)
         //public const double bandwidth = 1.0e6;  //(Mb/s)
         public const double bandwidth = 4000;    //(bits/s)
-        public const double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
+        public static double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 
         protected static double E_TX(double m, double d)
         {
@@ -116,13 +115,12 @@ namespace VisualizeNetwork
             node.E_r -= energy;
             node.CmsEnergy += energy;
             EnergyConsumption += energy;
-            if (node.CHID == -1) ReceivedDataNumAtBS++;
             if (node.E_r <= 0)
             {
                 node.IsAlive = false;
-                node.E_r = 0;
+                node.Status = "dead";
                 aliveNum--;
-                if (aliveNum == Sim.N - 1) FDN = Round;
+                if (aliveNum == N - 1) FDN = Round;
                 else if (aliveNum == 0) LDN = Round;
                 node.CHID = node.ID;
             }

@@ -5,7 +5,7 @@ namespace VisualizeNetwork
 {
     internal class LEACH : Sim
     {
-        protected const double P = (double)N_CH / N;
+        protected const double P = (double)k / N;
         protected Random rand = new Random();
         protected List<int> CHIDs = new List<int>();    //CHのリスト
 
@@ -43,6 +43,11 @@ namespace VisualizeNetwork
             return 0;
         }
 
+        protected virtual int CalcUnqualifiedRound(Node node)
+        {
+            return (int)Math.Round(1 / node.Pi);
+        }
+
         /// <summary>
         /// 引数をもとにクラスタヘッドを選出し、クラスタヘッドフラグを立てる
         /// </summary>
@@ -62,11 +67,12 @@ namespace VisualizeNetwork
                 if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
                 {
                     node.MemberNum = 1;
-                    node.UnqualifiedRound = (int)Math.Round(1 / node.Pi);
+                    node.UnqualifiedRound = CalcUnqualifiedRound(node);
                     CHIDs.Add(node.ID);
                     CHNum++;
                     node.IsCH = true;
                     node.HasCHCnt++;
+                    node.Status = "CH";
                 }
                 //}
                 if (node.UnqualifiedRound > 0) // CHの資格なし
@@ -101,6 +107,7 @@ namespace VisualizeNetwork
                     }
                 }
                 node.CHID = head.ID;
+                node.Status = "member";
                 nodes[i] = node;
                 head.MemberNum += 1;
                 nodes[node.CHID] = head;

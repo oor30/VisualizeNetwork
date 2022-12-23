@@ -14,16 +14,18 @@ namespace VisualizeNetwork
         private readonly float canvasW, canvasH;
         private double minX, maxX, minY, maxY;
         private double rw, rh;
-        private List<int> integers;
         private List<Node> initialNodes;
-        private List<List<Node>> nodesList;
+        private List<List<Node>> enabledNodesList;
         private List<Sim> algorithms;
-        private bool isPlaying;
+
         private int round;
         private int playSpeed = 1;
+        private bool isPlaying;
+        private int selectedNodeID;
         private CancellationTokenSource cts;
         private Point? prevPosition = null;
         private readonly ToolTip tooltip = new ToolTip();
+        private static readonly Random rand = new Random();
 
         public Form1()
         {
@@ -35,27 +37,7 @@ namespace VisualizeNetwork
             trackBarPlaySpeed.Maximum = 100;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofDialog = new OpenFileDialog
-            {
-                Title = "座標ファイルを選択"
-            };
-
-            if (ofDialog.ShowDialog() == DialogResult.OK)
-            {
-                PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
-                string fileName = ofDialog.FileName;
-                integers = GetIntegers(fileName);
-                MainProcess();
-            }
-            else
-            {
-                Console.WriteLine("キャンセルされました。");
-            }
-            ofDialog.Dispose();
-        }
-
+        // コンソールとフォーム下部に出力
         private void PrintConsole(string content)
         {
             Console.WriteLine(string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content);
@@ -63,21 +45,24 @@ namespace VisualizeNetwork
             labelProcessing.Refresh();
         }
 
-        private void MainProcess()
+        private void WholeSimulationProcess()
         {
+            DateTime start = DateTime.Now;
             Cursor = Cursors.WaitCursor;
             labelProcessing.Text = "...";
             labelProcessing.Visible = true;
-            initialNodes = GetInitialNodes(integers);
             Setup();
             RunSimulation();
             Cursor = Cursors.Default;
             labelProcessing.Visible = false;
+            DateTime end = DateTime.Now;
+            TimeSpan throughput = end - start;
+            Console.WriteLine("処理時間 : {0}ms", throughput.TotalMilliseconds);
         }
 
         private List<int> GetIntegers(string fileName)
         {
-            PrintConsole("座標を取得中");
+            PrintConsole("座標を読み込み中");
             List<int> integers = new List<int>();
             bool firstLoop;
 
@@ -115,7 +100,7 @@ namespace VisualizeNetwork
             }
             catch (Exception ex)
             {
-                Console.WriteLine("エラー:" + ex.Message);
+                Console.WriteLine("ファイルを読み込めませんでした : " + ex.Message);
             }
             finally
             {
@@ -149,10 +134,13 @@ namespace VisualizeNetwork
             minX = 0;
             maxY = 0;
             minY = 0;
+            Sim.packetSize = (int)numericUpDownPacketSize.Value;
             for (int j = 0; j < integers.Count; j++)
             {
-                Node node = new Node(j, integers[j] % y_range, integers[j] / y_range, j / 50, radioButtonConst.Checked,
-                    (double)numericUpDownInitialEnergy.Value);
+                double initEnergy;
+                if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
+                else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
+                Node node = new Node(j, integers[j] % y_range, integers[j] / y_range, initEnergy: initEnergy);
                 initialNodes.Add(node);
                 if (firstLoop || minX > node.X) minX = node.X;
                 if (firstLoop || minY > node.Y) minY = node.Y;
@@ -163,6 +151,7 @@ namespace VisualizeNetwork
             return initialNodes;
         }
 
+        // シミュレーション前の下準備
         private void Setup()
         {
             // 座標を正規化する
@@ -178,6 +167,7 @@ namespace VisualizeNetwork
             isPlaying = false;
             resultTable.Rows.Clear();
             cmbBoxAlgo.Items.Clear();
+            selectedNodeID = 0;
 
             // 各アルゴリズムのインスタンスを生成してリストに格納
             algorithms = new List<Sim>
@@ -187,11 +177,14 @@ namespace VisualizeNetwork
                 new IEE_LEACH(Mode.IEE_LEACH),
                 new IEE_LEACH(Mode.IEE_LEACH_A),
                 new IEE_LEACH(Mode.IEE_LEACH_B),
-                new IEE_LEACH(Mode.My_IEE_LEACH_B)
+                new IEE_LEACH(Mode.My_IEE_LEACH_B),
+                new IEE_LEACH(Mode.My_IEE_LEACH)
             };
             Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1);//BS
+            Sim.BS.Status = "BS";
         }
 
+        // すべてのアルゴリズムのシミュレーションを実行
         private void RunSimulation()
         {
             //クラスタリングをRラウンド実行
@@ -201,16 +194,17 @@ namespace VisualizeNetwork
                 sim.Run(initialNodes);
                 AddDataResultTable(sim);
             }
-            nodesList = algorithms[0].nodesList;
+            enabledNodesList = algorithms[0].nodesList;
             cmbBoxAlgo.SelectedIndex = 0;
 
             PrintConsole("ノード配置図を描画");
-            RefreshPaint(nodesList[0]);
+            RefreshPaintTable(enabledNodesList[0]);
             PrintConsole("グラフを描画");
             DrawChart();
             PrintConsole("シミュレーションが終了しました。");
         }
 
+        // 結果表にシミュレーション結果を追加
         private void AddDataResultTable(Sim sim)
         {
             resultTable.Rows.Add(sim.AlgoName, sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
@@ -292,7 +286,8 @@ namespace VisualizeNetwork
             }
         }
 
-        private Series CreateNewSeries(String algoName)
+        // Seriesを作成する
+        private Series CreateNewSeries(string algoName)
         {
             Series series = new Series
             {
@@ -302,10 +297,17 @@ namespace VisualizeNetwork
             return series;
         }
 
-        private void RefreshPaint(List<Node> nodes)
+        // ノード図とラウンドテーブルを更新する
+        private void RefreshPaintTable(List<Node> nodes)
         {
             labelRound.Text = "ラウンド：" + round;
+            RefreshPaint(nodes);
+            if (!isPlaying) RefreshRoundTable(nodes);
+        }
 
+        // ノード図を更新する
+        private void RefreshPaint(List<Node> nodes)
+        {
             // 座標リストからノードを描画する
             Graphics g = Graphics.FromImage(pictureBoxNodeMap.Image);
             g.Clear(Color.White);
@@ -315,34 +317,55 @@ namespace VisualizeNetwork
             pictureBoxNodeMap.Invalidate();
             pictureBoxNodeMap.Refresh();
             g.Dispose();
-
-            if (!isPlaying) RefreshRoundTable(nodes);
         }
 
+        // ノードを描画する
         private void PaintNodes(Graphics g, List<Node> nodes)
         {
-            Pen pen;
+            Pen pen = new Pen(Color.Black);
+            Brush brush = Brushes.Gray;
             foreach (Node node in nodes)
             {
+                pen.Width = 1;
                 if (node.IsAlive)
-                    if (node.IsCH) pen = new Pen(Color.Blue);
-                    else pen = new Pen(Color.Black);
-                else
-                    pen = new Pen(Color.Red);
+                {
+                    if (node.IsCH && node.CHID != -1)
+                    {
+                        pen.Color = Color.Green;
+                        brush = Brushes.Green;
+                    }
+                    else if (node.IsCH)
+                    {
+                        pen.Color = Color.Blue;
+                        brush = Brushes.Blue;
+                    }
+                    else
+                    {
+                        pen.Color = Color.Black;
+                        brush = Brushes.Black;
+                    }
+                }
+                else pen.Color = Color.Red;
+                if (node.ID == selectedNodeID)
+                {
+                    pen.Width = 4;
+                    pen.Color = Color.Yellow;
+                }
                 Point p = Normalize(node);
                 lock (g)
                 {
-                    g.DrawEllipse(pen, (int)(p.X - 5), (int)(p.Y - 5), 10, 10);
-                    if (node.IsCH) g.FillPie(Brushes.Blue, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
-                    else g.FillPie(Brushes.Gray, (int)(p.X - 5), (int)(p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
+                    g.DrawEllipse(pen, (p.X - 5), p.Y - 5, 10, 10);
+                    if (node.IsAlive)
+                        g.FillPie(brush, (p.X - 5), (p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
                 }
             }
             return;
         }
 
+        // ラウンドテーブルを更新する
         private void RefreshRoundTable(List<Node> nodes)
         {
-            tableEnergy.Rows.Clear();
+            roundTable.Rows.Clear();
             double sumEnergy = 0;
             double sumCmsEnergy = 0;
             double sumHasCHCnt = 0;
@@ -352,31 +375,25 @@ namespace VisualizeNetwork
             for (int i = 0; i < Sim.N; i++)
             {
                 Node node = nodes[i];
-                string CHID = node.CHID.ToString();
-                if (node.IsCH)
-                {
-                    CHID = "CH";
-                    numCH++;
-                }
-                else if (node.CHID == -1) CHID = "BS";
 
-                tableEnergy.Rows.Add(i, CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
+                roundTable.Rows.Add(i, node.Status, node.CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
                     node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
                 if (node.UnqualifiedRound == 0)
-                    tableEnergy.Rows[tableEnergy.Rows.Count - 1].Cells[5].Style.ForeColor = Color.Red;
+                    roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
                 sumEnergy += node.E_r;
                 sumCmsEnergy += node.CmsEnergy;
                 sumHasCHCnt += node.HasCHCnt;
                 sumPi += node.Pi;
                 if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
             }
-            tableEnergy.Rows.Insert(0, "合計", numCH, Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
+            roundTable.Rows.Insert(0, "合計", "", numCH, Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
                 sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
         }
 
+        // エッジを描画する
         private void PaintEdges(Graphics g, List<Node> nodes)
         {
-            Pen p = new Pen(Color.Black);
+            Pen pen = new Pen(Color.Black);
             foreach (Node node in nodes)
             {
                 if (node.CHID == -1)
@@ -386,12 +403,15 @@ namespace VisualizeNetwork
                 Node head = nodes[node.CHID];
                 if (node.ID != head.ID)
                 {
-                    g.DrawLine(p, Normalize(node), Normalize(head));
+                    if (node.IsCH) pen.Color = Color.Green;
+                    else pen.Color = Color.Black;
+                    g.DrawLine(pen, Normalize(node), Normalize(head));
                 }
             }
             return;
         }
 
+        // x軸,y軸を描画する
         private void PaintLine(Graphics g)
         {
             Pen pen = new Pen(Color.Gray);
@@ -407,12 +427,14 @@ namespace VisualizeNetwork
             }
         }
 
+        // ノードの座標をノード図のピクセルに変換する
         private Point Normalize(Node node)
         {
             return new Point((int)((node.X - minX) * rw * 0.95 + canvasW * 0.025),
                 (int)((node.Y - minY) * rh * 0.95 + canvasH * 0.025));
         }
 
+        // ノードの座標をノード図のピクセルに変換する
         private Point Normalize(Point point)
         {
             Point p = new Point((int)((point.X - minX) * rw * 0.95 + canvasW * 0.025),
@@ -420,147 +442,23 @@ namespace VisualizeNetwork
             return p;
         }
 
+        // ノード図のピクセルをノードの座標に変換する
         private Point RevNormalize(Point p)
         {
             return new Point((int)((p.X - canvasW * 0.025) / rw / 0.95 + minX),
                 (int)((p.Y - canvasH * 0.025) / rh / 0.95 + minY));
         }
 
-        private void PictureBoxNodeMap_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point p = RevNormalize(new Point(e.Location.X, e.Location.Y));
-            labelCoordinate.Text = "座標：(" + p.X + ", " + p.Y + ")";
-        }
-
-        private void TrackBarRound_Scroll(object sender, EventArgs e)
-        {
-            round = trackBarRound.Value;
-            RefreshPaint(nodesList[round - 1]);
-        }
-
-        private void TrackBarPlaySpeed_Scroll(object sender, EventArgs e)
-        {
-            playSpeed = trackBarPlaySpeed.Value;
-            labelPlaySpeed.Text = (playSpeed) + " (round/s)";
-        }
-
-        private void CmbBoxAlgo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            nodesList = algorithms[cmbBoxAlgo.SelectedIndex].nodesList;
-            RefreshPaint(nodesList[round - 1]);
-        }
-
-        private void ChartReceivedData_MouseMove(object sender, MouseEventArgs e)
-        {
-            var pos = e.Location;
-            if (prevPosition.HasValue && pos == prevPosition.Value) return;
-
-            tooltip.RemoveAll();
-            prevPosition = pos;
-            var results = chartReceivedData.HitTest(pos.X, pos.Y, false, ChartElementType.DataPoint);
-            foreach (var result in results)
-            {
-                if (result.ChartElementType == ChartElementType.DataPoint)
-                {
-                    var valueX = result.ChartArea.AxisX.PixelPositionToValue(pos.X);
-                    var valueY = result.ChartArea.AxisY.PixelPositionToValue(pos.Y);
-                    var text = "";
-                    text += "x: " + valueX;
-                    text += "\ny :" + ((float)valueY).ToString();
-                    tooltip.Show(text, chartReceivedData, pos.X+10, pos.Y);
-                }
-            }
-            //if (!chartReceivedData.ClientRectangle.Contains(chartReceivedData.Mouse)) return;
-            //var x = (int)Math.Round(chartReceivedData.ChartAreas[0].AxisX.PixelPositionToValue(pos.X));
-            //var str = "x : " + x + "\n";
-            //foreach (Sim sim in algorithms)
-            //{
-            //    var l = sim.CollectedDataNumList;
-            //    str += sim.AlgoName + " : " + l[x] + "\n";
-            //}
-            //tooltip.Show(str, chartReceivedData, pos.X+10, pos.Y);
-        }
-
-        private void PictureBoxNodeMap_MouseEnter(object sender, EventArgs e)
-        {
-            labelCoordinate.Visible = true;
-        }
-
-        private void PictureBoxNodeMap_MouseLeave(object sender, EventArgs e)
-        {
-            labelCoordinate.Visible = false;
-        }
-
-        private void BtnApply_Click(object sender, EventArgs e)
-        {
-            if (integers == null) toolStripMenuItemOpen.PerformClick();
-            else MainProcess();
-            tabControl.SelectedIndex = 0;
-        }
-
-        private void ResultTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex == -1) return;
-            cmbBoxAlgo.SelectedIndex = e.RowIndex;
-            nodesList = algorithms[e.RowIndex].nodesList;
-            RefreshPaint(nodesList[round - 1]);
-        }
-
-        private async void BtnPlayPose_Click(object sender, EventArgs e)
-        {
-            if (isPlaying)  //停止が押されたとき
-            {
-                isPlaying = !isPlaying;
-                //btnPlayPose.Text = "再生";
-                btnPlayPose.BackgroundImage = Properties.Resources.再生ボタン;
-                RefreshPaint(nodesList[round - 1]);
-                cts.Cancel();
-            }
-            else    //再生が押されたとき
-            {
-                if (round == nodesList.Count)
-                {
-                    round = 1;
-                }
-                isPlaying = !isPlaying;
-                //btnPlayPose.Text = "停止";
-                btnPlayPose.BackgroundImage = Properties.Resources.再生停止ボタン;
-                cts = new CancellationTokenSource();
-                Task<int> task = PlayClustering(cts.Token);
-                await task;
-                if (task.Result == 0)
-                {
-                    btnPlayPose.PerformClick();
-                    Console.WriteLine("シミュレーション終了しました。");
-                }
-            }
-        }
-
-        private void BtnBack_Click(object sender, EventArgs e)
-        {
-            if (round == 1) return;
-            round--;
-            trackBarRound.Value = round;
-            RefreshPaint(nodesList[round - 1]);
-        }
-
-        private void BtnNext_Click(object sender, EventArgs e)
-        {
-            if (round == Sim.R) return;
-            round++;
-            trackBarRound.Value = round;
-            RefreshPaint(nodesList[round - 1]);
-        }
-
+        // ノード図を並列処理で再生する
         private async Task<int> PlayClustering(CancellationToken ct)
         {
 
-            for (; round <= nodesList.Count; round++)
+            for (; round <= enabledNodesList.Count; round++)
             {
                 //ct.ThrowIfCancellationRequested();
                 if (ct.IsCancellationRequested) return -1;
 
-                RefreshPaint(nodesList[round - 1]);
+                RefreshPaintTable(enabledNodesList[round - 1]);
                 trackBarRound.Value = round;
                 await Task.Delay(1000 / playSpeed);
             }
