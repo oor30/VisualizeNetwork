@@ -84,26 +84,31 @@ namespace VisualizeNetwork
                         distMin = dist;
                     }
                 }
-                if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
-                {
-                    node.CHID = -1;
-                    nodes[i] = node;
-                    return;
-                }
-                else if ((mode == Mode.My_IEE_LEACH_B || mode == Mode.My_IEE_LEACH) && DirectIsMoreEfficient(node, head))
-                {
-                    node.CHID = -1;
-                    nodes[i] = node;
-                    return;
-                }
-                if (node.ID == head.ID) continue;
 
-                node.CHID = head.ID;
-                if (node.IsCH) node.Status = "CH/member";
-                else node.Status = "member";
-                nodes[i] = node;
-                head.MemberNum += 1;
-                nodes[node.CHID] = head;
+                // CH候補が自分自身なら、スキップ
+                if (node.ID == head.ID) continue;
+                // CH候補よりもBSのほうが近ければ直接送る
+                else if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                {
+                    node.CHID = -1;
+                    nodes[i] = node;
+                }
+                // CH候補を経由するよりも直接BSに送ったほうが、全体の消費エネルギーが小さければ直接送る
+                else if(DirectIsMoreEfficient(node, head) && (mode == Mode.My_IEE_LEACH_B || mode == Mode.My_IEE_LEACH))
+                {
+                    node.CHID = -1;
+                    nodes[i] = node;
+                }
+                // CH候補をCHに設定
+                else
+                {
+                    node.CHID = head.ID;
+                    if (node.IsCH) node.Status = "CH/member";
+                    else node.Status = "member";
+                    nodes[i] = node;
+                    head.MemberNum += 1;
+                    nodes[node.CHID] = head;
+                }
             }
         }
 
@@ -114,6 +119,11 @@ namespace VisualizeNetwork
             double distToCH = Math.Sqrt(Dist2(head, node));
             energyDirect = E_TX(packetSize, distDirect);
             energyViaCH = E_TX(packetSize, distToCH) + E_DA * packetSize + E_RX(packetSize);
+            if (mode == Mode.My_IEE_LEACH)
+            {
+                energyDirect /= node.E_r;
+                energyViaCH /= head.E_r;
+            }
             if (energyDirect < energyViaCH) return true;
             else return false;
         }

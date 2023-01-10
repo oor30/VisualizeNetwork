@@ -5,7 +5,8 @@ namespace VisualizeNetwork
 {
     internal class LEACH : Sim
     {
-        protected const double P = (double)k / N;
+        //protected static double P = (double)k / N;
+        //protected static double P = 0.05;
         protected Random rand = new Random();
         protected List<int> CHIDs = new List<int>();    //CHのリスト
 
@@ -51,7 +52,7 @@ namespace VisualizeNetwork
         /// <summary>
         /// 引数をもとにクラスタヘッドを選出し、クラスタヘッドフラグを立てる
         /// </summary>
-        /// <param AlgoName="nodes">構造体Nodeのリスト</param>
+        /// <param AlgoName="EnabledNodes">構造体Nodeのリスト</param>
         protected virtual void CHElection(List<Node> nodes)
         {
             CHIDs.Clear();
@@ -66,13 +67,14 @@ namespace VisualizeNetwork
                 if (node.IsAlive) node.Pi = GetPi(nodes, i);
                 if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
                 {
-                    node.MemberNum = 1;
+                    //node.MemberNum = 1;
                     node.UnqualifiedRound = CalcUnqualifiedRound(node);
                     CHIDs.Add(node.ID);
                     CHNum++;
-                    node.IsCH = true;
-                    node.HasCHCnt++;
-                    node.Status = "CH";
+                    node.SetCH();
+                    //node.IsCH = true;
+                    //node.HasCHCnt++;
+                    //node.Status = "CH";
                 }
                 //}
                 if (node.UnqualifiedRound > 0) // CHの資格なし
@@ -87,7 +89,7 @@ namespace VisualizeNetwork
         /// 引数をもとにメンバノードが参加するクラスタを選択する。
         /// 最短距離のクラスタヘッドを選択する。
         /// </summary>
-        /// <param AlgoName="nodes">構造体Nodeのリスト</param>
+        /// <param AlgoName="EnabledNodes">構造体Nodeのリスト</param>
         protected virtual void ClusterFormation(List<Node> nodes)
         {
             for (int i = 0; i < nodes.Count; i++)
@@ -117,8 +119,8 @@ namespace VisualizeNetwork
         /// <summary>
         /// SteadyState中で消費する電力を計算
         /// </summary>
-        /// <param AlgoName="nodes">構造体Nodeのリスト</param>
-        protected virtual void SteadyState(List<Node> nodes)
+        /// <param AlgoName="EnabledNodes">構造体Nodeのリスト</param>
+        private void SteadyState(List<Node> nodes)
         {
             for (int i = 0; i < nodes.Count; i++)
             {
