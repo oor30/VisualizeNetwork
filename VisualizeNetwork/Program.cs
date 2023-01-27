@@ -19,17 +19,17 @@ namespace VisualizeNetwork
 			Application.Run(new Form1());
 		}
 
-		public static Dictionary<int, string> AlgoName = new Dictionary<int, string>()
-		{
-			{1, "Direct" },
-			{2, "LEACH" },
-			{3, "IEE-LEACH" },
-			{4, "IEE-LEACH-A" },
-			{5, "IEE-LEACH-B" },
-			{6, "My-IEE-LEACH-B" },
-			{7, "My-IEE-LEACH" },
-			{8, "HEED" }
-		};
+		//public static Dictionary<int, string> AlgoName = new Dictionary<int, string>()
+		//{
+		//	{1, "Direct" },
+		//	{2, "LEACH" },
+		//	{3, "IEE-LEACH" },
+		//	{4, "IEE-LEACH-A" },
+		//	{5, "IEE-LEACH-B" },
+		//	{6, "My-IEE-LEACH-B" },
+		//	{7, "My-IEE-LEACH" },
+		//	{8, "HEED" }
+		//};
 	}
 
 	internal static class CopyHelper
@@ -45,6 +45,18 @@ namespace VisualizeNetwork
 				return (T)formatter.Deserialize(stream);
 			}
 		}
+	}
+
+	enum AlgoName
+	{
+		Direct,
+		LEACH,
+		IEE_LEACH,
+		IEE_LEACH_A,
+		IEE_LEACH_B,
+		My_IEE_LEACH_B,
+		My_IEE_LEACH,
+		HEED
 	}
 
 	/// <summary>

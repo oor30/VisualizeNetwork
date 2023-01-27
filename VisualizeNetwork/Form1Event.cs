@@ -33,6 +33,18 @@ namespace VisualizeNetwork
 			ofDialog.Dispose();
 		}
 
+		// 100回のシミュレーションを実行するボタン
+		private void D100ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				string path = "D100.Data" + i.ToString() + ".txt";
+				List<int> integers = GetIntegersFromRes(path);
+				initialNodes= GetInitialNodes(integers);
+				WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+			}
+		}
+
 		private void MenuItemCreate_Click(object sender, EventArgs e)
 		{
 			initialNodes = GetInitialNodes(CreateIntegers());
@@ -179,7 +191,7 @@ namespace VisualizeNetwork
 			}
 			else    //再生が押されたとき
 			{
-				if (round >= enabledAlgorithm.nodesList.Count)
+				if (round >= enabledAlgorithm.NodesList.Count)
 				{
 					round = 1;
 				}
@@ -209,7 +221,7 @@ namespace VisualizeNetwork
 		// 前ボタン
 		private void BtnNext_Click(object sender, EventArgs e)
 		{
-			if (round == enabledAlgorithm.nodesList.Count) return;
+			if (round == enabledAlgorithm.NodesList.Count) return;
 			//round++;
 			//trackBarRound.Value = round;
 			ChangeRound(round + 1);

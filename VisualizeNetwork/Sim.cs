@@ -15,9 +15,6 @@ namespace VisualizeNetwork
 		private double EnergyConsumption = 0;   // エネルギー消費量
 		//protected List<Node> EnabledNodes;             // ノードリスト
 
-		// 全ラウンド分のノードリスト
-		public List<List<Node>> nodesList { get; } = new List<List<Node>>();
-
 		// シミュレーションを評価する指標
 		public int FDN { get; private set; } = 0;
 		public int LDN { get; private set; } = 0;
@@ -29,7 +26,9 @@ namespace VisualizeNetwork
 		public List<int> CHNumList { get; } = new List<int>();      // CH数のリスト
 		public List<int> CollectedDataNumList { get; } = new List<int>();
 		public List<double> TotalEnergyConsumptionList { get; } = new List<double>();
-		public int test { get; } = 0;
+
+		// 全ラウンド分のノードリスト
+		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
 
 		// パラメーター
 		public static Node BS = new Node(-1, 50, 125, -1);//BS
@@ -56,7 +55,7 @@ namespace VisualizeNetwork
 				Round++;
 				EnergyConsumption = 0;
 				nodes = OneRound(nodes);
-				nodesList.Add(nodes);
+				NodesList.Add(nodes);
 				AliveNumList.Add(aliveNum);
 				CHNumList.Add(CHNum);
 				CollectedDataNum += aliveNum;
@@ -67,11 +66,6 @@ namespace VisualizeNetwork
 				if (aliveNum == 0) break;
 			}
 			FinalizeSimulation();
-
-			string jsonStr = JsonSerializer.Serialize(this);
-			var writer = new StreamWriter("C:\\Users\\kazuk\\OneDrive - 岐阜大学\\デスクトップ\\output\\" + this.AlgoName + ".json", true);
-			writer.Write(jsonStr);
-			writer.Dispose();
 		}
 
 		protected abstract List<Node> OneRound(List<Node> nodes);
@@ -148,7 +142,7 @@ namespace VisualizeNetwork
 			for (int j = 0; j < FDN; j++)
 			{
 				CHMean += CHNumList[j];
-				foreach (Node node in nodesList[j])
+				foreach (Node node in NodesList[j])
 				{
 					AveEnergyConsumption += node.CmsEnergy;
 				}
