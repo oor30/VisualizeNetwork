@@ -110,6 +110,7 @@ namespace VisualizeNetwork
 						imax = i;
 					}
 				}
+				if (max < 0) continue;
 				CHIDs.Add(imax);
 				CHNum++;
 				nodes[imax].SetCH();

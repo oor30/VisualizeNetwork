@@ -191,7 +191,7 @@ namespace VisualizeNetwork
 			}
 			else    //再生が押されたとき
 			{
-				if (round >= enabledAlgorithm.NodesList.Count)
+				if (round > enabledAlgorithm.LDN)
 				{
 					round = 1;
 				}
@@ -221,7 +221,7 @@ namespace VisualizeNetwork
 		// 前ボタン
 		private void BtnNext_Click(object sender, EventArgs e)
 		{
-			if (round == enabledAlgorithm.NodesList.Count) return;
+			if (round == enabledAlgorithm.LDN) return;
 			//round++;
 			//trackBarRound.Value = round;
 			ChangeRound(round + 1);

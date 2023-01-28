@@ -28,7 +28,9 @@ namespace VisualizeNetwork
 		public List<double> TotalEnergyConsumptionList { get; } = new List<double>();
 
 		// 全ラウンド分のノードリスト
-		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
+		//public List<List<Node>> NodesList { get; } = new List<List<Node>>();
+
+		public List<Node> nodes = new List<Node>();
 
 		// パラメーター
 		public static Node BS = new Node(-1, 50, 125, -1);//BS
@@ -41,10 +43,14 @@ namespace VisualizeNetwork
 
 		public void Run(List<Node> initialNodes)
 		{
-			List<Node> nodes = initialNodes;
+			//nodes = new List<Node>(initialNodes);
+			foreach (Node node in initialNodes)
+			{
+				nodes.Add(new Node(node));
+			}
 			for (int i = 0; i < R; i++)
 			{
-				nodes = new List<Node>(nodes);
+				//nodes = new List<Node>(nodes);
 				for (int j = 0; j < N; j++)
 				{
 					Node node = nodes[j];
@@ -55,7 +61,7 @@ namespace VisualizeNetwork
 				Round++;
 				EnergyConsumption = 0;
 				nodes = OneRound(nodes);
-				NodesList.Add(nodes);
+				//NodesList.Add(nodes);
 				AliveNumList.Add(aliveNum);
 				CHNumList.Add(CHNum);
 				CollectedDataNum += aliveNum;
@@ -142,9 +148,9 @@ namespace VisualizeNetwork
 			for (int j = 0; j < FDN; j++)
 			{
 				CHMean += CHNumList[j];
-				foreach (Node node in NodesList[j])
+				foreach (Node node in nodes)
 				{
-					AveEnergyConsumption += node.CmsEnergy;
+					AveEnergyConsumption += node.CmsEnergyList[j];
 				}
 			}
 			CHMean /= FDN;

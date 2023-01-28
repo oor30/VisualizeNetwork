@@ -22,8 +22,8 @@ namespace VisualizeNetwork
 		{
 			get
 			{
-				if (round < enabledAlgorithm.NodesList.Count) return enabledAlgorithm.NodesList[round - 1];
-				else return enabledAlgorithm.NodesList[enabledAlgorithm.NodesList.Count - 1];
+				if (round <= enabledAlgorithm.LDN) return enabledAlgorithm.nodes;
+				else return enabledAlgorithm.nodes;
 			}
 		}
 

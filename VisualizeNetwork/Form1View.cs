@@ -157,14 +157,14 @@ namespace VisualizeNetwork
 			foreach (Node node in nodes)
 			{
 				pen.Width = 1;
-				if (node.IsAlive)
+				if (node.IsAliveList[round])
 				{
-					if (node.IsCH && node.CHID != -1)
+					if (node.IsCHList[round] && node.CHIDList[round] != -1)
 					{
 						pen.Color = Color.Green;
 						brush = Brushes.Green;
 					}
-					else if (node.IsCH)
+					else if (node.IsCHList[round])
 					{
 						pen.Color = Color.Blue;
 						brush = Brushes.Blue;
@@ -185,8 +185,9 @@ namespace VisualizeNetwork
 				lock (g)
 				{
 					g.DrawEllipse(pen, (p.X - 5), p.Y - 5, 10, 10);
-					if (node.IsAlive)
-						g.FillPie(brush, (p.X - 5), (p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
+					if (node.IsAliveList[round])
+						g.FillPie(brush, (p.X - 5), (p.Y - 5), 10, 10, 0, 
+						(int)(node.E_rList[round] / node.E_init * 360));
 				}
 			}
 			return;
@@ -199,19 +200,19 @@ namespace VisualizeNetwork
 			foreach (Node node in nodes)
 			{
 				Node head;
-				if (node.CHID == -1)
+				if (node.CHIDList[round] == -1)
 				{
 					head = Sim.BS;
 					//continue;
 				}
 				else
 				{
-					head = nodes[node.CHID];
+					head = nodes[node.CHIDList[round]];
 
 				}
 				if (node.ID != head.ID)
 				{
-					if (node.IsCH) pen.Color = Color.Green;
+					if (node.IsCHList[round]) pen.Color = Color.Green;
 					else pen.Color = Color.Black;
 					g.DrawLine(pen, Normalize(node), Normalize(head));
 				}
@@ -263,7 +264,7 @@ namespace VisualizeNetwork
 		private async Task<int> PlayClustering(CancellationToken ct)
 		{
 
-			for (int i = round; i <= enabledAlgorithm.NodesList.Count; i++)
+			for (int i = round; i <= enabledAlgorithm.LDN; i++)
 			{
 				//ct.ThrowIfCancellationRequested();
 				if (ct.IsCancellationRequested) return -1;
