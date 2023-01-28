@@ -41,7 +41,7 @@ namespace VisualizeNetwork
 
 		public void Run(List<Node> initialNodes)
 		{
-			List<Node> nodes = initialNodes;
+			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)
 			{
 				nodes = new List<Node>(nodes);
@@ -124,7 +124,7 @@ namespace VisualizeNetwork
 			if (node.E_r <= 0)
 			{
 				node.IsAlive = false;
-				node.Status = "dead";
+				node.Status = status.dead;
 				aliveNum--;
 				if (aliveNum == N - 1) FDN = Round;
 				else if (aliveNum == 0) LDN = Round;

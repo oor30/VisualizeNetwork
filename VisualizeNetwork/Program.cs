@@ -59,6 +59,16 @@ namespace VisualizeNetwork
 		HEED
 	}
 
+	public enum status
+	{
+		dead,
+		normal,
+		member,
+		CH,
+		member_CH,
+		BS
+	}
+
 	/// <summary>
 	/// ノード1つの構造体
 	/// </summary>
@@ -73,7 +83,7 @@ namespace VisualizeNetwork
 		public double E_init { get; set; }       // 初期エネルギー
 
 		// ラウンドごとにリセット
-		public string Status { get; set; }
+		public status Status { get; set; }
 		public int CHID { get; set; }    // クラスタヘッドID
 		public bool IsCH { get; set; }   // CHか否か
 		public int MemberNum { get; set; }  // 自身がCHの場合、メンバノード数(自信を含む）
@@ -106,7 +116,7 @@ namespace VisualizeNetwork
 
 		public void ResetParameter()    // ラウンドごとに行うパラメータの初期化処理
 		{
-			Status = "normal";
+			Status = status.normal;
 			CHID = -1;
 			IsCH = false;
 			MemberNum = 0;
@@ -119,7 +129,7 @@ namespace VisualizeNetwork
 			MemberNum = 1;
 			IsCH = true;
 			HasCHCnt++;
-			Status = "CH";
+			Status = status.CH;
 		}
 	}
 }

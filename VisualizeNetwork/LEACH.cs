@@ -140,7 +140,7 @@ namespace VisualizeNetwork
 					}
 				}
 				node.CHID = head.ID;
-				node.Status = "member";
+				node.Status = status.member;
 				nodes[i] = node;
 				head.MemberNum += 1;
 				nodes[node.CHID] = head;

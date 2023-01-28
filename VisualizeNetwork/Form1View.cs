@@ -110,7 +110,7 @@ namespace VisualizeNetwork
 			{
 				Node node = nodes[i];
 
-				roundTable.Rows.Add(i, node.Status, node.CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
+				roundTable.Rows.Add(i, node.Status.ToString(), node.CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
 					node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
 				if (node.UnqualifiedRound == 0)
 					roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;

@@ -103,8 +103,8 @@ namespace VisualizeNetwork
                 else
                 {
                     node.CHID = head.ID;
-                    if (node.IsCH) node.Status = "CH/member";
-                    else node.Status = "member";
+                    if (node.IsCH) node.Status = status.member_CH;
+                    else node.Status = status.member;
                     nodes[i] = node;
                     head.MemberNum += 1;
                     nodes[node.CHID] = head;

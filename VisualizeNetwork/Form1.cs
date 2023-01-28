@@ -304,7 +304,7 @@ namespace VisualizeNetwork
 				new IEE_LEACH(Mode.My_IEE_LEACH)
 			};
 			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1);//BS
-			Sim.BS.Status = "BS";
+			Sim.BS.Status = VisualizeNetwork.status.BS;
 		}
 
 		// すべてのアルゴリズムのシミュレーションを実行
