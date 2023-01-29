@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
 
 namespace VisualizeNetwork
 {
@@ -34,7 +32,7 @@ namespace VisualizeNetwork
 		// パラメーター
 		public static Node BS = new Node(-1, 50, 125, -1);//BS
 		public int N { get { return initialNodes.Count; } }           // ノード数
-		public static double P = 0.05;		// CHの割合
+		public static double P = 0.05;      // CHの割合
 		//public const int k = 5;             // クラスタヘッド数
 		public const int R = 3500;          // 最大シミュレーションラウンド数
 		//public const int INTERVAL = 20;     // (s/Round)
@@ -50,7 +48,7 @@ namespace VisualizeNetwork
 				for (int j = 0; j < N; j++)
 				{
 					Node node = nodes[j];
-					if(node.IsAlive) node.ResetParameter();
+					if (node.IsAlive) node.ResetParameter();
 					nodes[j] = node;
 				}
 
@@ -70,6 +68,11 @@ namespace VisualizeNetwork
 			FinalizeSimulation();
 		}
 
+		/// <summary>
+		/// 1ラウンドで行う処理。抽象メソッド。
+		/// </summary>
+		/// <param name="nodes">ノードリスト</param>
+		/// <returns>ノードリスト</returns>
 		protected abstract List<Node> OneRound(List<Node> nodes);
 
 		//エネルギー消費モデル
@@ -83,6 +86,12 @@ namespace VisualizeNetwork
 		//public const double bandwidth = 4000;    //(bits/s)
 		public static double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 
+		/// <summary>
+		/// 送信エネルギーを計算する
+		/// </summary>
+		/// <param name="m">メッセージサイズ</param>
+		/// <param name="d">送信距離</param>
+		/// <returns>送信エネルギー</returns>
 		protected static double E_TX(double m, double d)
 		{
 			if (d <= d_0)
@@ -90,11 +99,23 @@ namespace VisualizeNetwork
 			else
 				return m * E_elec + m * e_mp * Math.Pow(d, 4);
 		}
+
+		/// <summary>
+		/// 受信エネルギーを計算する
+		/// </summary>
+		/// <param name="m">メッセージサイズ</param>
+		/// <returns>受信エネルギー</returns>
 		protected static double E_RX(double m)
 		{
 			return m * E_elec;
 		}
 
+		/// <summary>
+		/// 1ラウンドでノードが消費するエネルギー量を計算する
+		/// </summary>
+		/// <param name="node">計算するノード</param>
+		/// <param name="nodes">ノードリスト</param>
+		/// <returns>消費エネルギー量</returns>
 		protected static double CalcEnergyConsumption(Node node, List<Node> nodes)
 		{
 			double sendMessageBit = packetSize;
@@ -116,6 +137,11 @@ namespace VisualizeNetwork
 			return energy;
 		}
 
+		/// <summary>
+		/// エネルギーを消費する
+		/// </summary>
+		/// <param name="energy">消費エネルギー量</param>
+		/// <param name="node">ノード</param>
 		protected void ConsumeEnergy(double energy, ref Node node)
 		{
 			if (!node.IsAlive) return;
@@ -134,11 +160,20 @@ namespace VisualizeNetwork
 			}
 		}
 
+		/// <summary>
+		/// 2つのノード間の距離二乗を計算する
+		/// </summary>
+		/// <param name="a">ノードa</param>
+		/// <param name="b">ノードb</param>
+		/// <returns>距離二乗</returns>
 		protected static double Dist2(Node a, Node b)
 		{
 			return Math.Pow((a.X - b.X), 2) + Math.Pow((a.Y - b.Y), 2);
 		}
 
+		/// <summary>
+		/// シミュレーションの最後に評価指標を計算する
+		/// </summary>
 		protected void FinalizeSimulation()
 		{
 			for (int j = 0; j < FDN; j++)

@@ -13,7 +13,8 @@ namespace VisualizeNetwork
 		// Visualizerをリセットする
 		private void ResetView()
 		{
-			if (scenario.algorithms.Count == 0) {
+			if (scenario.algorithms.Count == 0)
+			{
 				MessageBox.Show("表示するシミュレーションシナリオがありません。",
 					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -49,9 +50,10 @@ namespace VisualizeNetwork
 			// 結果表にシミュレーション結果を追加・コンボボックスにアルゴリズムを追加
 			foreach (Sim sim in scenario.algorithms)
 			{
-				resultTable.Rows.Add(sim.AlgoName, sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
-						Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
-				resultTable.Rows[resultTable.Rows.Count - 1].HeaderCell.Value = resultTable.Rows.Count.ToString();
+				resultTable.Rows.Add((resultTable.Rows.Count + 1).ToString(), sim.AlgoName,
+					sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
+					Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
+				//resultTable.Rows[resultTable.Rows.Count - 1].HeaderCell.Value = resultTable.Rows.Count.ToString();
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 

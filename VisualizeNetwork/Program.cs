@@ -18,47 +18,11 @@ namespace VisualizeNetwork
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
 		}
-
-		//public static Dictionary<int, string> AlgoName = new Dictionary<int, string>()
-		//{
-		//	{1, "Direct" },
-		//	{2, "LEACH" },
-		//	{3, "IEE-LEACH" },
-		//	{4, "IEE-LEACH-A" },
-		//	{5, "IEE-LEACH-B" },
-		//	{6, "My-IEE-LEACH-B" },
-		//	{7, "My-IEE-LEACH" },
-		//	{8, "HEED" }
-		//};
 	}
 
-	internal static class CopyHelper
-	{
-		internal static T DeepCopy<T>(this T src)
-		{
-			using (MemoryStream stream = new MemoryStream())
-			{
-				var formatter = new BinaryFormatter();
-				formatter.Serialize(stream, src);
-				stream.Position = 0;
-
-				return (T)formatter.Deserialize(stream);
-			}
-		}
-	}
-
-	enum AlgoName
-	{
-		Direct,
-		LEACH,
-		IEE_LEACH,
-		IEE_LEACH_A,
-		IEE_LEACH_B,
-		My_IEE_LEACH_B,
-		My_IEE_LEACH,
-		HEED
-	}
-
+	/// <summary>
+	/// ノードの状態
+	/// </summary>
 	public enum StatusEnum
 	{
 		dead,

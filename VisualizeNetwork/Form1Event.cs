@@ -58,39 +58,42 @@ namespace VisualizeNetwork
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				for (int i = 0; i < 10; i++)
+				using (FolderBrowserDialog fbDialog = new FolderBrowserDialog()
 				{
-					string path = "D100.Data" + i.ToString() + ".txt";
-					var assm = Assembly.GetExecutingAssembly();
-					var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
-					using (StreamReader sr = new StreamReader(stream))
+					Description = "保存場所を選択"
+				})
+				{
+					if (fbDialog.ShowDialog() == DialogResult.OK)
 					{
-						List<int> integers;
-						try
+						for (int i = 0; i < 10; i++)
 						{
-							integers = GetIntegers(sr);
-						}
-						catch
-						{
-							return;
-						}
-						scenario.initialNodes = CnvIntToNodes(integers);
-						WholeSimulationProcess();
-						using (FolderBrowserDialog fbDialog = new FolderBrowserDialog()
-						{
-							Description = "保存場所を選択"
-						})
-						{
-							if (fbDialog.ShowDialog() == DialogResult.OK)
+							string path = "D100.Data" + i.ToString() + ".txt";
+							var assm = Assembly.GetExecutingAssembly();
+							var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
+							using (StreamReader sr = new StreamReader(stream))
 							{
-								string fileName = fbDialog.SelectedPath + "\\Data" + i.ToString() +
-									"\\" + scenario.scenarioFile;
-								SaveScenario("D100\\Data" + i.ToString() + "\\");
+								List<int> integers;
+								try
+								{
+									integers = GetIntegers(sr);
+								}
+								catch
+								{
+									return;
+								}
+								scenario.initialNodes = CnvIntToNodes(integers);
+								scenario.scenarioFile = "\\Data" + i.ToString();
+								WholeSimulationProcess();
+								string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
+								SaveScenario(fileName);
 							}
 						}
 					}
+					else
+					{
+						Console.WriteLine("キャンセルされました。");
+					}
 				}
-				scenario.scenarioFile = "D100\\Data9";
 				ResetView();
 			}
 		}
@@ -124,7 +127,7 @@ namespace VisualizeNetwork
 		}
 
 		// ★シナリオファイルを読み込むボタン
-		private void JsonToolStripMenuItem_Click(object sender, EventArgs e)
+		private void OpenScenarioToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using (OpenFileDialog ofDialog = new OpenFileDialog
 			{
@@ -149,7 +152,7 @@ namespace VisualizeNetwork
 		}
 
 		// シナリオファイルを保存するボタン
-		private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SaveScenarioToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using (SaveFileDialog sfDialog = new SaveFileDialog
 			{
@@ -272,7 +275,7 @@ namespace VisualizeNetwork
 			if (changingEnabledAlgorithm) return;
 			if (resultTable.SelectedRows.Count > 0)
 			{
-				string algoName = (string)resultTable.SelectedRows[0].Cells[0].Value;
+				string algoName = (string)resultTable.SelectedRows[0].Cells[1].Value;
 				foreach (Sim sim in scenario.algorithms)
 				{
 					if (sim.AlgoName == algoName)

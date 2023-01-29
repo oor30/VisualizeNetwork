@@ -47,13 +47,6 @@
 			this.trackBarPlaySpeed = new System.Windows.Forms.TrackBar();
 			this.labelPlaySpeed = new System.Windows.Forms.Label();
 			this.resultTable = new System.Windows.Forms.DataGridView();
-			this.headerAlgoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.FDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.LDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.CHave = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.CHsd = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.平均消費量 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.BS受信回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.cmbBoxAlgo = new System.Windows.Forms.ComboBox();
 			this.chartAliveNums = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.chartNumCH = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -110,11 +103,12 @@
 			this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemCreate = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-			this.配置データを読み込むToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.d100ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.シナリオToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.d100ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.d400ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.d600ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.labelProcessing = new System.Windows.Forms.Label();
 			this.btnNext = new System.Windows.Forms.Button();
 			this.btnBack = new System.Windows.Forms.Button();
@@ -123,6 +117,14 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.labelScenario = new System.Windows.Forms.Label();
+			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.headerAlgoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.FDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.LDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.CHave = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.CHsd = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.平均消費量 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.BS受信回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
@@ -233,6 +235,7 @@
 			this.resultTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this.resultTable.ColumnHeadersHeight = 25;
 			this.resultTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
             this.headerAlgoName,
             this.FDN,
             this.LDN,
@@ -245,76 +248,16 @@
 			this.resultTable.MultiSelect = false;
 			this.resultTable.Name = "resultTable";
 			this.resultTable.ReadOnly = true;
+			this.resultTable.RowHeadersVisible = false;
 			this.resultTable.RowHeadersWidth = 62;
 			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.InactiveBorder;
 			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.MenuText;
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 206);
+			this.resultTable.Size = new System.Drawing.Size(1616, 212);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
-			// 
-			// headerAlgoName
-			// 
-			this.headerAlgoName.FillWeight = 140F;
-			this.headerAlgoName.HeaderText = "アルゴリズム";
-			this.headerAlgoName.MinimumWidth = 8;
-			this.headerAlgoName.Name = "headerAlgoName";
-			this.headerAlgoName.ReadOnly = true;
-			// 
-			// FDN
-			// 
-			this.FDN.FillWeight = 80F;
-			this.FDN.HeaderText = "FDN";
-			this.FDN.MinimumWidth = 8;
-			this.FDN.Name = "FDN";
-			this.FDN.ReadOnly = true;
-			this.FDN.ToolTipText = "最初にノードが死ぬまでのラウンド数";
-			// 
-			// LDN
-			// 
-			this.LDN.FillWeight = 80F;
-			this.LDN.HeaderText = "LDN";
-			this.LDN.MinimumWidth = 8;
-			this.LDN.Name = "LDN";
-			this.LDN.ReadOnly = true;
-			this.LDN.ToolTipText = "最後のノードが死ぬまでのラウンド数";
-			// 
-			// CHave
-			// 
-			this.CHave.HeaderText = "CH平均";
-			this.CHave.MinimumWidth = 8;
-			this.CHave.Name = "CHave";
-			this.CHave.ReadOnly = true;
-			this.CHave.ToolTipText = "FDNまでの平均クラスタヘッド数";
-			// 
-			// CHsd
-			// 
-			this.CHsd.FillWeight = 130F;
-			this.CHsd.HeaderText = "CH標準偏差";
-			this.CHsd.MinimumWidth = 8;
-			this.CHsd.Name = "CHsd";
-			this.CHsd.ReadOnly = true;
-			this.CHsd.ToolTipText = "FDNまでのクラスタヘッド数の標準偏差";
-			// 
-			// 平均消費量
-			// 
-			this.平均消費量.FillWeight = 130F;
-			this.平均消費量.HeaderText = "平均消費量";
-			this.平均消費量.MinimumWidth = 8;
-			this.平均消費量.Name = "平均消費量";
-			this.平均消費量.ReadOnly = true;
-			this.平均消費量.ToolTipText = "FDNまでのラウンドあたりの平均エネルギー消費量(J)";
-			// 
-			// BS受信回数
-			// 
-			this.BS受信回数.FillWeight = 130F;
-			this.BS受信回数.HeaderText = "収集データ数";
-			this.BS受信回数.MinimumWidth = 8;
-			this.BS受信回数.Name = "BS受信回数";
-			this.BS受信回数.ReadOnly = true;
-			this.BS受信回数.ToolTipText = "ノードからBSまで送られたパケット数";
 			// 
 			// cmbBoxAlgo
 			// 
@@ -428,7 +371,7 @@
 			this.nodeID.Name = "nodeID";
 			this.nodeID.ReadOnly = true;
 			// 
-			// StatusEnum
+			// status
 			// 
 			this.status.FillWeight = 120F;
 			this.status.HeaderText = "status";
@@ -1060,7 +1003,8 @@
 			this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ファイルFToolStripMenuItem});
+            this.ファイルFToolStripMenuItem,
+            this.シナリオToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
@@ -1074,9 +1018,7 @@
             this.toolStripMenuItemOpen,
             this.menuItemCreate,
             this.toolStripMenuItem1,
-            this.配置データを読み込むToolStripMenuItem,
             this.jsonToolStripMenuItem,
-            this.設定SToolStripMenuItem,
             this.SaveToolStripMenuItem});
 			this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
 			this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
@@ -1085,56 +1027,64 @@
 			// toolStripMenuItemOpen
 			// 
 			this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
-			this.toolStripMenuItemOpen.Size = new System.Drawing.Size(271, 34);
+			this.toolStripMenuItemOpen.Size = new System.Drawing.Size(263, 34);
 			this.toolStripMenuItemOpen.Text = "開く(&O)...";
 			this.toolStripMenuItemOpen.Click += new System.EventHandler(this.BtnOpenFile_Click);
 			// 
 			// menuItemCreate
 			// 
 			this.menuItemCreate.Name = "menuItemCreate";
-			this.menuItemCreate.Size = new System.Drawing.Size(271, 34);
-			this.menuItemCreate.Text = "作成(&C)";
+			this.menuItemCreate.Size = new System.Drawing.Size(263, 34);
+			this.menuItemCreate.Text = "ランダムに作成(&C)";
 			this.menuItemCreate.Click += new System.EventHandler(this.MenuItemCreate_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(268, 6);
-			// 
-			// 配置データを読み込むToolStripMenuItem
-			// 
-			this.配置データを読み込むToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.d100ToolStripMenuItem});
-			this.配置データを読み込むToolStripMenuItem.Name = "配置データを読み込むToolStripMenuItem";
-			this.配置データを読み込むToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
-			this.配置データを読み込むToolStripMenuItem.Text = "配置データを読み込む";
-			// 
-			// d100ToolStripMenuItem
-			// 
-			this.d100ToolStripMenuItem.Name = "d100ToolStripMenuItem";
-			this.d100ToolStripMenuItem.Size = new System.Drawing.Size(157, 34);
-			this.d100ToolStripMenuItem.Text = "D100";
-			this.d100ToolStripMenuItem.Click += new System.EventHandler(this.D100ToolStripMenuItem_Click);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(260, 6);
 			// 
 			// jsonToolStripMenuItem
 			// 
 			this.jsonToolStripMenuItem.Name = "jsonToolStripMenuItem";
-			this.jsonToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
-			this.jsonToolStripMenuItem.Text = "json";
-			this.jsonToolStripMenuItem.Click += new System.EventHandler(this.JsonToolStripMenuItem_Click);
-			// 
-			// 設定SToolStripMenuItem
-			// 
-			this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
-			this.設定SToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
-			this.設定SToolStripMenuItem.Text = "設定(&S)...";
+			this.jsonToolStripMenuItem.Size = new System.Drawing.Size(263, 34);
+			this.jsonToolStripMenuItem.Text = "シナリオファイルを開く";
+			this.jsonToolStripMenuItem.Click += new System.EventHandler(this.OpenScenarioToolStripMenuItem_Click);
 			// 
 			// SaveToolStripMenuItem
 			// 
 			this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-			this.SaveToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
+			this.SaveToolStripMenuItem.Size = new System.Drawing.Size(263, 34);
 			this.SaveToolStripMenuItem.Text = "保存";
-			this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+			this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveScenarioToolStripMenuItem_Click);
+			// 
+			// シナリオToolStripMenuItem
+			// 
+			this.シナリオToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.d100ToolStripMenuItem1,
+            this.d400ToolStripMenuItem,
+            this.d600ToolStripMenuItem});
+			this.シナリオToolStripMenuItem.Name = "シナリオToolStripMenuItem";
+			this.シナリオToolStripMenuItem.Size = new System.Drawing.Size(113, 29);
+			this.シナリオToolStripMenuItem.Text = "100シナリオ";
+			// 
+			// d100ToolStripMenuItem1
+			// 
+			this.d100ToolStripMenuItem1.Name = "d100ToolStripMenuItem1";
+			this.d100ToolStripMenuItem1.Size = new System.Drawing.Size(157, 34);
+			this.d100ToolStripMenuItem1.Text = "D100";
+			this.d100ToolStripMenuItem1.Click += new System.EventHandler(this.D100ToolStripMenuItem_Click);
+			// 
+			// d400ToolStripMenuItem
+			// 
+			this.d400ToolStripMenuItem.Name = "d400ToolStripMenuItem";
+			this.d400ToolStripMenuItem.Size = new System.Drawing.Size(157, 34);
+			this.d400ToolStripMenuItem.Text = "D400";
+			// 
+			// d600ToolStripMenuItem
+			// 
+			this.d600ToolStripMenuItem.Name = "d600ToolStripMenuItem";
+			this.d600ToolStripMenuItem.Size = new System.Drawing.Size(157, 34);
+			this.d600ToolStripMenuItem.Text = "D600";
 			// 
 			// labelProcessing
 			// 
@@ -1219,7 +1169,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 927;
+			this.splitContainer1.SplitterDistance = 921;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1249,6 +1199,74 @@
 			this.labelScenario.Size = new System.Drawing.Size(113, 25);
 			this.labelScenario.TabIndex = 11;
 			this.labelScenario.Text = "シナリオ：なし";
+			// 
+			// Column1
+			// 
+			this.Column1.HeaderText = "No.";
+			this.Column1.MinimumWidth = 8;
+			this.Column1.Name = "Column1";
+			this.Column1.ReadOnly = true;
+			// 
+			// headerAlgoName
+			// 
+			this.headerAlgoName.FillWeight = 140F;
+			this.headerAlgoName.HeaderText = "アルゴリズム";
+			this.headerAlgoName.MinimumWidth = 8;
+			this.headerAlgoName.Name = "headerAlgoName";
+			this.headerAlgoName.ReadOnly = true;
+			// 
+			// FDN
+			// 
+			this.FDN.FillWeight = 80F;
+			this.FDN.HeaderText = "FDN";
+			this.FDN.MinimumWidth = 8;
+			this.FDN.Name = "FDN";
+			this.FDN.ReadOnly = true;
+			this.FDN.ToolTipText = "最初にノードが死ぬまでのラウンド数";
+			// 
+			// LDN
+			// 
+			this.LDN.FillWeight = 80F;
+			this.LDN.HeaderText = "LDN";
+			this.LDN.MinimumWidth = 8;
+			this.LDN.Name = "LDN";
+			this.LDN.ReadOnly = true;
+			this.LDN.ToolTipText = "最後のノードが死ぬまでのラウンド数";
+			// 
+			// CHave
+			// 
+			this.CHave.HeaderText = "CH平均";
+			this.CHave.MinimumWidth = 8;
+			this.CHave.Name = "CHave";
+			this.CHave.ReadOnly = true;
+			this.CHave.ToolTipText = "FDNまでの平均クラスタヘッド数";
+			// 
+			// CHsd
+			// 
+			this.CHsd.FillWeight = 130F;
+			this.CHsd.HeaderText = "CH標準偏差";
+			this.CHsd.MinimumWidth = 8;
+			this.CHsd.Name = "CHsd";
+			this.CHsd.ReadOnly = true;
+			this.CHsd.ToolTipText = "FDNまでのクラスタヘッド数の標準偏差";
+			// 
+			// 平均消費量
+			// 
+			this.平均消費量.FillWeight = 130F;
+			this.平均消費量.HeaderText = "平均消費量";
+			this.平均消費量.MinimumWidth = 8;
+			this.平均消費量.Name = "平均消費量";
+			this.平均消費量.ReadOnly = true;
+			this.平均消費量.ToolTipText = "FDNまでのラウンドあたりの平均エネルギー消費量(J)";
+			// 
+			// BS受信回数
+			// 
+			this.BS受信回数.FillWeight = 130F;
+			this.BS受信回数.HeaderText = "収集データ数";
+			this.BS受信回数.MinimumWidth = 8;
+			this.BS受信回数.Name = "BS受信回数";
+			this.BS受信回数.ReadOnly = true;
+			this.BS受信回数.ToolTipText = "ノードからBSまで送られたパケット数";
 			// 
 			// Form1
 			// 
@@ -1334,7 +1352,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
-        private System.Windows.Forms.ToolStripMenuItem 設定SToolStripMenuItem;
         private System.Windows.Forms.TabPage Chart2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartTotalEnergyConsumption;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartReceivedData;
@@ -1373,18 +1390,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDownP;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn headerAlgoName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FDN;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LDN;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CHave;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CHsd;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 平均消費量;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BS受信回数;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.GroupBox groupBox4;
-		private System.Windows.Forms.ToolStripMenuItem 配置データを読み込むToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem d100ToolStripMenuItem;
 		private System.Windows.Forms.CheckBox cbMy_IEE_LEACH;
 		private System.Windows.Forms.CheckBox cbMy_IEE_LEACH_B;
 		private System.Windows.Forms.CheckBox cbIEE_LEACH_B;
@@ -1396,6 +1404,18 @@
 		private System.Windows.Forms.Label labelScenario;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem シナリオToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem d100ToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem d400ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem d600ToolStripMenuItem;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+		private System.Windows.Forms.DataGridViewTextBoxColumn headerAlgoName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn FDN;
+		private System.Windows.Forms.DataGridViewTextBoxColumn LDN;
+		private System.Windows.Forms.DataGridViewTextBoxColumn CHave;
+		private System.Windows.Forms.DataGridViewTextBoxColumn CHsd;
+		private System.Windows.Forms.DataGridViewTextBoxColumn 平均消費量;
+		private System.Windows.Forms.DataGridViewTextBoxColumn BS受信回数;
 	}
 }
 

@@ -209,7 +209,7 @@ namespace VisualizeNetwork
 			// BSの座標
 			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1)
 			{
-				Status = VisualizeNetwork.StatusEnum.BS
+				Status = StatusEnum.BS
 			};
 			// ノードの初期エネルギー
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
@@ -257,7 +257,7 @@ namespace VisualizeNetwork
 		// シミュレーションシナリオを保存
 		private void SaveScenario(string path)
 		{
-			PrintConsole("シミュレーションシナリオを書き出しています：" + scenario.scenarioFile);
+			PrintConsole("シミュレーションシナリオを書き出しています：" + path);
 			using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
 			{
 				try
@@ -291,7 +291,6 @@ namespace VisualizeNetwork
 				}
 			}
 			ResetView();
-
 		}
 	}
 }

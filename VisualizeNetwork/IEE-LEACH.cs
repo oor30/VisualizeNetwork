@@ -12,8 +12,8 @@ namespace VisualizeNetwork
         My_IEE_LEACH
     }
 
-	[Serializable()]
-	internal class IEE_LEACH : LEACH
+    [Serializable()]
+    internal class IEE_LEACH : LEACH
     {
         private readonly Mode mode;
 
@@ -95,7 +95,7 @@ namespace VisualizeNetwork
                     nodes[i] = node;
                 }
                 // CH候補を経由するよりも直接BSに送ったほうが、全体の消費エネルギーが小さければ直接送る
-                else if(DirectIsMoreEfficient(node, head) && (mode == Mode.My_IEE_LEACH_B || mode == Mode.My_IEE_LEACH))
+                else if (DirectIsMoreEfficient(node, head) && (mode == Mode.My_IEE_LEACH_B || mode == Mode.My_IEE_LEACH))
                 {
                     node.CHID = -1;
                     nodes[i] = node;
