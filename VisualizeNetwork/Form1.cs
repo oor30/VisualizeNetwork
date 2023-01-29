@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
+using VisualizeNetwork.Resources.配置データ.D600;
 
 namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		private readonly float canvasW, canvasH;
-		private double minX, maxX, minY, maxY;
-		private double rw, rh;
-		private List<Node> initialNodes;
-		private List<Sim> algorithms;
+		//private readonly float canvasW, canvasH;
+		//private double minX, maxX, minY, maxY;
+		//private double rw, rh;
+		//private List<Node> initialNodes;
+		//private string scenarioFile = "なし";
+		//private List<Sim> algorithms = new List<Sim>();
+
+		private Scenario scenario;
+
 		private Sim enabledAlgorithm;
 		private List<Node> EnabledNodes
 		{
@@ -29,8 +35,8 @@ namespace VisualizeNetwork
 
 		private int round = 1;
 		private int playSpeed = 1;
-		private bool isPlaying;
-		private int selectedNodeID;
+		private bool isPlaying = false;
+		private int selectedNodeID = 0;
 		private CancellationTokenSource cts;
 		private Point? prevPosition = null;
 		private readonly ToolTip tooltip = new ToolTip();
@@ -40,29 +46,17 @@ namespace VisualizeNetwork
 		public Form1()
 		{
 			InitializeComponent();
-			canvasW = pictureBoxNodeMap.Size.Width;
-			canvasH = pictureBoxNodeMap.Size.Height;
+			//canvasW = pictureBoxNodeMap.Size.Width;
+			//canvasH = pictureBoxNodeMap.Size.Height;
 			pictureBoxNodeMap.Image = new Bitmap(pictureBoxNodeMap.Width, pictureBoxNodeMap.Height);
 			trackBarRound.Maximum = Sim.R;
 			trackBarPlaySpeed.Maximum = 100;
 
-			//algorithms = new List<Sim>
-			//{
-			//	new Direct(),
-			//	new LEACH(),
-			//	new IEE_LEACH(Mode.IEE_LEACH),
-			//	new IEE_LEACH(Mode.IEE_LEACH_A),
-			//	new IEE_LEACH(Mode.IEE_LEACH_B),
-			//	new IEE_LEACH(Mode.My_IEE_LEACH_B),
-			//	new IEE_LEACH(Mode.My_IEE_LEACH)
-			//};
-
-			//checkedListBoxAlgo.Items.Clear();
-			//foreach (Sim sim in algorithms)
-			//{
-			//	checkedListBoxAlgo.Items.Add(sim.AlgoName);
-			//	checkedListBoxAlgo.SetItemChecked(checkedListBoxAlgo.Items.Count - 1, true);
-			//}
+			scenario = new Scenario
+			{
+				canvasW = pictureBoxNodeMap.Size.Width,
+				canvasH = pictureBoxNodeMap.Size.Height,
+			};
 		}
 
 
@@ -114,19 +108,9 @@ namespace VisualizeNetwork
 		// 1シミュレーション全体を実行する関数
 		private void WholeSimulationProcess(string outputFolderPath = "")
 		{
-			tabControl.SelectedIndex = 0;
-			DateTime start = DateTime.Now;
-			Cursor = Cursors.WaitCursor;
-			labelProcessing.Text = "...";
-			labelProcessing.Visible = true;
-			Setup();
+			ResetParameters();
 			RunSimulation();
-			//OutputResultJson(outputFolderPath);
-			Cursor = Cursors.Default;
-			labelProcessing.Visible = false;
-			DateTime end = DateTime.Now;
-			TimeSpan throughput = end - start;
-			Console.WriteLine("合計処理時間 : {0:#.####}s", throughput.TotalSeconds);
+			SaveScenario(outputFolderPath);
 		}
 
 		private List<int> GetIntegers(string fileName)
@@ -245,7 +229,7 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("座標を変換中");
 			List<Node> initialNodes = new List<Node>();
-			bool firstLoop;
+			//bool firstLoop;
 			// Y軸の範囲を入力するダイアログを表示
 			//ConfigFileDialog configFileDialog = new ConfigFileDialog();
 			//configFileDialog.label1.Text = "ノード数：" + num;
@@ -261,11 +245,11 @@ namespace VisualizeNetwork
 			y_range = Sim.widthHeight;
 
 			// 座標に変換
-			firstLoop = true;
-			maxX = 0;
-			minX = 0;
-			maxY = 0;
-			minY = 0;
+			//firstLoop = true;
+			//maxX = 0;
+			//minX = 0;
+			//maxY = 0;
+			//minY = 0;
 			//Sim.packetSize = (int)numericUpDownPacketSize.Value;
 			for (int j = 0; j < integers.Count; j++)
 			{
@@ -274,75 +258,84 @@ namespace VisualizeNetwork
 				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
 				Node node = new Node(j, integers[j] % y_range, integers[j] / y_range, initEnergy: initEnergy);
 				initialNodes.Add(node);
-				if (firstLoop || minX > node.X) minX = node.X;
-				if (firstLoop || minY > node.Y) minY = node.Y;
-				if (firstLoop || maxX < node.X) maxX = node.X;
-				if (firstLoop || maxY < node.Y) maxY = node.Y;
-				if (firstLoop) firstLoop = false;
+				//if (firstLoop || minX > node.X) minX = node.X;
+				//if (firstLoop || minY > node.Y) minY = node.Y;
+				//if (firstLoop || maxX < node.X) maxX = node.X;
+				//if (firstLoop || maxY < node.Y) maxY = node.Y;
+				//if (firstLoop) firstLoop = false;
 			}
 			return initialNodes;
 		}
 
 		// シミュレーション前の下準備
-		private void Setup()
+		private void ResetParameters()
 		{
 			PrintConsole("シミュレーションの準備中");
-			// 座標を正規化する
-			double w = maxX - minX;
-			double h = maxY - minY;
-			rw = canvasW / w;
-			rh = canvasH / h;
 
-			// 変数を初期化
-			round = 1;
-			labelRound.Text = "ラウンド：" + round;
-			trackBarRound.Value = 1;
-			isPlaying = false;
-			resultTable.Rows.Clear();
-			cmbBoxAlgo.Items.Clear();
-			selectedNodeID = 0;
+			// 1ラウンドあたりの送信パケットサイズ
 			Sim.packetSize = (int)numericUpDownPacketSize.Value;
-
-			// 各アルゴリズムのインスタンスを生成してリストに格納
-			algorithms = new List<Sim>();
-			if (cbDirect.Checked) algorithms.Add(new Direct());
-			if (cbLEACH.Checked) algorithms.Add(new LEACH());
-			if (cbIEE_LEACH.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
-			if (cbIEE_LEACH_A.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
-			if (cbIEE_LEACH_B.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
-			if (cbMy_IEE_LEACH_B.Checked) algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
-			if (cbMy_IEE_LEACH.Checked) algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
-
+			// BSの座標
 			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1)
 			{
 				Status = VisualizeNetwork.status.BS
-			};//BS
+			};
+			// ノードの初期エネルギー
+			for (int i = 0; i < scenario.initialNodes.Count; i++)
+			{
+				Node node = scenario.initialNodes[i];
+				node.Initialize();
+				double initEnergy;
+				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
+				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
+				node.E_init = initEnergy;
+				scenario.initialNodes[i] = node;
+			}
+
+			//// 各アルゴリズムのインスタンスを生成してリストに格納
+			//scenario.algorithms = new List<Sim>();
+			//if (cbDirect.Checked) scenario.algorithms.Add(new Direct());
+			//if (cbLEACH.Checked) scenario.algorithms.Add(new LEACH());
+			//if (cbIEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
+			//if (cbIEE_LEACH_A.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
+			//if (cbIEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
+			//if (cbMy_IEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
+			//if (cbMy_IEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
 		}
 
 		// すべてのアルゴリズムのシミュレーションを実行
 		private void RunSimulation()
 		{
+			// 各アルゴリズムのインスタンスを生成してリストに格納
+			scenario.algorithms = new List<Sim>();
+			if (cbDirect.Checked) scenario.algorithms.Add(new Direct());
+			if (cbLEACH.Checked) scenario.algorithms.Add(new LEACH());
+			if (cbIEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
+			if (cbIEE_LEACH_A.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
+			if (cbIEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
+			if (cbMy_IEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
+			if (cbMy_IEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
+
 			//クラスタリングをRラウンド実行
-			foreach (Sim sim in algorithms)
+			foreach (Sim sim in scenario.algorithms)
 			{
 				PrintConsole(sim.AlgoName + ": シミュレーションを開始");
-				sim.Run(initialNodes);
+				sim.Run(scenario.initialNodes);
 			}
-			AddDataResultTable();
-			ChangeEnabledAlgorithm(algorithms[0]);
-			int maxRound = 0;
-			foreach (Sim sim in algorithms)
-			{
-				if (maxRound < sim.LDN) maxRound = sim.LDN;
-				if (sim.LDN == 0)
-				{
-					maxRound = Sim.R;
-					break;
-				}
-			}
-			trackBarRound.Maximum = maxRound;
+			//AddDataResultTable();
+			//ChangeEnabledAlgorithm(scenario.algorithms[0]);
+			//int maxRound = 0;
+			//foreach (Sim sim in scenario.algorithms)
+			//{
+			//	if (maxRound < sim.LDN) maxRound = sim.LDN;
+			//	if (sim.LDN == 0)
+			//	{
+			//		maxRound = Sim.R;
+			//		break;
+			//	}
+			//}
+			//trackBarRound.Maximum = maxRound;
 
-			DrawChart();
+			//DrawChart();
 			PrintConsole("シミュレーションが終了しました。");
 		}
 
@@ -355,20 +348,45 @@ namespace VisualizeNetwork
 		}
 
 		// シミュレーションをJSONで出力
-		private void OutputResultJson(string path)
+		private void SaveScenario(string path)
 		{
 			PrintConsole("シミュレーション結果を書き出しています：" + path);
-			string folderPath = "C:\\Users\\kazuk\\OneDrive - 岐阜大学\\デスクトップ\\output\\" + path;
+			string folderPath = "C:\\Users\\kazuk\\Desktop\\output\\" + path;
 			if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-			foreach (var sim in algorithms)
+			using (FileStream fs = new FileStream(folderPath + scenario.scenarioFile + ".vns", FileMode.Create, FileAccess.Write))
 			{
-				PrintConsole("Jsonシリアライズ中");
-				string jsonStr = JsonSerializer.Serialize(sim);
-				PrintConsole("書き込み中");
-				var writer = new StreamWriter(folderPath + sim.AlgoName + ".json", false, Encoding.UTF8);
-				writer.Write(jsonStr);
-				writer.Dispose();
+				try
+				{
+					BinaryFormatter bf = new BinaryFormatter();
+					bf.Serialize(fs, scenario);
+				}
+				catch
+				{
+					MessageBox.Show("シナリオファイルを保存できませんでした。",
+						"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 			}
+		}
+
+		private void OpenScenario(string path)
+		{
+			PrintConsole("シナリオを読み込んでいます：" + Path.GetFileName(path));
+			using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+			{
+				try
+				{
+					BinaryFormatter f = new BinaryFormatter();
+					//読み込んで逆シリアル化する
+					scenario = (Scenario)f.Deserialize(fs);
+				}
+				catch (Exception)
+				{
+					MessageBox.Show("シナリオファイルを開けませんでした。",
+						"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+			ResetView();
+
 		}
 	}
 }

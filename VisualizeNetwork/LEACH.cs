@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace VisualizeNetwork
 {
+	[Serializable()]
 	internal class LEACH : Sim
 	{
 		//protected static double P = (double)k / N;

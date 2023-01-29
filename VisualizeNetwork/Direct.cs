@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VisualizeNetwork
 {
-    internal class Direct : Sim
+	[Serializable()]
+	internal class Direct : Sim
     {
         public Direct()
         {

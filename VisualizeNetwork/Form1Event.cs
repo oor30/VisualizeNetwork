@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using VisualizeNetwork.Resources.配置データ.D600;
 
 namespace VisualizeNetwork
 {
@@ -15,16 +17,22 @@ namespace VisualizeNetwork
 		{
 			OpenFileDialog ofDialog = new OpenFileDialog
 			{
-				Title = "座標ファイルを選択"
+				Title = "座標ファイルを選択",
+				Filter = "テキストファイル(*.txt)|*.txt"
 			};
 
 			if (ofDialog.ShowDialog() == DialogResult.OK)
 			{
-				PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
-				string fileName = ofDialog.FileName;
-				List<int> integers = GetIntegers(fileName);
-				initialNodes = GetInitialNodes(integers);
-				WholeSimulationProcess();
+				using (Waiting waiting = new Waiting(this, labelProcessing))
+				{
+					PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
+					string fileName = ofDialog.FileName;
+					List<int> integers = GetIntegers(fileName);
+					scenario.initialNodes = GetInitialNodes(integers);
+					scenario.scenarioFile = Path.GetFileNameWithoutExtension(fileName);
+					WholeSimulationProcess();
+					ResetView();
+				}
 			}
 			else
 			{
@@ -36,19 +44,71 @@ namespace VisualizeNetwork
 		// 100回のシミュレーションを実行するボタン
 		private void D100ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			for (int i = 0; i < 10; i++)
+			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				string path = "D100.Data" + i.ToString() + ".txt";
-				List<int> integers = GetIntegersFromRes(path);
-				initialNodes= GetInitialNodes(integers);
-				WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+				for (int i = 0; i < 10; i++)
+				{
+					string path = "D100.Data" + i.ToString() + ".txt";
+					List<int> integers = GetIntegersFromRes(path);
+					scenario.initialNodes = GetInitialNodes(integers);
+					WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+				}
+				scenario.scenarioFile = "D100\\Data9";
+				ResetView();
 			}
 		}
 
+		// ノード配置を無作為に生成してシミュレーションするボタン
 		private void MenuItemCreate_Click(object sender, EventArgs e)
 		{
-			initialNodes = GetInitialNodes(CreateIntegers());
-			WholeSimulationProcess();
+			using (Waiting waiting = new Waiting(this, labelProcessing))
+			{
+				scenario.initialNodes = GetInitialNodes(CreateIntegers());
+				scenario.scenarioFile = "無作為";
+				WholeSimulationProcess();
+				ResetView();
+			}
+		}
+
+		// シナリオファイルを読み込むボタン
+		private void JsonToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofDialog = new OpenFileDialog
+			{
+				Title = "シナリオファイルを選択",
+				Filter = "シナリオファイル(*.vns)|*.vns"
+			};
+
+			if (ofDialog.ShowDialog() == DialogResult.OK)
+			{
+				using (Waiting waiting = new Waiting(this, labelProcessing))
+				{
+					PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
+					string fileName = ofDialog.FileName;
+					OpenScenario(fileName);
+				}
+			}
+			else
+			{
+				Console.WriteLine("キャンセルされました。");
+			}
+			ofDialog.Dispose();
+		}
+
+		// 設定を適用するボタン
+		private void BtnApply_Click(object sender, EventArgs e)
+		{
+			if (scenario.algorithms.Count == 0)
+			{
+				MessageBox.Show("表示するシミュレーションシナリオがありません。",
+					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			using (Waiting waiting = new Waiting(this, labelProcessing))
+			{
+				WholeSimulationProcess();
+			}
 		}
 
 		// ノード図上でカーソルが動いたとき、座標を変更する
@@ -90,7 +150,7 @@ namespace VisualizeNetwork
 			//enabledNodesList = algorithms[cmbBoxAlgo.SelectedIndex].nodesList;
 			//enabledAlgorithm = algorithms[cmbBoxAlgo.SelectedIndex];
 			if (changingEnabledAlgorithm) return;
-			ChangeEnabledAlgorithm(algorithms[cmbBoxAlgo.SelectedIndex], cmbBoxAlgo.Name);
+			ChangeEnabledAlgorithm(scenario.algorithms[cmbBoxAlgo.SelectedIndex], cmbBoxAlgo.Name);
 			//ChangeRound();
 		}
 
@@ -125,22 +185,6 @@ namespace VisualizeNetwork
 			//tooltip.Show(str, chartReceivedData, pos.X+10, pos.Y);
 		}
 
-		// 設定を適用するボタン
-		private void BtnApply_Click(object sender, EventArgs e)
-		{
-			for (int i = 0; i < initialNodes.Count; i++)
-			{
-				Node node = initialNodes[i];
-				node.Initialize();
-				double initEnergy;
-				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
-				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
-				node.E_init = initEnergy;
-				initialNodes[i] = node;
-			}
-			WholeSimulationProcess();
-		}
-
 		// ラウンドテーブルで違うノードが選択されたら、そのノードをハイライトする
 		private void RoundTable_SelectionChanged(object sender, EventArgs e)
 		{
@@ -165,7 +209,7 @@ namespace VisualizeNetwork
 			if (resultTable.SelectedRows.Count > 0)
 			{
 				string algoName = (string)resultTable.SelectedRows[0].Cells[0].Value;
-				foreach (Sim sim in algorithms)
+				foreach (Sim sim in scenario.algorithms)
 				{
 					if (sim.AlgoName == algoName)
 					{

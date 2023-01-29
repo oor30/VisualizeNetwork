@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\配置データ\D600\Scenario.cs" />
     <Compile Include="Sim.cs" />
     <EmbeddedResource Include="ConfigFileDialog.resx">
       <DependentUpon>ConfigFileDialog.cs</DependentUpon>

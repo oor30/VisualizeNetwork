@@ -10,16 +10,75 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		// 結果表にシミュレーション結果を追加
-		private void AddDataResultTable()
+		// Visualizerをリセットする
+		private void ResetView()
 		{
-			foreach (Sim sim in algorithms)
+			if (scenario.algorithms.Count == 0) {
+				MessageBox.Show("表示するシミュレーションシナリオがありません。",
+					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			// 座標を正規化する
+			double maxX = double.MinValue;
+			double minX = double.MaxValue;
+			double maxY = double.MinValue;
+			double minY = double.MaxValue;
+
+			foreach (Node node in scenario.initialNodes)
+			{
+				if (maxX < node.X) maxX = node.X;
+				if (minX > node.X) minX = node.X;
+				if (maxY < node.Y) maxY = node.Y;
+				if (minY > node.Y) minY = node.Y;
+			}
+
+			scenario.maxX = maxX;
+			scenario.minX = minX;
+			scenario.maxY = maxY;
+			scenario.minY = minY;
+			double w = maxX - minX;
+			double h = maxY - minY;
+			scenario.rw = scenario.canvasW / w;
+			scenario.rh = scenario.canvasH / h;
+
+			int maxRound = 0;
+			foreach (Sim sim in scenario.algorithms)
+			{
+				if (maxRound < sim.LDN) maxRound = sim.LDN;
+				if (sim.LDN == 0)
+				{
+					maxRound = Sim.R;
+					break;
+				}
+			}
+
+			// 変数を初期化
+			tabControl.SelectedIndex = 0;
+			round = 1;
+			playSpeed = 1;
+			trackBarPlaySpeed.Value = playSpeed;
+			isPlaying = false;
+			selectedNodeID = 0;
+			labelRound.Text = "ラウンド：" + round;
+			labelScenario.Text = "シナリオ：" + scenario.scenarioFile;
+			trackBarRound.Value = 1;
+			trackBarRound.Maximum = maxRound;
+			resultTable.Rows.Clear();
+			cmbBoxAlgo.Items.Clear();
+			selectedNodeID = 0;
+
+			// 結果表にシミュレーション結果を追加・コンボボックスにアルゴリズムを追加
+			foreach (Sim sim in scenario.algorithms)
 			{
 				resultTable.Rows.Add(sim.AlgoName, sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
 						Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
 				resultTable.Rows[resultTable.Rows.Count - 1].HeaderCell.Value = resultTable.Rows.Count.ToString();
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
+
+			DrawChart();
+			ChangeEnabledAlgorithm(scenario.algorithms[0]);
 		}
 
 		// グラフを描画
@@ -27,7 +86,7 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("グラフを描画");
 			int maxRound = 0;
-			foreach (Sim sim in algorithms)
+			foreach (Sim sim in scenario.algorithms)
 			{
 				if (maxRound < sim.LDN) maxRound = sim.LDN;
 				if (sim.LDN == 0)
@@ -70,7 +129,7 @@ namespace VisualizeNetwork
 				chart.ChartAreas.Add(chartArea);
 			}
 
-			foreach (Sim sim in algorithms)
+			foreach (Sim sim in scenario.algorithms)
 			{
 				List<Series> seriesList = new List<Series>
 				{
@@ -223,16 +282,16 @@ namespace VisualizeNetwork
 		private void PaintLine(Graphics g)
 		{
 			Pen pen = new Pen(Color.Gray);
-			for (int i = (int)(minX - 10) / 50; i <= (maxX + 10); i += 50)
+			for (int i = (int)(scenario.minX - 10) / 50; i <= (scenario.maxX + 10); i += 50)
 			{
 				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, p.X, 0, p.X, canvasH);
+				g.DrawLine(pen, p.X, 0, p.X, scenario.canvasH);
 				g.DrawString(i.ToString(), this.Font, Brushes.Black, p.X, 0);
 			}
-			for (int i = (int)(minY - 10) / 50; i <= (maxY + 10); i += 50)
+			for (int i = (int)(scenario.minY - 10) / 50; i <= (scenario.maxY + 10); i += 50)
 			{
 				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, 0, p.Y, canvasW, p.Y);
+				g.DrawLine(pen, 0, p.Y, scenario.canvasW, p.Y);
 				g.DrawString(i.ToString(), this.Font, Brushes.Black, 0, p.Y);
 			}
 		}
@@ -240,23 +299,23 @@ namespace VisualizeNetwork
 		// ノードの座標をノード図のピクセルに変換する
 		private Point Normalize(Node node)
 		{
-			return new Point((int)((node.X - minX) * rw * 0.95 + canvasW * 0.025),
-				(int)((node.Y - minY) * rh * 0.95 + canvasH * 0.025));
+			return new Point((int)((node.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
+				(int)((node.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
 		}
 
 		// ノードの座標をノード図のピクセルに変換する
 		private Point Normalize(Point point)
 		{
-			Point p = new Point((int)((point.X - minX) * rw * 0.95 + canvasW * 0.025),
-				(int)((point.Y - minY) * rh * 0.95 + canvasH * 0.025));
+			Point p = new Point((int)((point.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
+				(int)((point.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
 			return p;
 		}
 
 		// ノード図のピクセルをノードの座標に変換する
 		private Point RevNormalize(Point p)
 		{
-			return new Point((int)((p.X - canvasW * 0.025) / rw / 0.95 + minX),
-				(int)((p.Y - canvasH * 0.025) / rh / 0.95 + minY));
+			return new Point((int)((p.X - scenario.canvasW * 0.025) / scenario.rw / 0.95 + scenario.minX),
+				(int)((p.Y - scenario.canvasH * 0.025) / scenario.rh / 0.95 + scenario.minY));
 		}
 
 		// ノード図を並列処理で再生する

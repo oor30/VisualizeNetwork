@@ -109,9 +109,11 @@
 			this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemCreate = new System.Windows.Forms.ToolStripMenuItem();
-			this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.配置データを読み込むToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.d100ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.labelProcessing = new System.Windows.Forms.Label();
 			this.btnNext = new System.Windows.Forms.Button();
 			this.btnBack = new System.Windows.Forms.Button();
@@ -119,6 +121,7 @@
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.labelScenario = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
@@ -171,13 +174,13 @@
 			// 
 			this.trackBarRound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarRound.Location = new System.Drawing.Point(116, 45);
+			this.trackBarRound.Location = new System.Drawing.Point(149, 43);
 			this.trackBarRound.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.trackBarRound.Maximum = 100;
 			this.trackBarRound.MaximumSize = new System.Drawing.Size(1178, 68);
 			this.trackBarRound.Minimum = 1;
 			this.trackBarRound.Name = "trackBarRound";
-			this.trackBarRound.Size = new System.Drawing.Size(1178, 69);
+			this.trackBarRound.Size = new System.Drawing.Size(1178, 68);
 			this.trackBarRound.TabIndex = 3;
 			this.trackBarRound.Value = 1;
 			this.trackBarRound.Scroll += new System.EventHandler(this.TrackBarRound_Scroll);
@@ -247,7 +250,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 184);
+			this.resultTable.Size = new System.Drawing.Size(1616, 198);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -1069,8 +1072,10 @@
 			this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemOpen,
             this.menuItemCreate,
-            this.設定SToolStripMenuItem,
-            this.配置データを読み込むToolStripMenuItem});
+            this.toolStripMenuItem1,
+            this.配置データを読み込むToolStripMenuItem,
+            this.jsonToolStripMenuItem,
+            this.設定SToolStripMenuItem});
 			this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
 			this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
 			this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
@@ -1089,11 +1094,10 @@
 			this.menuItemCreate.Text = "作成(&C)";
 			this.menuItemCreate.Click += new System.EventHandler(this.MenuItemCreate_Click);
 			// 
-			// 設定SToolStripMenuItem
+			// toolStripMenuItem1
 			// 
-			this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
-			this.設定SToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
-			this.設定SToolStripMenuItem.Text = "設定(&S)...";
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(268, 6);
 			// 
 			// 配置データを読み込むToolStripMenuItem
 			// 
@@ -1109,6 +1113,19 @@
 			this.d100ToolStripMenuItem.Size = new System.Drawing.Size(157, 34);
 			this.d100ToolStripMenuItem.Text = "D100";
 			this.d100ToolStripMenuItem.Click += new System.EventHandler(this.D100ToolStripMenuItem_Click);
+			// 
+			// jsonToolStripMenuItem
+			// 
+			this.jsonToolStripMenuItem.Name = "jsonToolStripMenuItem";
+			this.jsonToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
+			this.jsonToolStripMenuItem.Text = "json";
+			this.jsonToolStripMenuItem.Click += new System.EventHandler(this.JsonToolStripMenuItem_Click);
+			// 
+			// 設定SToolStripMenuItem
+			// 
+			this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
+			this.設定SToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
+			this.設定SToolStripMenuItem.Text = "設定(&S)...";
 			// 
 			// labelProcessing
 			// 
@@ -1193,12 +1210,13 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 949;
+			this.splitContainer1.SplitterDistance = 935;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 11;
 			// 
 			// panel2
 			// 
+			this.panel2.Controls.Add(this.labelScenario);
 			this.panel2.Controls.Add(this.labelPlaySpeed);
 			this.panel2.Controls.Add(this.trackBarPlaySpeed);
 			this.panel2.Controls.Add(this.trackBarRound);
@@ -1213,6 +1231,15 @@
 			this.panel2.Padding = new System.Windows.Forms.Padding(0, 33, 0, 0);
 			this.panel2.Size = new System.Drawing.Size(1616, 180);
 			this.panel2.TabIndex = 0;
+			// 
+			// labelScenario
+			// 
+			this.labelScenario.AutoSize = true;
+			this.labelScenario.Location = new System.Drawing.Point(685, 121);
+			this.labelScenario.Name = "labelScenario";
+			this.labelScenario.Size = new System.Drawing.Size(113, 25);
+			this.labelScenario.TabIndex = 11;
+			this.labelScenario.Text = "シナリオ：なし";
 			// 
 			// Form1
 			// 
@@ -1356,6 +1383,9 @@
 		private System.Windows.Forms.CheckBox cbIEE_LEACH;
 		private System.Windows.Forms.CheckBox cbLEACH;
 		private System.Windows.Forms.CheckBox cbDirect;
+		private System.Windows.Forms.ToolStripMenuItem jsonToolStripMenuItem;
+		private System.Windows.Forms.Label labelScenario;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 	}
 }
 

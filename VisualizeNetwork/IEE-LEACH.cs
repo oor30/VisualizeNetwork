@@ -12,7 +12,8 @@ namespace VisualizeNetwork
         My_IEE_LEACH
     }
 
-    internal class IEE_LEACH : LEACH
+	[Serializable()]
+	internal class IEE_LEACH : LEACH
     {
         private readonly Mode mode;
 

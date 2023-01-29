@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace VisualizeNetwork
 {
+	[Serializable()]
 	internal abstract class Sim
 	{
 		// 変数

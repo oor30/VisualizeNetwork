@@ -72,7 +72,7 @@ namespace VisualizeNetwork
 	/// <summary>
 	/// ノード1つの構造体
 	/// </summary>
-	//[Serializable]
+	[Serializable()]
 	public struct Node
 	{
 		// パラメータ
