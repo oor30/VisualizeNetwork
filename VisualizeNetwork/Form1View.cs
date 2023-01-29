@@ -165,7 +165,7 @@ namespace VisualizeNetwork
 			int qualifiedNodeNum = 0;
 			double sumPi = 0;
 			int numCH = 0;
-			for (int i = 0; i < Sim.N; i++)
+			for (int i = 0; i < scenario.N; i++)
 			{
 				Node node = nodes[i];
 

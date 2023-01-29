@@ -7,6 +7,8 @@ namespace VisualizeNetwork.Resources.配置データ.D600
 	[Serializable()]
 	public class Scenario
 	{
+		public int N;
+		public int widthHeight;
 		public float canvasW, canvasH;
 		public double minX, maxX, minY, maxY;
 		public double rw, rh;

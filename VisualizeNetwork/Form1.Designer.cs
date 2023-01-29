@@ -180,7 +180,7 @@
 			this.trackBarRound.MaximumSize = new System.Drawing.Size(1178, 68);
 			this.trackBarRound.Minimum = 1;
 			this.trackBarRound.Name = "trackBarRound";
-			this.trackBarRound.Size = new System.Drawing.Size(1178, 68);
+			this.trackBarRound.Size = new System.Drawing.Size(1178, 69);
 			this.trackBarRound.TabIndex = 3;
 			this.trackBarRound.Value = 1;
 			this.trackBarRound.Scroll += new System.EventHandler(this.TrackBarRound_Scroll);
@@ -250,7 +250,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 198);
+			this.resultTable.Size = new System.Drawing.Size(1616, 202);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -1210,7 +1210,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 935;
+			this.splitContainer1.SplitterDistance = 931;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 11;
 			// 

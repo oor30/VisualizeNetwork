@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,11 +28,23 @@ namespace VisualizeNetwork
 				{
 					PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
 					string fileName = ofDialog.FileName;
-					List<int> integers = GetIntegers(fileName);
-					scenario.initialNodes = GetInitialNodes(integers);
-					scenario.scenarioFile = Path.GetFileNameWithoutExtension(fileName);
-					WholeSimulationProcess();
-					ResetView();
+					using (StreamReader sr = new StreamReader(fileName))
+					{
+						List<int> integers;
+						try
+						{
+							integers = GetIntegers(sr);
+						}
+						catch
+						{
+							return;
+						}
+						scenario.initialNodes = CnvIntToNodes(integers);
+						scenario.scenarioFile = Path.GetFileNameWithoutExtension(fileName);
+						WholeSimulationProcess();
+						ResetView();
+					}
+					//List<int> integers = GetIntegers(fileName);
 				}
 			}
 			else
@@ -49,9 +62,23 @@ namespace VisualizeNetwork
 				for (int i = 0; i < 10; i++)
 				{
 					string path = "D100.Data" + i.ToString() + ".txt";
-					List<int> integers = GetIntegersFromRes(path);
-					scenario.initialNodes = GetInitialNodes(integers);
-					WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+					var assm = Assembly.GetExecutingAssembly();
+					var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
+					using (StreamReader sr = new StreamReader(stream))
+					{
+						List<int> integers;
+						try
+						{
+							integers = GetIntegers(sr);
+						}
+						catch
+						{
+							return;
+						}
+						scenario.initialNodes = CnvIntToNodes(integers);
+						WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+					}
+					//List<int> integers = GetIntegersFromRes(path);
 				}
 				scenario.scenarioFile = "D100\\Data9";
 				ResetView();
@@ -63,7 +90,7 @@ namespace VisualizeNetwork
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				scenario.initialNodes = GetInitialNodes(CreateIntegers());
+				scenario.initialNodes = CnvIntToNodes(CreateIntegers());
 				scenario.scenarioFile = "無作為";
 				WholeSimulationProcess();
 				ResetView();

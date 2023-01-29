@@ -12,9 +12,9 @@ namespace VisualizeNetwork
 		public string AlgoName { get; protected set; }     // アルゴリズム名
 		public int Round { get; private set; } = 0;   // 現在のラウンド数
 		protected int CHNum = 0;        // CH数
-		protected int aliveNum = N;     // 生存ノード数
+		protected int aliveNum;     // 生存ノード数
 		private double EnergyConsumption = 0;   // エネルギー消費量
-		//protected List<Node> EnabledNodes;             // ノードリスト
+		protected List<Node> initialNodes = new List<Node>();
 
 		// シミュレーションを評価する指標
 		public int FDN { get; private set; } = 0;
@@ -33,8 +33,7 @@ namespace VisualizeNetwork
 
 		// パラメーター
 		public static Node BS = new Node(-1, 50, 125, -1);//BS
-		public static int N = 100;           // ノード数
-		public static int widthHeight = 100;	// ノード図の一辺の長さ(m)
+		public int N { get { return initialNodes.Count; } }           // ノード数
 		public static double P = 0.05;		// CHの割合
 		//public const int k = 5;             // クラスタヘッド数
 		public const int R = 3500;          // 最大シミュレーションラウンド数
@@ -42,6 +41,8 @@ namespace VisualizeNetwork
 
 		public void Run(List<Node> initialNodes)
 		{
+			this.initialNodes = initialNodes;
+			aliveNum = N;
 			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)
 			{

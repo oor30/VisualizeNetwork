@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -14,15 +15,7 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		//private readonly float canvasW, canvasH;
-		//private double minX, maxX, minY, maxY;
-		//private double rw, rh;
-		//private List<Node> initialNodes;
-		//private string scenarioFile = "なし";
-		//private List<Sim> algorithms = new List<Sim>();
-
 		private Scenario scenario;
-
 		private Sim enabledAlgorithm;
 		private List<Node> EnabledNodes
 		{
@@ -46,8 +39,6 @@ namespace VisualizeNetwork
 		public Form1()
 		{
 			InitializeComponent();
-			//canvasW = pictureBoxNodeMap.Size.Width;
-			//canvasH = pictureBoxNodeMap.Size.Height;
 			pictureBoxNodeMap.Image = new Bitmap(pictureBoxNodeMap.Width, pictureBoxNodeMap.Height);
 			trackBarRound.Maximum = Sim.R;
 			trackBarPlaySpeed.Maximum = 100;
@@ -113,98 +104,43 @@ namespace VisualizeNetwork
 			SaveScenario(outputFolderPath);
 		}
 
-		private List<int> GetIntegers(string fileName)
+		private List<int> GetIntegers(StreamReader sr)
 		{
 			PrintConsole("座標を読み込み中");
 			List<int> integers = new List<int>();
-			Sim.N = 100;
-			Sim.widthHeight = 100;
-			Sim.P = (double)numericUpDownP.Value;
-			int i = 0;
-			int min = int.MaxValue;
-			int max = int.MinValue;
-			int num = 0;
 			// ファイルから座標を読み込む
 			try
 			{
-				StreamReader sr = new StreamReader(fileName);
 				string line = sr.ReadLine();
 				while (line != null && line != "-1")
 				{
+					int i = 0;
 					try
 					{
 						i = int.Parse(line);
 					}
-					catch (Exception)
+					catch
 					{
-						Console.WriteLine("座標を数値に変換できませんでした");
-						MessageBox.Show("座標を数値に変換できませんでした。", "エラー");
+						throw new Exception("数値に変換できませんでした。");
 					}
-					num++;
-					if (min > i) min = i;
-					if (max < i) max = i;
 					integers.Add(i);
 					line = sr.ReadLine();
 				}
-				sr.Close();
+				if (integers.Count == 0) throw new Exception("数値が1つも読み込めませんでした。");
+				// ノード数
+				scenario.N = integers.Count;
+				// 一辺の長さ
+				scenario.widthHeight = (int)(Math.Ceiling(Math.Sqrt(integers.Max()) / 100) * 100);
+				PrintConsole("読み込み完了");
+				return integers;
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				Console.WriteLine("ファイルを読み込めませんでした : " + ex.Message);
+				MessageBox.Show("ファイルを読み込めませんでした。", "エラー",
+					MessageBoxButtons.OK, MessageBoxIcon.Error);
+				throw;
 			}
-			finally
-			{
-				PrintConsole("読み込み完了");
-			}
-			return integers;
-		}
-
-		private List<int> GetIntegersFromRes(string path)
-		{
-			var assm = Assembly.GetExecutingAssembly();
-			var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
-			PrintConsole("座標を読み込み中：path");
-			List<int> integers = new List<int>();
-			Sim.N = 100;
-			Sim.widthHeight = 100;
-			Sim.P = (double)numericUpDownP.Value;
-			int i = 0;
-			int min = int.MaxValue;
-			int max = int.MinValue;
-			int num = 0;
-			// ファイルから座標を読み込む
-			try
-			{
-				StreamReader sr = new StreamReader(stream);
-				string line = sr.ReadLine();
-				while (line != null && line != "-1")
-				{
-					try
-					{
-						i = int.Parse(line);
-					}
-					catch (Exception)
-					{
-						Console.WriteLine("座標を数値に変換できませんでした");
-						MessageBox.Show("座標を数値に変換できませんでした。", "エラー");
-					}
-					num++;
-					if (min > i) min = i;
-					if (max < i) max = i;
-					integers.Add(i);
-					line = sr.ReadLine();
-				}
-				sr.Close();
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("ファイルを読み込めませんでした : " + ex.Message);
-			}
-			finally
-			{
-				PrintConsole("読み込み完了");
-			}
-			return integers;
 		}
 
 		private List<int> CreateIntegers()
@@ -212,57 +148,32 @@ namespace VisualizeNetwork
 			PrintConsole("座標を作成中");
 			Random random = new Random();
 			List<int> integers = new List<int>();
-			Sim.N = (int)numericUpDownN.Value;
-			Sim.widthHeight = (int)numericUpDownWidth.Value;
-			Sim.P = (double)numericUpDownP.Value;
+			// ノード数
+			scenario.N = (int)numericUpDownN.Value;
+			// 一辺の長さ
+			scenario.widthHeight = (int)numericUpDownWidth.Value;
 
-			for (int i = 0; i < Sim.N; i++)
+			for (int i = 0; i < scenario.N; i++)
 			{
-				integers.Add((int)(random.NextDouble() * Math.Pow(Sim.widthHeight, 2)));
+				integers.Add((int)(random.NextDouble() * Math.Pow(scenario.widthHeight, 2)));
 			}
 			integers.Sort();
 			PrintConsole("作成完了");
 			return integers;
 		}
 
-		private List<Node> GetInitialNodes(List<int> integers)
+		private List<Node> CnvIntToNodes(List<int> integers)
 		{
 			PrintConsole("座標を変換中");
 			List<Node> initialNodes = new List<Node>();
-			//bool firstLoop;
-			// Y軸の範囲を入力するダイアログを表示
-			//ConfigFileDialog configFileDialog = new ConfigFileDialog();
-			//configFileDialog.label1.Text = "ノード数：" + num;
-			//configFileDialog.label2.Text = "最小値：" + min;
-			//configFileDialog.label3.Text = "最大値：" + max;
-
-			int y_range;
-			//if (configFileDialog.ShowDialog() == DialogResult.OK)
-			//    y_range = configFileDialog.getRangeY();
-			//else
-			//    return;
-
-			y_range = Sim.widthHeight;
-
-			// 座標に変換
-			//firstLoop = true;
-			//maxX = 0;
-			//minX = 0;
-			//maxY = 0;
-			//minY = 0;
-			//Sim.packetSize = (int)numericUpDownPacketSize.Value;
 			for (int j = 0; j < integers.Count; j++)
 			{
 				double initEnergy;
 				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
 				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
-				Node node = new Node(j, integers[j] % y_range, integers[j] / y_range, initEnergy: initEnergy);
+				Node node = new Node(j, integers[j] % scenario.widthHeight, integers[j] / scenario.widthHeight,
+					initEnergy: initEnergy);
 				initialNodes.Add(node);
-				//if (firstLoop || minX > node.X) minX = node.X;
-				//if (firstLoop || minY > node.Y) minY = node.Y;
-				//if (firstLoop || maxX < node.X) maxX = node.X;
-				//if (firstLoop || maxY < node.Y) maxY = node.Y;
-				//if (firstLoop) firstLoop = false;
 			}
 			return initialNodes;
 		}
@@ -272,6 +183,8 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("シミュレーションの準備中");
 
+			// CH割合
+			Sim.P = (double)numericUpDownP.Value;
 			// 1ラウンドあたりの送信パケットサイズ
 			Sim.packetSize = (int)numericUpDownPacketSize.Value;
 			// BSの座標
@@ -290,16 +203,6 @@ namespace VisualizeNetwork
 				node.E_init = initEnergy;
 				scenario.initialNodes[i] = node;
 			}
-
-			//// 各アルゴリズムのインスタンスを生成してリストに格納
-			//scenario.algorithms = new List<Sim>();
-			//if (cbDirect.Checked) scenario.algorithms.Add(new Direct());
-			//if (cbLEACH.Checked) scenario.algorithms.Add(new LEACH());
-			//if (cbIEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
-			//if (cbIEE_LEACH_A.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
-			//if (cbIEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
-			//if (cbMy_IEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
-			//if (cbMy_IEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
 		}
 
 		// すべてのアルゴリズムのシミュレーションを実行
@@ -321,21 +224,6 @@ namespace VisualizeNetwork
 				PrintConsole(sim.AlgoName + ": シミュレーションを開始");
 				sim.Run(scenario.initialNodes);
 			}
-			//AddDataResultTable();
-			//ChangeEnabledAlgorithm(scenario.algorithms[0]);
-			//int maxRound = 0;
-			//foreach (Sim sim in scenario.algorithms)
-			//{
-			//	if (maxRound < sim.LDN) maxRound = sim.LDN;
-			//	if (sim.LDN == 0)
-			//	{
-			//		maxRound = Sim.R;
-			//		break;
-			//	}
-			//}
-			//trackBarRound.Maximum = maxRound;
-
-			//DrawChart();
 			PrintConsole("シミュレーションが終了しました。");
 		}
 
@@ -347,10 +235,10 @@ namespace VisualizeNetwork
 			labelProcessing.Refresh();
 		}
 
-		// シミュレーションをJSONで出力
+		// シミュレーションシナリオを出力
 		private void SaveScenario(string path)
 		{
-			PrintConsole("シミュレーション結果を書き出しています：" + path);
+			PrintConsole("シミュレーションシナリオを書き出しています：" + path);
 			string folderPath = "C:\\Users\\kazuk\\Desktop\\output\\" + path;
 			if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 			using (FileStream fs = new FileStream(folderPath + scenario.scenarioFile + ".vns", FileMode.Create, FileAccess.Write))
@@ -368,18 +256,18 @@ namespace VisualizeNetwork
 			}
 		}
 
+		// シミュレーションシナリオを読み込む
 		private void OpenScenario(string path)
 		{
-			PrintConsole("シナリオを読み込んでいます：" + Path.GetFileName(path));
+			PrintConsole("シミュレーションシナリオを読み込んでいます：" + Path.GetFileName(path));
 			using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
 			{
 				try
 				{
 					BinaryFormatter f = new BinaryFormatter();
-					//読み込んで逆シリアル化する
 					scenario = (Scenario)f.Deserialize(fs);
 				}
-				catch (Exception)
+				catch
 				{
 					MessageBox.Show("シナリオファイルを開けませんでした。",
 						"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
