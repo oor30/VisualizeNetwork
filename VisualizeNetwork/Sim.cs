@@ -9,6 +9,7 @@ namespace VisualizeNetwork
 		// 変数
 		public string AlgoName { get; protected set; }     // アルゴリズム名
 		public int Round { get; private set; } = 0;   // 現在のラウンド数
+		[NonSerialized]
 		protected int CHNum = 0;        // CH数
 		protected int aliveNum;     // 生存ノード数
 		private double EnergyConsumption = 0;   // エネルギー消費量

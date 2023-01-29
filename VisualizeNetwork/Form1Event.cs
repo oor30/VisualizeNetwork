@@ -280,8 +280,6 @@ namespace VisualizeNetwork
 				{
 					if (sim.AlgoName == algoName)
 					{
-						//enabledNodesList = sim.nodesList;
-						//ChangeRound();
 						ChangeEnabledAlgorithm(sim, resultTable.Name);
 						return;
 					}

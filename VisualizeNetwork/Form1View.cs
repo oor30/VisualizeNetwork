@@ -10,7 +10,9 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		// Visualizerをリセットする
+		/// <summary>
+		/// Visualizerをリセットする
+		/// </summary>
 		private void ResetView()
 		{
 			if (scenario.algorithms.Count == 0)
@@ -53,7 +55,6 @@ namespace VisualizeNetwork
 				resultTable.Rows.Add((resultTable.Rows.Count + 1).ToString(), sim.AlgoName,
 					sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
 					Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
-				//resultTable.Rows[resultTable.Rows.Count - 1].HeaderCell.Value = resultTable.Rows.Count.ToString();
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 
@@ -61,7 +62,9 @@ namespace VisualizeNetwork
 			ChangeEnabledAlgorithm(scenario.algorithms[0]);
 		}
 
-		// グラフを描画
+		/// <summary>
+		/// グラフを描画
+		/// </summary>
 		private void DrawChart()
 		{
 			PrintConsole("グラフを描画");
@@ -135,7 +138,10 @@ namespace VisualizeNetwork
 			}
 		}
 
-		// ラウンドテーブルを更新する
+		/// <summary>
+		/// ラウンドテーブルを更新する
+		/// </summary>
+		/// <param name="nodes">ノードリスト</param>
 		private void RefreshRoundTable(List<Node> nodes)
 		{
 			roundTable.Rows.Clear();
@@ -163,7 +169,11 @@ namespace VisualizeNetwork
 				sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
 		}
 
-		// Seriesを作成する(DrawChartの補助)
+		/// <summary>
+		/// Seriesを作成する(DrawChartの補助)
+		/// </summary>
+		/// <param name="algoName">アルゴリズムの名前</param>
+		/// <returns>グラフのSeries</returns>
 		private Series CreateNewSeries(string algoName)
 		{
 			Series series = new Series
@@ -174,7 +184,10 @@ namespace VisualizeNetwork
 			return series;
 		}
 
-		// ノード図を更新する
+		/// <summary>
+		/// ノード図を更新する
+		/// </summary>
+		/// <param name="nodes">ノードリスト</param>
 		private void RefreshPaint(List<Node> nodes)
 		{
 			// 座標リストからノードを描画する
@@ -188,7 +201,11 @@ namespace VisualizeNetwork
 			g.Dispose();
 		}
 
-		// ノードを描画する
+		/// <summary>
+		/// ノードを描画する
+		/// </summary>
+		/// <param name="g">キャンバスのGraphics</param>
+		/// <param name="nodes">ノードリスト</param>
 		private void PaintNodes(Graphics g, List<Node> nodes)
 		{
 			Pen pen = new Pen(Color.Black);
@@ -231,7 +248,11 @@ namespace VisualizeNetwork
 			return;
 		}
 
-		// エッジを描画する
+		/// <summary>
+		/// エッジを描画する
+		/// </summary>
+		/// <param name="g">キャンバスのGraphics</param>
+		/// <param name="nodes">ノードリスト</param>
 		private void PaintEdges(Graphics g, List<Node> nodes)
 		{
 			Pen pen = new Pen(Color.Black);
@@ -258,7 +279,10 @@ namespace VisualizeNetwork
 			return;
 		}
 
-		// x軸,y軸と目盛りを描画する
+		/// <summary>
+		/// x軸,y軸と目盛りを描画する
+		/// </summary>
+		/// <param name="g">キャンバスのGraphics</param>
 		private void PaintLine(Graphics g)
 		{
 			Pen pen = new Pen(Color.Gray);
@@ -276,14 +300,22 @@ namespace VisualizeNetwork
 			}
 		}
 
-		// ノードの座標をノード図のピクセルに変換する
+		/// <summary>
+		/// ノードの座標をノード図のピクセルに変換する
+		/// </summary>
+		/// <param name="node">ノード</param>
+		/// <returns>ポイント</returns>
 		private Point Normalize(Node node)
 		{
 			return new Point((int)((node.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
 				(int)((node.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
 		}
 
-		// ノードの座標をノード図のピクセルに変換する
+		/// <summary>
+		/// ノードの座標をノード図のピクセルに変換する
+		/// </summary>
+		/// <param name="point">ポイント</param>
+		/// <returns>ポイント</returns>
 		private Point Normalize(Point point)
 		{
 			Point p = new Point((int)((point.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
@@ -291,14 +323,22 @@ namespace VisualizeNetwork
 			return p;
 		}
 
-		// ノード図のピクセルをノードの座標に変換する
+		/// <summary>
+		/// ノード図のピクセルをノードの座標に変換する
+		/// </summary>
+		/// <param name="p">ポイント</param>
+		/// <returns>ポイント</returns>
 		private Point RevNormalize(Point p)
 		{
 			return new Point((int)((p.X - scenario.canvasW * 0.025) / scenario.rw / 0.95 + scenario.minX),
 				(int)((p.Y - scenario.canvasH * 0.025) / scenario.rh / 0.95 + scenario.minY));
 		}
 
-		// ノード図を並列処理で再生する
+		/// <summary>
+		/// ノード図を並列処理で再生する
+		/// </summary>
+		/// <param name="ct"></param>
+		/// <returns></returns>
 		private async Task<int> PlayClustering(CancellationToken ct)
 		{
 
