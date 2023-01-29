@@ -77,7 +77,13 @@
 			this.numericUpDownP = new System.Windows.Forms.NumericUpDown();
 			this.label7 = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.checkedListBoxAlgo = new System.Windows.Forms.CheckedListBox();
+			this.cbMy_IEE_LEACH = new System.Windows.Forms.CheckBox();
+			this.cbMy_IEE_LEACH_B = new System.Windows.Forms.CheckBox();
+			this.cbIEE_LEACH_B = new System.Windows.Forms.CheckBox();
+			this.cbIEE_LEACH_A = new System.Windows.Forms.CheckBox();
+			this.cbIEE_LEACH = new System.Windows.Forms.CheckBox();
+			this.cbLEACH = new System.Windows.Forms.CheckBox();
+			this.cbDirect = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
@@ -241,7 +247,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 176);
+			this.resultTable.Size = new System.Drawing.Size(1616, 184);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -513,7 +519,7 @@
 			this.Chart2.Controls.Add(this.chartReceivedData);
 			this.Chart2.Location = new System.Drawing.Point(4, 34);
 			this.Chart2.Name = "Chart2";
-			this.Chart2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.Chart2.Padding = new System.Windows.Forms.Padding(3);
 			this.Chart2.Size = new System.Drawing.Size(1604, 868);
 			this.Chart2.TabIndex = 2;
 			this.Chart2.Text = "Chart2";
@@ -565,7 +571,7 @@
 			this.設定.Controls.Add(this.groupBoxInitialEnergy);
 			this.設定.Location = new System.Drawing.Point(4, 34);
 			this.設定.Name = "設定";
-			this.設定.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.設定.Padding = new System.Windows.Forms.Padding(3);
 			this.設定.Size = new System.Drawing.Size(1604, 868);
 			this.設定.TabIndex = 3;
 			this.設定.Text = "設定";
@@ -605,25 +611,97 @@
 			// 
 			// groupBox4
 			// 
-			this.groupBox4.Controls.Add(this.checkedListBoxAlgo);
+			this.groupBox4.Controls.Add(this.cbMy_IEE_LEACH);
+			this.groupBox4.Controls.Add(this.cbMy_IEE_LEACH_B);
+			this.groupBox4.Controls.Add(this.cbIEE_LEACH_B);
+			this.groupBox4.Controls.Add(this.cbIEE_LEACH_A);
+			this.groupBox4.Controls.Add(this.cbIEE_LEACH);
+			this.groupBox4.Controls.Add(this.cbLEACH);
+			this.groupBox4.Controls.Add(this.cbDirect);
 			this.groupBox4.Location = new System.Drawing.Point(801, 45);
-			this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.groupBox4.Size = new System.Drawing.Size(300, 276);
+			this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
+			this.groupBox4.Size = new System.Drawing.Size(300, 297);
 			this.groupBox4.TabIndex = 5;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "アルゴリズム";
 			// 
-			// checkedListBoxAlgo
+			// cbMy_IEE_LEACH
 			// 
-			this.checkedListBoxAlgo.CheckOnClick = true;
-			this.checkedListBoxAlgo.FormattingEnabled = true;
-			this.checkedListBoxAlgo.Location = new System.Drawing.Point(9, 33);
-			this.checkedListBoxAlgo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.checkedListBoxAlgo.Name = "checkedListBoxAlgo";
-			this.checkedListBoxAlgo.Size = new System.Drawing.Size(260, 200);
-			this.checkedListBoxAlgo.TabIndex = 0;
+			this.cbMy_IEE_LEACH.AutoSize = true;
+			this.cbMy_IEE_LEACH.Checked = true;
+			this.cbMy_IEE_LEACH.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbMy_IEE_LEACH.Location = new System.Drawing.Point(8, 250);
+			this.cbMy_IEE_LEACH.Name = "cbMy_IEE_LEACH";
+			this.cbMy_IEE_LEACH.Size = new System.Drawing.Size(153, 29);
+			this.cbMy_IEE_LEACH.TabIndex = 6;
+			this.cbMy_IEE_LEACH.Text = "My-IEE-LEACH";
+			this.cbMy_IEE_LEACH.UseVisualStyleBackColor = true;
+			// 
+			// cbMy_IEE_LEACH_B
+			// 
+			this.cbMy_IEE_LEACH_B.AutoSize = true;
+			this.cbMy_IEE_LEACH_B.Location = new System.Drawing.Point(8, 214);
+			this.cbMy_IEE_LEACH_B.Name = "cbMy_IEE_LEACH_B";
+			this.cbMy_IEE_LEACH_B.Size = new System.Drawing.Size(170, 29);
+			this.cbMy_IEE_LEACH_B.TabIndex = 5;
+			this.cbMy_IEE_LEACH_B.Text = "My-IEE-LEACH-B";
+			this.cbMy_IEE_LEACH_B.UseVisualStyleBackColor = true;
+			// 
+			// cbIEE_LEACH_B
+			// 
+			this.cbIEE_LEACH_B.AutoSize = true;
+			this.cbIEE_LEACH_B.Location = new System.Drawing.Point(8, 176);
+			this.cbIEE_LEACH_B.Name = "cbIEE_LEACH_B";
+			this.cbIEE_LEACH_B.Size = new System.Drawing.Size(138, 29);
+			this.cbIEE_LEACH_B.TabIndex = 4;
+			this.cbIEE_LEACH_B.Text = "IEE-LEACH-B";
+			this.cbIEE_LEACH_B.UseVisualStyleBackColor = true;
+			// 
+			// cbIEE_LEACH_A
+			// 
+			this.cbIEE_LEACH_A.AutoSize = true;
+			this.cbIEE_LEACH_A.Location = new System.Drawing.Point(8, 140);
+			this.cbIEE_LEACH_A.Name = "cbIEE_LEACH_A";
+			this.cbIEE_LEACH_A.Size = new System.Drawing.Size(140, 29);
+			this.cbIEE_LEACH_A.TabIndex = 3;
+			this.cbIEE_LEACH_A.Text = "IEE-LEACH-A";
+			this.cbIEE_LEACH_A.UseVisualStyleBackColor = true;
+			// 
+			// cbIEE_LEACH
+			// 
+			this.cbIEE_LEACH.AutoSize = true;
+			this.cbIEE_LEACH.Checked = true;
+			this.cbIEE_LEACH.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbIEE_LEACH.Location = new System.Drawing.Point(8, 104);
+			this.cbIEE_LEACH.Name = "cbIEE_LEACH";
+			this.cbIEE_LEACH.Size = new System.Drawing.Size(121, 29);
+			this.cbIEE_LEACH.TabIndex = 2;
+			this.cbIEE_LEACH.Text = "IEE-LEACH";
+			this.cbIEE_LEACH.UseVisualStyleBackColor = true;
+			// 
+			// cbLEACH
+			// 
+			this.cbLEACH.AutoSize = true;
+			this.cbLEACH.Checked = true;
+			this.cbLEACH.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbLEACH.Location = new System.Drawing.Point(8, 68);
+			this.cbLEACH.Name = "cbLEACH";
+			this.cbLEACH.Size = new System.Drawing.Size(91, 29);
+			this.cbLEACH.TabIndex = 1;
+			this.cbLEACH.Text = "LEACH";
+			this.cbLEACH.UseVisualStyleBackColor = true;
+			// 
+			// cbDirect
+			// 
+			this.cbDirect.AutoSize = true;
+			this.cbDirect.Location = new System.Drawing.Point(8, 32);
+			this.cbDirect.Name = "cbDirect";
+			this.cbDirect.Size = new System.Drawing.Size(84, 29);
+			this.cbDirect.TabIndex = 0;
+			this.cbDirect.Text = "Direct";
+			this.cbDirect.UseVisualStyleBackColor = true;
 			// 
 			// groupBox3
 			// 
@@ -1101,7 +1179,7 @@
 			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
 			this.splitContainer1.Location = new System.Drawing.Point(0, 180);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer1.Name = "splitContainer1";
 			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -1115,7 +1193,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 957;
+			this.splitContainer1.SplitterDistance = 949;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1168,6 +1246,7 @@
 			this.設定.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownP)).EndInit();
 			this.groupBox4.ResumeLayout(false);
+			this.groupBox4.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
@@ -1268,9 +1347,15 @@
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.GroupBox groupBox4;
-		private System.Windows.Forms.CheckedListBox checkedListBoxAlgo;
 		private System.Windows.Forms.ToolStripMenuItem 配置データを読み込むToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem d100ToolStripMenuItem;
+		private System.Windows.Forms.CheckBox cbMy_IEE_LEACH;
+		private System.Windows.Forms.CheckBox cbMy_IEE_LEACH_B;
+		private System.Windows.Forms.CheckBox cbIEE_LEACH_B;
+		private System.Windows.Forms.CheckBox cbIEE_LEACH_A;
+		private System.Windows.Forms.CheckBox cbIEE_LEACH;
+		private System.Windows.Forms.CheckBox cbLEACH;
+		private System.Windows.Forms.CheckBox cbDirect;
 	}
 }
 

@@ -46,12 +46,23 @@ namespace VisualizeNetwork
 			trackBarRound.Maximum = Sim.R;
 			trackBarPlaySpeed.Maximum = 100;
 
-			checkedListBoxAlgo.Items.Clear();
-			foreach (string name in Enum.GetNames(typeof(AlgoName)))
-			{
-				checkedListBoxAlgo.Items.Add(name);
-				checkedListBoxAlgo.SetItemChecked(checkedListBoxAlgo.Items.Count - 1, true);
-			}
+			//algorithms = new List<Sim>
+			//{
+			//	new Direct(),
+			//	new LEACH(),
+			//	new IEE_LEACH(Mode.IEE_LEACH),
+			//	new IEE_LEACH(Mode.IEE_LEACH_A),
+			//	new IEE_LEACH(Mode.IEE_LEACH_B),
+			//	new IEE_LEACH(Mode.My_IEE_LEACH_B),
+			//	new IEE_LEACH(Mode.My_IEE_LEACH)
+			//};
+
+			//checkedListBoxAlgo.Items.Clear();
+			//foreach (Sim sim in algorithms)
+			//{
+			//	checkedListBoxAlgo.Items.Add(sim.AlgoName);
+			//	checkedListBoxAlgo.SetItemChecked(checkedListBoxAlgo.Items.Count - 1, true);
+			//}
 		}
 
 
@@ -293,18 +304,19 @@ namespace VisualizeNetwork
 			Sim.packetSize = (int)numericUpDownPacketSize.Value;
 
 			// 各アルゴリズムのインスタンスを生成してリストに格納
-			algorithms = new List<Sim>
+			algorithms = new List<Sim>();
+			if (cbDirect.Checked) algorithms.Add(new Direct());
+			if (cbLEACH.Checked) algorithms.Add(new LEACH());
+			if (cbIEE_LEACH.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
+			if (cbIEE_LEACH_A.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
+			if (cbIEE_LEACH_B.Checked) algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
+			if (cbMy_IEE_LEACH_B.Checked) algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
+			if (cbMy_IEE_LEACH.Checked) algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
+
+			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1)
 			{
-				new Direct(),
-				new LEACH(),
-				new IEE_LEACH(Mode.IEE_LEACH),
-				new IEE_LEACH(Mode.IEE_LEACH_A),
-				new IEE_LEACH(Mode.IEE_LEACH_B),
-				new IEE_LEACH(Mode.My_IEE_LEACH_B),
-				new IEE_LEACH(Mode.My_IEE_LEACH)
-			};
-			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1);//BS
-			Sim.BS.Status = VisualizeNetwork.status.BS;
+				Status = VisualizeNetwork.status.BS
+			};//BS
 		}
 
 		// すべてのアルゴリズムのシミュレーションを実行
