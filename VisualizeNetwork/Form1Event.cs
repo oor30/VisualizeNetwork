@@ -13,7 +13,7 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		// ノード配置のファイルを開くボタン
+		// ★★★ノード配置のファイルを開くボタン
 		private void BtnOpenFile_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog ofDialog = new OpenFileDialog
@@ -44,7 +44,6 @@ namespace VisualizeNetwork
 						WholeSimulationProcess();
 						ResetView();
 					}
-					//List<int> integers = GetIntegers(fileName);
 				}
 			}
 			else
@@ -54,7 +53,7 @@ namespace VisualizeNetwork
 			ofDialog.Dispose();
 		}
 
-		// 100回のシミュレーションを実行するボタン
+		// ★★★100回のシミュレーションを実行するボタン
 		private void D100ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
@@ -76,16 +75,27 @@ namespace VisualizeNetwork
 							return;
 						}
 						scenario.initialNodes = CnvIntToNodes(integers);
-						WholeSimulationProcess("D100\\Data" + i.ToString() + "\\");
+						WholeSimulationProcess();
+						using (FolderBrowserDialog fbDialog = new FolderBrowserDialog()
+						{
+							Description = "保存場所を選択"
+						})
+						{
+							if (fbDialog.ShowDialog() == DialogResult.OK)
+							{
+								string fileName = fbDialog.SelectedPath + "\\Data" + i.ToString() +
+									"\\" + scenario.scenarioFile;
+								SaveScenario("D100\\Data" + i.ToString() + "\\");
+							}
+						}
 					}
-					//List<int> integers = GetIntegersFromRes(path);
 				}
 				scenario.scenarioFile = "D100\\Data9";
 				ResetView();
 			}
 		}
 
-		// ノード配置を無作為に生成してシミュレーションするボタン
+		// ★★★ノード配置を無作為に生成してシミュレーションするボタン
 		private void MenuItemCreate_Click(object sender, EventArgs e)
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
@@ -97,32 +107,7 @@ namespace VisualizeNetwork
 			}
 		}
 
-		// シナリオファイルを読み込むボタン
-		private void JsonToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog ofDialog = new OpenFileDialog
-			{
-				Title = "シナリオファイルを選択",
-				Filter = "シナリオファイル(*.vns)|*.vns"
-			};
-
-			if (ofDialog.ShowDialog() == DialogResult.OK)
-			{
-				using (Waiting waiting = new Waiting(this, labelProcessing))
-				{
-					PrintConsole("ファイルが選択されました。" + ofDialog.FileName);
-					string fileName = ofDialog.FileName;
-					OpenScenario(fileName);
-				}
-			}
-			else
-			{
-				Console.WriteLine("キャンセルされました。");
-			}
-			ofDialog.Dispose();
-		}
-
-		// 設定を適用するボタン
+		// ★設定を適用するボタン
 		private void BtnApply_Click(object sender, EventArgs e)
 		{
 			if (scenario.algorithms.Count == 0)
@@ -136,6 +121,58 @@ namespace VisualizeNetwork
 			{
 				WholeSimulationProcess();
 			}
+		}
+
+		// ★シナリオファイルを読み込むボタン
+		private void JsonToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			using (OpenFileDialog ofDialog = new OpenFileDialog
+			{
+				Title = "シナリオファイルを選択",
+				Filter = "シナリオファイル(*.vns)|*.vns"
+			})
+			{
+				if (ofDialog.ShowDialog() == DialogResult.OK)
+				{
+					using (Waiting waiting = new Waiting(this, labelProcessing))
+					{
+						PrintConsole("ファイルが選択されました：" + ofDialog.FileName);
+						string fileName = ofDialog.FileName;
+						OpenScenario(fileName);
+					}
+				}
+				else
+				{
+					Console.WriteLine("キャンセルされました。");
+				}
+			}
+		}
+
+		// シナリオファイルを保存するボタン
+		private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			using (SaveFileDialog sfDialog = new SaveFileDialog
+			{
+				Title = "ファイルを保存する",
+				FileName = scenario.scenarioFile + ".vns",
+				Filter = "シナリオファイル(*.vns)|*.vns"
+			})
+			{
+				if (sfDialog.ShowDialog() == DialogResult.OK)
+				{
+					using (Waiting waiting = new Waiting(this, labelProcessing))
+					{
+						PrintConsole("ファイルが選択されました：" + sfDialog.FileName);
+						string fileName = sfDialog.FileName;
+						SaveScenario(fileName);
+					}
+				}
+				else
+				{
+					Console.WriteLine("キャンセルされました。");
+				}
+			}
+
 		}
 
 		// ノード図上でカーソルが動いたとき、座標を変更する

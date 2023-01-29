@@ -126,7 +126,7 @@ namespace VisualizeNetwork
 			if (node.E_r <= 0)
 			{
 				node.IsAlive = false;
-				node.Status = status.dead;
+				node.Status = StatusEnum.dead;
 				aliveNum--;
 				if (aliveNum == N - 1) FDN = Round;
 				else if (aliveNum == 0) LDN = Round;

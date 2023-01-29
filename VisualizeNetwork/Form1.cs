@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
 using VisualizeNetwork.Resources.配置データ.D600;
@@ -40,14 +37,8 @@ namespace VisualizeNetwork
 		{
 			InitializeComponent();
 			pictureBoxNodeMap.Image = new Bitmap(pictureBoxNodeMap.Width, pictureBoxNodeMap.Height);
-			trackBarRound.Maximum = Sim.R;
-			trackBarPlaySpeed.Maximum = 100;
-
-			scenario = new Scenario
-			{
-				canvasW = pictureBoxNodeMap.Size.Width,
-				canvasH = pictureBoxNodeMap.Size.Height,
-			};
+			trackBarPlaySpeed.Maximum = 50;
+			scenario = new Scenario();
 		}
 
 
@@ -97,13 +88,13 @@ namespace VisualizeNetwork
 		}
 
 		// 1シミュレーション全体を実行する関数
-		private void WholeSimulationProcess(string outputFolderPath = "")
+		private void WholeSimulationProcess()
 		{
 			ResetParameters();
 			RunSimulation();
-			SaveScenario(outputFolderPath);
 		}
 
+		// 座標数値をファイルから読み取る関数
 		private List<int> GetIntegers(StreamReader sr)
 		{
 			PrintConsole("座標を読み込み中");
@@ -134,7 +125,7 @@ namespace VisualizeNetwork
 				PrintConsole("読み込み完了");
 				return integers;
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine("ファイルを読み込めませんでした : " + ex.Message);
 				MessageBox.Show("ファイルを読み込めませんでした。", "エラー",
@@ -143,6 +134,7 @@ namespace VisualizeNetwork
 			}
 		}
 
+		// 座標数値を無作為に生成する関数
 		private List<int> CreateIntegers()
 		{
 			PrintConsole("座標を作成中");
@@ -162,6 +154,7 @@ namespace VisualizeNetwork
 			return integers;
 		}
 
+		// 座標数値をノードリストに変換する関数
 		private List<Node> CnvIntToNodes(List<int> integers)
 		{
 			PrintConsole("座標を変換中");
@@ -183,6 +176,32 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("シミュレーションの準備中");
 
+			// 座標を正規化する
+			scenario.canvasW = pictureBoxNodeMap.Size.Width;
+			scenario.canvasH = pictureBoxNodeMap.Size.Height;
+
+			double maxX = double.MinValue;
+			double minX = double.MaxValue;
+			double maxY = double.MinValue;
+			double minY = double.MaxValue;
+
+			foreach (Node node in scenario.initialNodes)
+			{
+				if (maxX < node.X) maxX = node.X;
+				if (minX > node.X) minX = node.X;
+				if (maxY < node.Y) maxY = node.Y;
+				if (minY > node.Y) minY = node.Y;
+			}
+
+			scenario.maxX = maxX;
+			scenario.minX = minX;
+			scenario.maxY = maxY;
+			scenario.minY = minY;
+			double w = maxX - minX;
+			double h = maxY - minY;
+			scenario.rw = scenario.canvasW / w;
+			scenario.rh = scenario.canvasH / h;
+
 			// CH割合
 			Sim.P = (double)numericUpDownP.Value;
 			// 1ラウンドあたりの送信パケットサイズ
@@ -190,7 +209,7 @@ namespace VisualizeNetwork
 			// BSの座標
 			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1)
 			{
-				Status = VisualizeNetwork.status.BS
+				Status = VisualizeNetwork.StatusEnum.BS
 			};
 			// ノードの初期エネルギー
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
@@ -235,13 +254,11 @@ namespace VisualizeNetwork
 			labelProcessing.Refresh();
 		}
 
-		// シミュレーションシナリオを出力
+		// シミュレーションシナリオを保存
 		private void SaveScenario(string path)
 		{
-			PrintConsole("シミュレーションシナリオを書き出しています：" + path);
-			string folderPath = "C:\\Users\\kazuk\\Desktop\\output\\" + path;
-			if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-			using (FileStream fs = new FileStream(folderPath + scenario.scenarioFile + ".vns", FileMode.Create, FileAccess.Write))
+			PrintConsole("シミュレーションシナリオを書き出しています：" + scenario.scenarioFile);
+			using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
 			{
 				try
 				{
@@ -264,8 +281,8 @@ namespace VisualizeNetwork
 			{
 				try
 				{
-					BinaryFormatter f = new BinaryFormatter();
-					scenario = (Scenario)f.Deserialize(fs);
+					BinaryFormatter bf = new BinaryFormatter();
+					scenario = (Scenario)bf.Deserialize(fs);
 				}
 				catch
 				{

@@ -114,6 +114,7 @@
 			this.d100ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.labelProcessing = new System.Windows.Forms.Label();
 			this.btnNext = new System.Windows.Forms.Button();
 			this.btnBack = new System.Windows.Forms.Button();
@@ -250,7 +251,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 202);
+			this.resultTable.Size = new System.Drawing.Size(1616, 206);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -427,7 +428,7 @@
 			this.nodeID.Name = "nodeID";
 			this.nodeID.ReadOnly = true;
 			// 
-			// status
+			// StatusEnum
 			// 
 			this.status.FillWeight = 120F;
 			this.status.HeaderText = "status";
@@ -1075,7 +1076,8 @@
             this.toolStripMenuItem1,
             this.配置データを読み込むToolStripMenuItem,
             this.jsonToolStripMenuItem,
-            this.設定SToolStripMenuItem});
+            this.設定SToolStripMenuItem,
+            this.SaveToolStripMenuItem});
 			this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
 			this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
 			this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
@@ -1126,6 +1128,13 @@
 			this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
 			this.設定SToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
 			this.設定SToolStripMenuItem.Text = "設定(&S)...";
+			// 
+			// SaveToolStripMenuItem
+			// 
+			this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
+			this.SaveToolStripMenuItem.Size = new System.Drawing.Size(271, 34);
+			this.SaveToolStripMenuItem.Text = "保存";
+			this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
 			// 
 			// labelProcessing
 			// 
@@ -1210,7 +1219,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 931;
+			this.splitContainer1.SplitterDistance = 927;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1386,6 +1395,7 @@
 		private System.Windows.Forms.ToolStripMenuItem jsonToolStripMenuItem;
 		private System.Windows.Forms.Label labelScenario;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
 	}
 }
 

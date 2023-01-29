@@ -19,29 +19,6 @@ namespace VisualizeNetwork
 				return;
 			}
 
-			// 座標を正規化する
-			double maxX = double.MinValue;
-			double minX = double.MaxValue;
-			double maxY = double.MinValue;
-			double minY = double.MaxValue;
-
-			foreach (Node node in scenario.initialNodes)
-			{
-				if (maxX < node.X) maxX = node.X;
-				if (minX > node.X) minX = node.X;
-				if (maxY < node.Y) maxY = node.Y;
-				if (minY > node.Y) minY = node.Y;
-			}
-
-			scenario.maxX = maxX;
-			scenario.minX = minX;
-			scenario.maxY = maxY;
-			scenario.minY = minY;
-			double w = maxX - minX;
-			double h = maxY - minY;
-			scenario.rw = scenario.canvasW / w;
-			scenario.rh = scenario.canvasH / h;
-
 			int maxRound = 0;
 			foreach (Sim sim in scenario.algorithms)
 			{
@@ -67,6 +44,7 @@ namespace VisualizeNetwork
 			resultTable.Rows.Clear();
 			cmbBoxAlgo.Items.Clear();
 			selectedNodeID = 0;
+			changingEnabledAlgorithm = true;
 
 			// 結果表にシミュレーション結果を追加・コンボボックスにアルゴリズムを追加
 			foreach (Sim sim in scenario.algorithms)
