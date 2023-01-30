@@ -9,11 +9,11 @@ namespace VisualizeNetwork
 		// 変数
 		public string AlgoName { get; protected set; }     // アルゴリズム名
 		public int Round { get; private set; } = 0;   // 現在のラウンド数
+		public const int R = 3500;          // 最大シミュレーションラウンド数
 		[NonSerialized]
 		protected int CHNum = 0;        // CH数
 		protected int aliveNum;     // 生存ノード数
 		private double EnergyConsumption = 0;   // エネルギー消費量
-		public static List<Node> initialNodes = new List<Node>();
 
 		// シミュレーションを評価する指標
 		public int FDN { get; private set; } = 0;
@@ -30,19 +30,18 @@ namespace VisualizeNetwork
 		// 全ラウンド分のノードリスト
 		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
 
-		// パラメーター
-		public static Node BS = new Node(-1, 50, 125, -1);//BS
-		public static double[,] distTable;
-		public static double[] distBSList;
-		public static int N { get { return initialNodes.Count; } }           // ノード数
-		public static double P = 0.05;      // CHの割合
+		// パラメーター(Form1.csで設定)
+		public static List<Node> initialNodes = new List<Node>();   // 初期ノード(CnvIntToNodes)
+		public static double[,] distTable;  // 各ノード間の距離(CnvIntToNodes)
+		public static Node BS = new Node(-1, 50, 125, -1);	// BS(ResetParameters)
+		public static double[] distBSList;  // 各ノードからBSまでの距離(ResetParameters)
+		public static double P = 0.05;      // CHの割合(ResetParameters)
+		public static int N { get { return initialNodes.Count; } }	// ノード数
 		//public const int k = 5;             // クラスタヘッド数
-		public const int R = 3500;          // 最大シミュレーションラウンド数
 		//public const int INTERVAL = 20;     // (s/Round)
 
 		public void Run(List<Node> initialNodes)
 		{
-			//this.initialNodes = initialNodes;
 			aliveNum = N;
 			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)

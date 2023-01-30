@@ -245,7 +245,7 @@ namespace VisualizeNetwork
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{
 				double dist = Math.Sqrt(Sim.Dist2(scenario.initialNodes[i], Sim.BS));
-				Sim.distBSList[i] = dist;
+				distBSList[i] = dist;
 			}
 			Sim.distBSList = distBSList;
 			// ノードの初期エネルギー
