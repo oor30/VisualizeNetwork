@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows.Forms;
-using VisualizeNetwork.Resources.配置データ.D600;
 
 namespace VisualizeNetwork
 {

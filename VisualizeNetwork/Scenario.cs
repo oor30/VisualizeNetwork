@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace VisualizeNetwork.Resources.配置データ.D600
+namespace VisualizeNetwork
 {
 	[Serializable()]
 	public class Scenario

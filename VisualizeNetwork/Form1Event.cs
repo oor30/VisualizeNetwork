@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using VisualizeNetwork.Resources.配置データ.D600;
 
 namespace VisualizeNetwork
 {
