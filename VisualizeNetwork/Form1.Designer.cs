@@ -75,6 +75,7 @@
 			this.chartTotalEnergyConsumption = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.chartReceivedData = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.設定 = new System.Windows.Forms.TabPage();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			this.numericUpDownP = new System.Windows.Forms.NumericUpDown();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.cbMy_IEE_LEACH = new System.Windows.Forms.CheckBox();
@@ -125,10 +126,10 @@
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabResultTable = new System.Windows.Forms.TabPage();
 			this.tabLog = new System.Windows.Forms.TabPage();
+			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.labelScenario = new System.Windows.Forms.Label();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
@@ -143,6 +144,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.chartTotalEnergyConsumption)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.chartReceivedData)).BeginInit();
 			this.設定.SuspendLayout();
+			this.groupBox5.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownP)).BeginInit();
 			this.groupBox4.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -167,7 +169,6 @@
 			this.tabResultTable.SuspendLayout();
 			this.tabLog.SuspendLayout();
 			this.panel2.SuspendLayout();
-			this.groupBox5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// labelCoordinate
@@ -263,7 +264,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1598, 170);
+			this.resultTable.Size = new System.Drawing.Size(1598, 194);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -378,7 +379,7 @@
 			this.tabControl.MinimumSize = new System.Drawing.Size(1612, 906);
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(1614, 908);
+			this.tabControl.Size = new System.Drawing.Size(1614, 906);
 			this.tabControl.TabIndex = 14;
 			// 
 			// Simulation
@@ -393,7 +394,7 @@
 			this.Simulation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.Simulation.Name = "Simulation";
 			this.Simulation.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.Simulation.Size = new System.Drawing.Size(1606, 870);
+			this.Simulation.Size = new System.Drawing.Size(1606, 868);
 			this.Simulation.TabIndex = 0;
 			this.Simulation.Text = "Simulation";
 			// 
@@ -532,7 +533,7 @@
 			this.Chart1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.Chart1.Name = "Chart1";
 			this.Chart1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.Chart1.Size = new System.Drawing.Size(1604, 868);
+			this.Chart1.Size = new System.Drawing.Size(1606, 868);
 			this.Chart1.TabIndex = 1;
 			this.Chart1.Text = "Chart1";
 			this.Chart1.UseVisualStyleBackColor = true;
@@ -543,8 +544,8 @@
 			this.Chart2.Controls.Add(this.chartReceivedData);
 			this.Chart2.Location = new System.Drawing.Point(4, 34);
 			this.Chart2.Name = "Chart2";
-			this.Chart2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-			this.Chart2.Size = new System.Drawing.Size(1604, 868);
+			this.Chart2.Padding = new System.Windows.Forms.Padding(3);
+			this.Chart2.Size = new System.Drawing.Size(1606, 868);
 			this.Chart2.TabIndex = 2;
 			this.Chart2.Text = "Chart2";
 			this.Chart2.UseVisualStyleBackColor = true;
@@ -594,11 +595,21 @@
 			this.設定.Controls.Add(this.groupBoxInitialEnergy);
 			this.設定.Location = new System.Drawing.Point(4, 34);
 			this.設定.Name = "設定";
-			this.設定.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-			this.設定.Size = new System.Drawing.Size(1606, 870);
+			this.設定.Padding = new System.Windows.Forms.Padding(3);
+			this.設定.Size = new System.Drawing.Size(1606, 868);
 			this.設定.TabIndex = 3;
 			this.設定.Text = "設定";
 			this.設定.UseVisualStyleBackColor = true;
+			// 
+			// groupBox5
+			// 
+			this.groupBox5.Controls.Add(this.numericUpDownP);
+			this.groupBox5.Location = new System.Drawing.Point(471, 182);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(166, 100);
+			this.groupBox5.TabIndex = 6;
+			this.groupBox5.TabStop = false;
+			this.groupBox5.Text = "PH比率";
 			// 
 			// numericUpDownP
 			// 
@@ -633,9 +644,9 @@
 			this.groupBox4.Controls.Add(this.cbLEACH);
 			this.groupBox4.Controls.Add(this.cbDirect);
 			this.groupBox4.Location = new System.Drawing.Point(801, 45);
-			this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBox4.Size = new System.Drawing.Size(228, 297);
 			this.groupBox4.TabIndex = 5;
 			this.groupBox4.TabStop = false;
@@ -942,12 +953,13 @@
 			// 
 			// label4
 			// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(242, 63);
+			this.label4.Location = new System.Drawing.Point(240, 60);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(24, 25);
+			this.label4.Size = new System.Drawing.Size(30, 25);
 			this.label4.TabIndex = 0;
-			this.label4.Text = "+";
+			this.label4.Text = "＋";
 			// 
 			// numericUpDownRange
 			// 
@@ -957,7 +969,7 @@
             0,
             0,
             65536});
-			this.numericUpDownRange.Location = new System.Drawing.Point(270, 60);
+			this.numericUpDownRange.Location = new System.Drawing.Point(276, 58);
 			this.numericUpDownRange.Maximum = new decimal(new int[] {
             5,
             0,
@@ -1155,10 +1167,10 @@
 			// 
 			// labelProcessing
 			// 
+			this.labelProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelProcessing.AutoSize = true;
 			this.labelProcessing.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.labelProcessing.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.labelProcessing.Location = new System.Drawing.Point(0, 1293);
+			this.labelProcessing.Location = new System.Drawing.Point(1468, 154);
 			this.labelProcessing.Name = "labelProcessing";
 			this.labelProcessing.Size = new System.Drawing.Size(134, 25);
 			this.labelProcessing.TabIndex = 16;
@@ -1223,7 +1235,7 @@
 			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
 			this.splitContainer1.Location = new System.Drawing.Point(0, 180);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer1.Name = "splitContainer1";
 			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -1237,7 +1249,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1138);
-			this.splitContainer1.SplitterDistance = 910;
+			this.splitContainer1.SplitterDistance = 886;
 			this.splitContainer1.SplitterWidth = 10;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1247,35 +1259,48 @@
 			this.tabControl1.Controls.Add(this.tabLog);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(1614, 216);
+			this.tabControl1.Size = new System.Drawing.Size(1614, 240);
 			this.tabControl1.TabIndex = 9;
 			// 
 			// tabResultTable
 			// 
 			this.tabResultTable.Controls.Add(this.resultTable);
 			this.tabResultTable.Location = new System.Drawing.Point(4, 34);
-			this.tabResultTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabResultTable.Margin = new System.Windows.Forms.Padding(4);
 			this.tabResultTable.Name = "tabResultTable";
-			this.tabResultTable.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.tabResultTable.Size = new System.Drawing.Size(1606, 178);
+			this.tabResultTable.Padding = new System.Windows.Forms.Padding(4);
+			this.tabResultTable.Size = new System.Drawing.Size(1606, 202);
 			this.tabResultTable.TabIndex = 0;
 			this.tabResultTable.Text = "結果";
 			this.tabResultTable.UseVisualStyleBackColor = true;
 			// 
 			// tabLog
 			// 
+			this.tabLog.Controls.Add(this.labelProcessing);
+			this.tabLog.Controls.Add(this.progressBar1);
 			this.tabLog.Controls.Add(this.textBoxLog);
 			this.tabLog.Location = new System.Drawing.Point(4, 34);
-			this.tabLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabLog.Margin = new System.Windows.Forms.Padding(4);
 			this.tabLog.Name = "tabLog";
-			this.tabLog.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.tabLog.Size = new System.Drawing.Size(1604, 286);
+			this.tabLog.Padding = new System.Windows.Forms.Padding(4);
+			this.tabLog.Size = new System.Drawing.Size(1606, 202);
 			this.tabLog.TabIndex = 1;
 			this.tabLog.Text = "ログ";
 			this.tabLog.UseVisualStyleBackColor = true;
+			// 
+			// progressBar1
+			// 
+			this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.progressBar1.Location = new System.Drawing.Point(4, 188);
+			this.progressBar1.Name = "progressBar1";
+			this.progressBar1.Size = new System.Drawing.Size(1598, 10);
+			this.progressBar1.Step = 1;
+			this.progressBar1.TabIndex = 7;
+			this.progressBar1.Value = 5;
+			this.progressBar1.Visible = false;
 			// 
 			// textBoxLog
 			// 
@@ -1283,12 +1308,12 @@
 			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.textBoxLog.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textBoxLog.Location = new System.Drawing.Point(4, 4);
-			this.textBoxLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxLog.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ReadOnly = true;
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxLog.Size = new System.Drawing.Size(1596, 278);
+			this.textBoxLog.Size = new System.Drawing.Size(1598, 194);
 			this.textBoxLog.TabIndex = 0;
 			// 
 			// panel2
@@ -1318,22 +1343,11 @@
 			this.labelScenario.TabIndex = 11;
 			this.labelScenario.Text = "シナリオ：なし";
 			// 
-			// groupBox5
-			// 
-			this.groupBox5.Controls.Add(this.numericUpDownP);
-			this.groupBox5.Location = new System.Drawing.Point(471, 182);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(166, 100);
-			this.groupBox5.TabIndex = 6;
-			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "PH比率";
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1616, 1318);
-			this.Controls.Add(this.labelProcessing);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.panel1);
 			this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -1357,6 +1371,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.chartTotalEnergyConsumption)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.chartReceivedData)).EndInit();
 			this.設定.ResumeLayout(false);
+			this.groupBox5.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownP)).EndInit();
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox4.PerformLayout();
@@ -1388,7 +1403,6 @@
 			this.tabLog.PerformLayout();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
-			this.groupBox5.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -1484,6 +1498,7 @@
 		private System.Windows.Forms.TabPage tabLog;
 		private System.Windows.Forms.TextBox textBoxLog;
 		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.ProgressBar progressBar1;
 	}
 }
 

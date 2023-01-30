@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -48,7 +50,7 @@ namespace VisualizeNetwork
 			}
 			else
 			{
-				Console.WriteLine("キャンセルされました。");
+				PrintConsole("キャンセルされました。");
 			}
 			ofDialog.Dispose();
 		}
@@ -65,8 +67,19 @@ namespace VisualizeNetwork
 				{
 					if (fbDialog.ShowDialog() == DialogResult.OK)
 					{
+						Dictionary<string, Record>  record = null;
+						progressBar1.Minimum = 0;
+						progressBar1.Maximum = 10;
+						progressBar1.Value= 0;
+						progressBar1.Visible = true;
+						labelProcessing.Visible = true;
 						for (int i = 0; i < 10; i++)
 						{
+							progressBar1.PerformStep();
+							progressBar1.Update();
+							labelProcessing.Text = (i + 1).ToString() + " / 100";
+							labelProcessing.Update();
+
 							string path = "D100.Data" + i.ToString() + ".txt";
 							var assm = Assembly.GetExecutingAssembly();
 							var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
@@ -84,14 +97,53 @@ namespace VisualizeNetwork
 								scenario.initialNodes = CnvIntToNodes(integers);
 								scenario.scenarioFile = "\\Data" + i.ToString();
 								WholeSimulationProcess();
+								Application.DoEvents();
+
+								if (record == null)
+								{
+									record = new Dictionary<string, Record>();
+									foreach (Sim sim in scenario.algorithms)
+									{
+										record.Add(sim.AlgoName, new Record());
+									}
+								}
+								foreach (Sim sim in scenario.algorithms)
+								{
+									record[sim.AlgoName].Add(sim.FDN, sim.LDN);
+								}
+
 								//string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
 								//SaveScenario(fileName);
 							}
 						}
+						progressBar1.Visible= false;
+						labelProcessing.Visible= false;
+						foreach(KeyValuePair<string, Record> kvp in record)
+						{
+							PrintConsole(kvp.Key + "：：" + kvp.Value.GetMean(), false);
+						}
+						//string jsonStr = JsonSerializer.Serialize(record);
+						using (StreamWriter writer = new StreamWriter(
+							fbDialog.SelectedPath + "\\シミュレーション結果.json", false))
+						{
+							//using(StreamWriter writer = new StreamWriter(fbDialog.SelectedPath ))
+							try
+							{
+								records = new Records(record, Sim.BS);
+								string jsonStr = JsonSerializer.Serialize(records);
+								writer.WriteLine(jsonStr);
+							}
+							catch
+							{
+								MessageBox.Show("シナリオファイルを保存できませんでした。",
+									"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+						}
+
 					}
 					else
 					{
-						Console.WriteLine("キャンセルされました。");
+						PrintConsole("キャンセルされました。");
 					}
 				}
 				ResetView();

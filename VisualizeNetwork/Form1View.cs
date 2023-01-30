@@ -159,7 +159,9 @@ namespace VisualizeNetwork
 					node.Status == StatusEnum.dead ? "-" : node.CHID.ToString(),
 					Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
 					node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
-				if (node.UnqualifiedRound == 0)
+				if (node.Status == StatusEnum.dead )
+					roundTable.Rows[roundTable.Rows.Count-1].Cells[1].Style.ForeColor= Color.Red;
+				if (node.UnqualifiedRound != 0)
 					roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
 				sumEnergy += node.E_r;
 				sumCmsEnergy += node.CmsEnergy;
@@ -167,7 +169,8 @@ namespace VisualizeNetwork
 				sumPi += node.Pi;
 				if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
 			}
-			roundTable.Rows.Insert(0, "合計", "生存" + enabledAlgorithm.AliveNumList[SafeRound - 1] + "個",
+			roundTable.Rows.Insert(0, "計" + Sim.N + "個",
+				"生存" + enabledAlgorithm.AliveNumList[SafeRound - 1] + "個",
 				enabledAlgorithm.CHNumList[SafeRound - 1] + "個",
 				Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
 				sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));

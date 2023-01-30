@@ -75,7 +75,7 @@ namespace VisualizeNetwork
                     if (mode == Mode.My_IEE_LEACH && headID == node.ID) continue;
                     Node tmp = nodes[headID];
                     //double dist = Dist2(tmp, node);
-					double dist = distTable[i, headID];
+					double dist = distTable[tmp.ID, node.ID];
 					if (dist < distMin)
                     {
                         if (mode == Mode.My_IEE_LEACH && node.IsCH && distBSList[node.ID] <= distBSList[tmp.ID])

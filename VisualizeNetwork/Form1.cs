@@ -13,6 +13,7 @@ namespace VisualizeNetwork
 	public partial class Form1 : Form
 	{
 		private Scenario scenario;
+		private Records records;
 		private Sim enabledAlgorithm;
 		private List<Node> EnabledNodes
 		{
@@ -89,7 +90,8 @@ namespace VisualizeNetwork
 			{
 				trackBarRound.Value = round;
 			}
-			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}", enabledAlgorithm.AlgoName, round));
+			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}", 
+				enabledAlgorithm.AlgoName, round));
 			labelRound.Text = "ラウンド：" + round;
 			RefreshPaint(EnabledNodes);
 			if (!isPlaying) RefreshRoundTable(EnabledNodes);
@@ -187,7 +189,7 @@ namespace VisualizeNetwork
 				{
 					double dist;
 					if (i == j) dist = 0;
-					else if (i > j) dist = distTable[i, j];
+					else if (i > j) dist = distTable[j, i];
 					else
 					{
 						dist = Math.Sqrt(Sim.Dist2(initialNodes[i], initialNodes[j]));
@@ -284,12 +286,13 @@ namespace VisualizeNetwork
 		}
 
 		// コンソールとフォーム下部に出力
-		private void PrintConsole(string content)
+		internal void PrintConsole(string content, bool writeTime = true)
 		{
-			Console.WriteLine(string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content);
-			labelProcessing.Text = content;
-			labelProcessing.Refresh();
-			textBoxLog.AppendText(string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content + Environment.NewLine);
+			//labelProcessing.Text = content;
+			//labelProcessing.Refresh();
+			if (writeTime) content = string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content;
+			Console.WriteLine(content);
+			textBoxLog.AppendText(content + Environment.NewLine);
 		}
 
 		// シミュレーションシナリオを保存

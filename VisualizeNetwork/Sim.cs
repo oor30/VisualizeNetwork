@@ -22,8 +22,8 @@ namespace VisualizeNetwork
 		public double CHSD { get; private set; } = 0;
 		public double AveEnergyConsumption { get; private set; } = 0;
 		public int CollectedDataNum { get; private set; } = 0;
-		public List<int> AliveNumList { get; } = new List<int>();   // 生存ノード数のリスト
 		public List<int> CHNumList { get; } = new List<int>();      // CH数のリスト
+		public List<int> AliveNumList { get; } = new List<int>();   // 生存ノード数のリスト
 		public List<int> CollectedDataNumList { get; } = new List<int>();
 		public List<double> TotalEnergyConsumptionList { get; } = new List<double>();
 

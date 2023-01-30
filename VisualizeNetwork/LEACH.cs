@@ -134,7 +134,7 @@ namespace VisualizeNetwork
 				{
 					Node tmp = nodes[headID];
 					//double dist = Dist2(tmp, node);
-					double dist = distTable[i, headID];
+					double dist = distTable[tmp.ID, node.ID];
 					if (dist < distMin)
 					{
 						head = tmp;
