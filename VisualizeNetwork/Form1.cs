@@ -22,6 +22,14 @@ namespace VisualizeNetwork
 				else return enabledAlgorithm.NodesList[enabledAlgorithm.NodesList.Count - 1];
 			}
 		}
+		private int SafeRound
+		{
+			get
+			{
+				if (round > enabledAlgorithm.LDN) return enabledAlgorithm.LDN;
+				else return round;
+			}
+		}
 
 		private int round = 1;
 		private int playSpeed = 1;
@@ -168,6 +176,26 @@ namespace VisualizeNetwork
 					initEnergy: initEnergy);
 				initialNodes.Add(node);
 			}
+			Sim.initialNodes = initialNodes;
+
+			PrintConsole("各ノード間の距離を計算中");
+			double[,] distTable = new double[initialNodes.Count, initialNodes.Count];
+			//List<List<double>> distTable = new List<List<double>>();
+			for (int i = 0; i < initialNodes.Count; i++)
+			{
+				for (int j = 0; j < initialNodes.Count; j++)
+				{
+					double dist;
+					if (i == j) dist = 0;
+					else if (i > j) dist = distTable[i, j];
+					else
+					{
+						dist = Math.Sqrt(Sim.Dist2(initialNodes[i], initialNodes[j]));
+					}
+					distTable[i, j] = dist;
+				}
+			}
+			Sim.distTable = distTable;
 			return initialNodes;
 		}
 
@@ -175,6 +203,8 @@ namespace VisualizeNetwork
 		private void ResetParameters()
 		{
 			PrintConsole("シミュレーションの準備中");
+
+			tabControl1.SelectedTab = tabLog;
 
 			// 座標を正規化する
 			scenario.canvasW = pictureBoxNodeMap.Size.Width;
@@ -211,6 +241,13 @@ namespace VisualizeNetwork
 			{
 				Status = StatusEnum.BS
 			};
+			double[] distBSList = new double[Sim.N];
+			for (int i = 0; i < scenario.initialNodes.Count; i++)
+			{
+				double dist = Math.Sqrt(Sim.Dist2(scenario.initialNodes[i], Sim.BS));
+				Sim.distBSList[i] = dist;
+			}
+			Sim.distBSList = distBSList;
 			// ノードの初期エネルギー
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{
@@ -252,6 +289,7 @@ namespace VisualizeNetwork
 			Console.WriteLine(string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content);
 			labelProcessing.Text = content;
 			labelProcessing.Refresh();
+			textBoxLog.AppendText(string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content + Environment.NewLine);
 		}
 
 		// シミュレーションシナリオを保存

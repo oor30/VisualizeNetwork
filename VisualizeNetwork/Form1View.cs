@@ -35,6 +35,7 @@ namespace VisualizeNetwork
 
 			// 変数を初期化
 			tabControl.SelectedIndex = 0;
+			tabControl1.SelectedTab = tabResultTable;
 			round = 1;
 			playSpeed = 1;
 			trackBarPlaySpeed.Value = playSpeed;
@@ -150,12 +151,13 @@ namespace VisualizeNetwork
 			double sumHasCHCnt = 0;
 			int qualifiedNodeNum = 0;
 			double sumPi = 0;
-			int numCH = 0;
 			for (int i = 0; i < scenario.N; i++)
 			{
 				Node node = nodes[i];
 
-				roundTable.Rows.Add(i, node.Status.ToString(), node.CHID, Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
+				roundTable.Rows.Add(i, node.Status.ToString(),
+					node.Status == StatusEnum.dead ? "-" : node.CHID.ToString(),
+					Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
 					node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
 				if (node.UnqualifiedRound == 0)
 					roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
@@ -165,7 +167,9 @@ namespace VisualizeNetwork
 				sumPi += node.Pi;
 				if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
 			}
-			roundTable.Rows.Insert(0, "合計", "", numCH, Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
+			roundTable.Rows.Insert(0, "合計", "生存" + enabledAlgorithm.AliveNumList[SafeRound - 1] + "個",
+				enabledAlgorithm.CHNumList[SafeRound - 1] + "個",
+				Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
 				sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
 		}
 
@@ -258,16 +262,17 @@ namespace VisualizeNetwork
 			Pen pen = new Pen(Color.Black);
 			foreach (Node node in nodes)
 			{
+				if (node.Status == StatusEnum.dead) continue;
+
 				Node head;
 				if (node.CHID == -1)
 				{
-					head = Sim.BS;
-					//continue;
+					//head = Sim.BS;
+					continue;
 				}
 				else
 				{
 					head = nodes[node.CHID];
-
 				}
 				if (node.ID != head.ID)
 				{

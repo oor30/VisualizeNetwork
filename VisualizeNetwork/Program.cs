@@ -95,5 +95,16 @@ namespace VisualizeNetwork
 			HasCHCnt++;
 			Status = StatusEnum.CH;
 		}
+
+		public void SetDead()
+		{
+			Status = StatusEnum.dead;
+			CHID = 444;
+			IsCH = false;
+			MemberNum = 0;
+			Pi = 0;
+			CmsEnergy = 0;
+			UnqualifiedRound = 0;
+		}
 	}
 }

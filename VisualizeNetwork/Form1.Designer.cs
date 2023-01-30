@@ -47,6 +47,14 @@
 			this.trackBarPlaySpeed = new System.Windows.Forms.TrackBar();
 			this.labelPlaySpeed = new System.Windows.Forms.Label();
 			this.resultTable = new System.Windows.Forms.DataGridView();
+			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.headerAlgoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.FDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.LDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.CHave = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.CHsd = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.平均消費量 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.BS受信回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.cmbBoxAlgo = new System.Windows.Forms.ComboBox();
 			this.chartAliveNums = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.chartNumCH = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -68,7 +76,6 @@
 			this.chartReceivedData = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.設定 = new System.Windows.Forms.TabPage();
 			this.numericUpDownP = new System.Windows.Forms.NumericUpDown();
-			this.label7 = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.cbMy_IEE_LEACH = new System.Windows.Forms.CheckBox();
 			this.cbMy_IEE_LEACH_B = new System.Windows.Forms.CheckBox();
@@ -115,16 +122,13 @@
 			this.btnPlayPose = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabResultTable = new System.Windows.Forms.TabPage();
+			this.tabLog = new System.Windows.Forms.TabPage();
+			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.labelScenario = new System.Windows.Forms.Label();
-			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.headerAlgoName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.FDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.LDN = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.CHave = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.CHsd = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.平均消費量 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.BS受信回数 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
@@ -159,7 +163,11 @@
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			this.tabControl1.SuspendLayout();
+			this.tabResultTable.SuspendLayout();
+			this.tabLog.SuspendLayout();
 			this.panel2.SuspendLayout();
+			this.groupBox5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// labelCoordinate
@@ -177,7 +185,7 @@
 			// 
 			this.trackBarRound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarRound.Location = new System.Drawing.Point(149, 43);
+			this.trackBarRound.Location = new System.Drawing.Point(148, 44);
 			this.trackBarRound.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.trackBarRound.Maximum = 100;
 			this.trackBarRound.MaximumSize = new System.Drawing.Size(1178, 68);
@@ -244,7 +252,7 @@
             this.平均消費量,
             this.BS受信回数});
 			this.resultTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.resultTable.Location = new System.Drawing.Point(0, 0);
+			this.resultTable.Location = new System.Drawing.Point(4, 4);
 			this.resultTable.MultiSelect = false;
 			this.resultTable.Name = "resultTable";
 			this.resultTable.ReadOnly = true;
@@ -255,9 +263,77 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1616, 212);
+			this.resultTable.Size = new System.Drawing.Size(1598, 170);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
+			// 
+			// Column1
+			// 
+			this.Column1.HeaderText = "No.";
+			this.Column1.MinimumWidth = 8;
+			this.Column1.Name = "Column1";
+			this.Column1.ReadOnly = true;
+			// 
+			// headerAlgoName
+			// 
+			this.headerAlgoName.FillWeight = 140F;
+			this.headerAlgoName.HeaderText = "アルゴリズム";
+			this.headerAlgoName.MinimumWidth = 8;
+			this.headerAlgoName.Name = "headerAlgoName";
+			this.headerAlgoName.ReadOnly = true;
+			// 
+			// FDN
+			// 
+			this.FDN.FillWeight = 80F;
+			this.FDN.HeaderText = "FDN";
+			this.FDN.MinimumWidth = 8;
+			this.FDN.Name = "FDN";
+			this.FDN.ReadOnly = true;
+			this.FDN.ToolTipText = "最初にノードが死ぬまでのラウンド数";
+			// 
+			// LDN
+			// 
+			this.LDN.FillWeight = 80F;
+			this.LDN.HeaderText = "LDN";
+			this.LDN.MinimumWidth = 8;
+			this.LDN.Name = "LDN";
+			this.LDN.ReadOnly = true;
+			this.LDN.ToolTipText = "最後のノードが死ぬまでのラウンド数";
+			// 
+			// CHave
+			// 
+			this.CHave.HeaderText = "CH平均";
+			this.CHave.MinimumWidth = 8;
+			this.CHave.Name = "CHave";
+			this.CHave.ReadOnly = true;
+			this.CHave.ToolTipText = "FDNまでの平均クラスタヘッド数";
+			// 
+			// CHsd
+			// 
+			this.CHsd.FillWeight = 130F;
+			this.CHsd.HeaderText = "CH標準偏差";
+			this.CHsd.MinimumWidth = 8;
+			this.CHsd.Name = "CHsd";
+			this.CHsd.ReadOnly = true;
+			this.CHsd.ToolTipText = "FDNまでのクラスタヘッド数の標準偏差";
+			// 
+			// 平均消費量
+			// 
+			this.平均消費量.FillWeight = 130F;
+			this.平均消費量.HeaderText = "平均消費量";
+			this.平均消費量.MinimumWidth = 8;
+			this.平均消費量.Name = "平均消費量";
+			this.平均消費量.ReadOnly = true;
+			this.平均消費量.ToolTipText = "FDNまでのラウンドあたりの平均エネルギー消費量(J)";
+			// 
+			// BS受信回数
+			// 
+			this.BS受信回数.FillWeight = 130F;
+			this.BS受信回数.HeaderText = "収集データ数";
+			this.BS受信回数.MinimumWidth = 8;
+			this.BS受信回数.Name = "BS受信回数";
+			this.BS受信回数.ReadOnly = true;
+			this.BS受信回数.ToolTipText = "ノードからBSまで送られたパケット数";
 			// 
 			// cmbBoxAlgo
 			// 
@@ -296,17 +372,18 @@
 			this.tabControl.Controls.Add(this.Chart1);
 			this.tabControl.Controls.Add(this.Chart2);
 			this.tabControl.Controls.Add(this.設定);
+			this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl.Location = new System.Drawing.Point(0, 0);
 			this.tabControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.tabControl.MaximumSize = new System.Drawing.Size(1612, 906);
 			this.tabControl.MinimumSize = new System.Drawing.Size(1612, 906);
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(1612, 906);
+			this.tabControl.Size = new System.Drawing.Size(1614, 908);
 			this.tabControl.TabIndex = 14;
 			// 
 			// Simulation
 			// 
+			this.Simulation.AutoScroll = true;
 			this.Simulation.BackColor = System.Drawing.Color.Transparent;
 			this.Simulation.Controls.Add(this.roundTable);
 			this.Simulation.Controls.Add(this.pictureBoxNodeMap);
@@ -316,7 +393,7 @@
 			this.Simulation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.Simulation.Name = "Simulation";
 			this.Simulation.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.Simulation.Size = new System.Drawing.Size(1604, 868);
+			this.Simulation.Size = new System.Drawing.Size(1606, 870);
 			this.Simulation.TabIndex = 0;
 			this.Simulation.Text = "Simulation";
 			// 
@@ -344,7 +421,7 @@
             this.CH回数,
             this.CH資格,
             this.Pi});
-			this.roundTable.Location = new System.Drawing.Point(694, 51);
+			this.roundTable.Location = new System.Drawing.Point(756, 51);
 			this.roundTable.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.roundTable.MultiSelect = false;
 			this.roundTable.Name = "roundTable";
@@ -438,9 +515,9 @@
 			this.pictureBoxNodeMap.BackColor = System.Drawing.SystemColors.Window;
 			this.pictureBoxNodeMap.Location = new System.Drawing.Point(3, 51);
 			this.pictureBoxNodeMap.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.pictureBoxNodeMap.MaximumSize = new System.Drawing.Size(692, 750);
+			this.pictureBoxNodeMap.MaximumSize = new System.Drawing.Size(750, 750);
 			this.pictureBoxNodeMap.Name = "pictureBoxNodeMap";
-			this.pictureBoxNodeMap.Size = new System.Drawing.Size(687, 750);
+			this.pictureBoxNodeMap.Size = new System.Drawing.Size(750, 750);
 			this.pictureBoxNodeMap.TabIndex = 0;
 			this.pictureBoxNodeMap.TabStop = false;
 			this.pictureBoxNodeMap.MouseEnter += new System.EventHandler(this.PictureBoxNodeMap_MouseEnter);
@@ -466,7 +543,7 @@
 			this.Chart2.Controls.Add(this.chartReceivedData);
 			this.Chart2.Location = new System.Drawing.Point(4, 34);
 			this.Chart2.Name = "Chart2";
-			this.Chart2.Padding = new System.Windows.Forms.Padding(3);
+			this.Chart2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
 			this.Chart2.Size = new System.Drawing.Size(1604, 868);
 			this.Chart2.TabIndex = 2;
 			this.Chart2.Text = "Chart2";
@@ -508,8 +585,7 @@
 			// 
 			// 設定
 			// 
-			this.設定.Controls.Add(this.numericUpDownP);
-			this.設定.Controls.Add(this.label7);
+			this.設定.Controls.Add(this.groupBox5);
 			this.設定.Controls.Add(this.groupBox4);
 			this.設定.Controls.Add(this.groupBox3);
 			this.設定.Controls.Add(this.groupBox2);
@@ -518,8 +594,8 @@
 			this.設定.Controls.Add(this.groupBoxInitialEnergy);
 			this.設定.Location = new System.Drawing.Point(4, 34);
 			this.設定.Name = "設定";
-			this.設定.Padding = new System.Windows.Forms.Padding(3);
-			this.設定.Size = new System.Drawing.Size(1604, 868);
+			this.設定.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.設定.Size = new System.Drawing.Size(1606, 870);
 			this.設定.TabIndex = 3;
 			this.設定.Text = "設定";
 			this.設定.UseVisualStyleBackColor = true;
@@ -532,7 +608,7 @@
             0,
             0,
             131072});
-			this.numericUpDownP.Location = new System.Drawing.Point(495, 201);
+			this.numericUpDownP.Location = new System.Drawing.Point(25, 46);
 			this.numericUpDownP.Maximum = new decimal(new int[] {
             1,
             0,
@@ -547,15 +623,6 @@
             0,
             131072});
 			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(370, 201);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(88, 25);
-			this.label7.TabIndex = 4;
-			this.label7.Text = "CH比率 p";
-			// 
 			// groupBox4
 			// 
 			this.groupBox4.Controls.Add(this.cbMy_IEE_LEACH);
@@ -566,10 +633,10 @@
 			this.groupBox4.Controls.Add(this.cbLEACH);
 			this.groupBox4.Controls.Add(this.cbDirect);
 			this.groupBox4.Location = new System.Drawing.Point(801, 45);
-			this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
+			this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
-			this.groupBox4.Size = new System.Drawing.Size(300, 297);
+			this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBox4.Size = new System.Drawing.Size(228, 297);
 			this.groupBox4.TabIndex = 5;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "アルゴリズム";
@@ -579,7 +646,7 @@
 			this.cbMy_IEE_LEACH.AutoSize = true;
 			this.cbMy_IEE_LEACH.Checked = true;
 			this.cbMy_IEE_LEACH.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbMy_IEE_LEACH.Location = new System.Drawing.Point(8, 250);
+			this.cbMy_IEE_LEACH.Location = new System.Drawing.Point(17, 249);
 			this.cbMy_IEE_LEACH.Name = "cbMy_IEE_LEACH";
 			this.cbMy_IEE_LEACH.Size = new System.Drawing.Size(153, 29);
 			this.cbMy_IEE_LEACH.TabIndex = 6;
@@ -589,7 +656,7 @@
 			// cbMy_IEE_LEACH_B
 			// 
 			this.cbMy_IEE_LEACH_B.AutoSize = true;
-			this.cbMy_IEE_LEACH_B.Location = new System.Drawing.Point(8, 214);
+			this.cbMy_IEE_LEACH_B.Location = new System.Drawing.Point(17, 213);
 			this.cbMy_IEE_LEACH_B.Name = "cbMy_IEE_LEACH_B";
 			this.cbMy_IEE_LEACH_B.Size = new System.Drawing.Size(170, 29);
 			this.cbMy_IEE_LEACH_B.TabIndex = 5;
@@ -599,7 +666,7 @@
 			// cbIEE_LEACH_B
 			// 
 			this.cbIEE_LEACH_B.AutoSize = true;
-			this.cbIEE_LEACH_B.Location = new System.Drawing.Point(8, 176);
+			this.cbIEE_LEACH_B.Location = new System.Drawing.Point(17, 175);
 			this.cbIEE_LEACH_B.Name = "cbIEE_LEACH_B";
 			this.cbIEE_LEACH_B.Size = new System.Drawing.Size(138, 29);
 			this.cbIEE_LEACH_B.TabIndex = 4;
@@ -609,7 +676,7 @@
 			// cbIEE_LEACH_A
 			// 
 			this.cbIEE_LEACH_A.AutoSize = true;
-			this.cbIEE_LEACH_A.Location = new System.Drawing.Point(8, 140);
+			this.cbIEE_LEACH_A.Location = new System.Drawing.Point(17, 139);
 			this.cbIEE_LEACH_A.Name = "cbIEE_LEACH_A";
 			this.cbIEE_LEACH_A.Size = new System.Drawing.Size(140, 29);
 			this.cbIEE_LEACH_A.TabIndex = 3;
@@ -621,7 +688,7 @@
 			this.cbIEE_LEACH.AutoSize = true;
 			this.cbIEE_LEACH.Checked = true;
 			this.cbIEE_LEACH.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbIEE_LEACH.Location = new System.Drawing.Point(8, 104);
+			this.cbIEE_LEACH.Location = new System.Drawing.Point(17, 103);
 			this.cbIEE_LEACH.Name = "cbIEE_LEACH";
 			this.cbIEE_LEACH.Size = new System.Drawing.Size(121, 29);
 			this.cbIEE_LEACH.TabIndex = 2;
@@ -633,7 +700,7 @@
 			this.cbLEACH.AutoSize = true;
 			this.cbLEACH.Checked = true;
 			this.cbLEACH.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbLEACH.Location = new System.Drawing.Point(8, 68);
+			this.cbLEACH.Location = new System.Drawing.Point(17, 67);
 			this.cbLEACH.Name = "cbLEACH";
 			this.cbLEACH.Size = new System.Drawing.Size(91, 29);
 			this.cbLEACH.TabIndex = 1;
@@ -643,7 +710,7 @@
 			// cbDirect
 			// 
 			this.cbDirect.AutoSize = true;
-			this.cbDirect.Location = new System.Drawing.Point(8, 32);
+			this.cbDirect.Location = new System.Drawing.Point(17, 31);
 			this.cbDirect.Name = "cbDirect";
 			this.cbDirect.Size = new System.Drawing.Size(84, 29);
 			this.cbDirect.TabIndex = 0;
@@ -658,7 +725,7 @@
 			this.groupBox3.Controls.Add(this.numericUpDownN);
 			this.groupBox3.Location = new System.Drawing.Point(1245, 45);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(279, 150);
+			this.groupBox3.Size = new System.Drawing.Size(279, 132);
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "その他";
@@ -1091,7 +1158,7 @@
 			this.labelProcessing.AutoSize = true;
 			this.labelProcessing.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.labelProcessing.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.labelProcessing.Location = new System.Drawing.Point(0, 1294);
+			this.labelProcessing.Location = new System.Drawing.Point(0, 1293);
 			this.labelProcessing.Name = "labelProcessing";
 			this.labelProcessing.Size = new System.Drawing.Size(134, 25);
 			this.labelProcessing.TabIndex = 16;
@@ -1147,15 +1214,16 @@
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1616, 1319);
+			this.panel1.Size = new System.Drawing.Size(1616, 1318);
 			this.panel1.TabIndex = 17;
 			// 
 			// splitContainer1
 			// 
+			this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
 			this.splitContainer1.Location = new System.Drawing.Point(0, 180);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.splitContainer1.Name = "splitContainer1";
 			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -1167,11 +1235,61 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.resultTable);
-			this.splitContainer1.Size = new System.Drawing.Size(1616, 1139);
-			this.splitContainer1.SplitterDistance = 921;
-			this.splitContainer1.SplitterWidth = 6;
+			this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
+			this.splitContainer1.Size = new System.Drawing.Size(1616, 1138);
+			this.splitContainer1.SplitterDistance = 910;
+			this.splitContainer1.SplitterWidth = 10;
 			this.splitContainer1.TabIndex = 11;
+			// 
+			// tabControl1
+			// 
+			this.tabControl1.Controls.Add(this.tabResultTable);
+			this.tabControl1.Controls.Add(this.tabLog);
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl1.Location = new System.Drawing.Point(0, 0);
+			this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(1614, 216);
+			this.tabControl1.TabIndex = 9;
+			// 
+			// tabResultTable
+			// 
+			this.tabResultTable.Controls.Add(this.resultTable);
+			this.tabResultTable.Location = new System.Drawing.Point(4, 34);
+			this.tabResultTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabResultTable.Name = "tabResultTable";
+			this.tabResultTable.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabResultTable.Size = new System.Drawing.Size(1606, 178);
+			this.tabResultTable.TabIndex = 0;
+			this.tabResultTable.Text = "結果";
+			this.tabResultTable.UseVisualStyleBackColor = true;
+			// 
+			// tabLog
+			// 
+			this.tabLog.Controls.Add(this.textBoxLog);
+			this.tabLog.Location = new System.Drawing.Point(4, 34);
+			this.tabLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabLog.Name = "tabLog";
+			this.tabLog.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tabLog.Size = new System.Drawing.Size(1604, 286);
+			this.tabLog.TabIndex = 1;
+			this.tabLog.Text = "ログ";
+			this.tabLog.UseVisualStyleBackColor = true;
+			// 
+			// textBoxLog
+			// 
+			this.textBoxLog.BackColor = System.Drawing.SystemColors.HighlightText;
+			this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxLog.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBoxLog.Location = new System.Drawing.Point(4, 4);
+			this.textBoxLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxLog.Multiline = true;
+			this.textBoxLog.Name = "textBoxLog";
+			this.textBoxLog.ReadOnly = true;
+			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.textBoxLog.Size = new System.Drawing.Size(1596, 278);
+			this.textBoxLog.TabIndex = 0;
 			// 
 			// panel2
 			// 
@@ -1194,92 +1312,34 @@
 			// labelScenario
 			// 
 			this.labelScenario.AutoSize = true;
-			this.labelScenario.Location = new System.Drawing.Point(685, 121);
+			this.labelScenario.Location = new System.Drawing.Point(686, 122);
 			this.labelScenario.Name = "labelScenario";
 			this.labelScenario.Size = new System.Drawing.Size(113, 25);
 			this.labelScenario.TabIndex = 11;
 			this.labelScenario.Text = "シナリオ：なし";
 			// 
-			// Column1
+			// groupBox5
 			// 
-			this.Column1.HeaderText = "No.";
-			this.Column1.MinimumWidth = 8;
-			this.Column1.Name = "Column1";
-			this.Column1.ReadOnly = true;
-			// 
-			// headerAlgoName
-			// 
-			this.headerAlgoName.FillWeight = 140F;
-			this.headerAlgoName.HeaderText = "アルゴリズム";
-			this.headerAlgoName.MinimumWidth = 8;
-			this.headerAlgoName.Name = "headerAlgoName";
-			this.headerAlgoName.ReadOnly = true;
-			// 
-			// FDN
-			// 
-			this.FDN.FillWeight = 80F;
-			this.FDN.HeaderText = "FDN";
-			this.FDN.MinimumWidth = 8;
-			this.FDN.Name = "FDN";
-			this.FDN.ReadOnly = true;
-			this.FDN.ToolTipText = "最初にノードが死ぬまでのラウンド数";
-			// 
-			// LDN
-			// 
-			this.LDN.FillWeight = 80F;
-			this.LDN.HeaderText = "LDN";
-			this.LDN.MinimumWidth = 8;
-			this.LDN.Name = "LDN";
-			this.LDN.ReadOnly = true;
-			this.LDN.ToolTipText = "最後のノードが死ぬまでのラウンド数";
-			// 
-			// CHave
-			// 
-			this.CHave.HeaderText = "CH平均";
-			this.CHave.MinimumWidth = 8;
-			this.CHave.Name = "CHave";
-			this.CHave.ReadOnly = true;
-			this.CHave.ToolTipText = "FDNまでの平均クラスタヘッド数";
-			// 
-			// CHsd
-			// 
-			this.CHsd.FillWeight = 130F;
-			this.CHsd.HeaderText = "CH標準偏差";
-			this.CHsd.MinimumWidth = 8;
-			this.CHsd.Name = "CHsd";
-			this.CHsd.ReadOnly = true;
-			this.CHsd.ToolTipText = "FDNまでのクラスタヘッド数の標準偏差";
-			// 
-			// 平均消費量
-			// 
-			this.平均消費量.FillWeight = 130F;
-			this.平均消費量.HeaderText = "平均消費量";
-			this.平均消費量.MinimumWidth = 8;
-			this.平均消費量.Name = "平均消費量";
-			this.平均消費量.ReadOnly = true;
-			this.平均消費量.ToolTipText = "FDNまでのラウンドあたりの平均エネルギー消費量(J)";
-			// 
-			// BS受信回数
-			// 
-			this.BS受信回数.FillWeight = 130F;
-			this.BS受信回数.HeaderText = "収集データ数";
-			this.BS受信回数.MinimumWidth = 8;
-			this.BS受信回数.Name = "BS受信回数";
-			this.BS受信回数.ReadOnly = true;
-			this.BS受信回数.ToolTipText = "ノードからBSまで送られたパケット数";
+			this.groupBox5.Controls.Add(this.numericUpDownP);
+			this.groupBox5.Location = new System.Drawing.Point(471, 182);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(166, 100);
+			this.groupBox5.TabIndex = 6;
+			this.groupBox5.TabStop = false;
+			this.groupBox5.Text = "PH比率";
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1616, 1319);
+			this.ClientSize = new System.Drawing.Size(1616, 1318);
 			this.Controls.Add(this.labelProcessing);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.panel1);
 			this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.MinimumSize = new System.Drawing.Size(1540, 925);
+			this.MinimumSize = new System.Drawing.Size(1537, 917);
 			this.Name = "Form1";
 			this.Text = "VisualizeNetwork";
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).EndInit();
@@ -1297,7 +1357,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.chartTotalEnergyConsumption)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.chartReceivedData)).EndInit();
 			this.設定.ResumeLayout(false);
-			this.設定.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownP)).EndInit();
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox4.PerformLayout();
@@ -1323,8 +1382,13 @@
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
+			this.tabControl1.ResumeLayout(false);
+			this.tabResultTable.ResumeLayout(false);
+			this.tabLog.ResumeLayout(false);
+			this.tabLog.PerformLayout();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
+			this.groupBox5.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -1389,7 +1453,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDownP;
-        private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.GroupBox groupBox4;
@@ -1416,6 +1479,11 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn CHsd;
 		private System.Windows.Forms.DataGridViewTextBoxColumn 平均消費量;
 		private System.Windows.Forms.DataGridViewTextBoxColumn BS受信回数;
+		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabPage tabResultTable;
+		private System.Windows.Forms.TabPage tabLog;
+		private System.Windows.Forms.TextBox textBoxLog;
+		private System.Windows.Forms.GroupBox groupBox5;
 	}
 }
 

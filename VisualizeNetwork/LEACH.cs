@@ -133,7 +133,8 @@ namespace VisualizeNetwork
 				foreach (int headID in CHIDs)
 				{
 					Node tmp = nodes[headID];
-					double dist = Dist2(tmp, node);
+					//double dist = Dist2(tmp, node);
+					double dist = distTable[i, headID];
 					if (dist < distMin)
 					{
 						head = tmp;

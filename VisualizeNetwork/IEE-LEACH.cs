@@ -74,10 +74,12 @@ namespace VisualizeNetwork
                 {
                     if (mode == Mode.My_IEE_LEACH && headID == node.ID) continue;
                     Node tmp = nodes[headID];
-                    double dist = Dist2(tmp, node);
-                    if (dist < distMin)
+                    //double dist = Dist2(tmp, node);
+					double dist = distTable[i, headID];
+					if (dist < distMin)
                     {
-                        if (mode == Mode.My_IEE_LEACH && node.IsCH && Dist2(node, BS) <= Dist2(tmp, BS))
+                        if (mode == Mode.My_IEE_LEACH && node.IsCH && distBSList[node.ID] <= distBSList[tmp.ID])
+                        //if (mode == Mode.My_IEE_LEACH && node.IsCH && Dist2(node, BS) <= Dist2(tmp, BS))
                         {
                             continue;
                         }
@@ -89,7 +91,8 @@ namespace VisualizeNetwork
                 // CH候補が自分自身なら、スキップ
                 if (node.ID == head.ID) continue;
                 // CH候補よりもBSのほうが近ければ直接送る
-                else if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                else if (distBSList[node.ID] < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                //else if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 {
                     node.CHID = -1;
                     nodes[i] = node;
@@ -116,8 +119,10 @@ namespace VisualizeNetwork
         private bool DirectIsMoreEfficient(Node node, Node head)
         {
             double energyDirect, energyViaCH;
-            double distDirect = Math.Sqrt(Dist2(BS, node));
-            double distToCH = Math.Sqrt(Dist2(head, node));
+            double distDirect = distBSList[node.ID];
+            //double distDirect = Math.Sqrt(Dist2(BS, node));
+			double distToCH = distTable[head.ID, node.ID];
+            //double distToCH = Math.Sqrt(Dist2(head, node));
             energyDirect = E_TX(packetSize, distDirect);
             energyViaCH = E_TX(packetSize, distToCH) + E_DA * packetSize + E_RX(packetSize);
             if (mode == Mode.My_IEE_LEACH)

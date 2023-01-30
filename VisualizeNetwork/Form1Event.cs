@@ -84,8 +84,8 @@ namespace VisualizeNetwork
 								scenario.initialNodes = CnvIntToNodes(integers);
 								scenario.scenarioFile = "\\Data" + i.ToString();
 								WholeSimulationProcess();
-								string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
-								SaveScenario(fileName);
+								//string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
+								//SaveScenario(fileName);
 							}
 						}
 					}
@@ -123,6 +123,7 @@ namespace VisualizeNetwork
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
 				WholeSimulationProcess();
+				ResetView();
 			}
 		}
 

@@ -13,7 +13,7 @@ namespace VisualizeNetwork
 		protected int CHNum = 0;        // CH数
 		protected int aliveNum;     // 生存ノード数
 		private double EnergyConsumption = 0;   // エネルギー消費量
-		protected List<Node> initialNodes = new List<Node>();
+		public static List<Node> initialNodes = new List<Node>();
 
 		// シミュレーションを評価する指標
 		public int FDN { get; private set; } = 0;
@@ -32,7 +32,9 @@ namespace VisualizeNetwork
 
 		// パラメーター
 		public static Node BS = new Node(-1, 50, 125, -1);//BS
-		public int N { get { return initialNodes.Count; } }           // ノード数
+		public static double[,] distTable;
+		public static double[] distBSList;
+		public static int N { get { return initialNodes.Count; } }           // ノード数
 		public static double P = 0.05;      // CHの割合
 		//public const int k = 5;             // クラスタヘッド数
 		public const int R = 3500;          // 最大シミュレーションラウンド数
@@ -40,7 +42,7 @@ namespace VisualizeNetwork
 
 		public void Run(List<Node> initialNodes)
 		{
-			this.initialNodes = initialNodes;
+			//this.initialNodes = initialNodes;
 			aliveNum = N;
 			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)
@@ -50,6 +52,7 @@ namespace VisualizeNetwork
 				{
 					Node node = nodes[j];
 					if (node.IsAlive) node.ResetParameter();
+					else if (node.Status != StatusEnum.dead) node.SetDead();
 					nodes[j] = node;
 				}
 
@@ -153,11 +156,11 @@ namespace VisualizeNetwork
 			if (node.E_r <= 0)
 			{
 				node.IsAlive = false;
-				node.Status = StatusEnum.dead;
+				//node.Status = StatusEnum.dead;
 				aliveNum--;
 				if (aliveNum == N - 1) FDN = Round;
 				else if (aliveNum == 0) LDN = Round;
-				node.CHID = node.ID;
+				//node.CHID = node.ID;
 			}
 		}
 
@@ -167,7 +170,7 @@ namespace VisualizeNetwork
 		/// <param name="a">ノードa</param>
 		/// <param name="b">ノードb</param>
 		/// <returns>距離二乗</returns>
-		protected static double Dist2(Node a, Node b)
+		internal static double Dist2(Node a, Node b)
 		{
 			return Math.Pow((a.X - b.X), 2) + Math.Pow((a.Y - b.Y), 2);
 		}
