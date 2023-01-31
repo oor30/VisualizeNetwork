@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,10 +65,10 @@ namespace VisualizeNetwork
 				{
 					if (fbDialog.ShowDialog() == DialogResult.OK)
 					{
-						Dictionary<string, Record>  record = null;
+						Dictionary<string, Record> record = null;
 						progressBar1.Minimum = 0;
 						progressBar1.Maximum = 10;
-						progressBar1.Value= 0;
+						progressBar1.Value = 0;
 						progressBar1.Visible = true;
 						labelProcessing.Visible = true;
 						for (int i = 0; i < 10; i++)
@@ -115,9 +114,9 @@ namespace VisualizeNetwork
 								//SaveScenario(fileName);
 							}
 						}
-						progressBar1.Visible= false;
-						labelProcessing.Visible= false;
-						foreach(KeyValuePair<string, Record> kvp in record)
+						progressBar1.Visible = false;
+						labelProcessing.Visible = false;
+						foreach (KeyValuePair<string, Record> kvp in record)
 						{
 							PrintConsole(kvp.Key + "：：" + kvp.Value.GetMean(), false);
 						}
@@ -311,7 +310,7 @@ namespace VisualizeNetwork
 			{
 				if (roundTable.SelectedRows[0].Index == 0) return;
 				selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
-				RefreshPaint(EnabledNodes);
+				RefreshNodeMap(EnabledNodes);
 			}
 		}
 

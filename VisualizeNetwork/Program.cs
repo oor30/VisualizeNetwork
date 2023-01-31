@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 namespace VisualizeNetwork
@@ -44,10 +41,10 @@ namespace VisualizeNetwork
 		public int ID { get; }      // ノードID
 		public double X { get; }    // x座標
 		public double Y { get; }    // y座標
-		public double E_init { get; set; }       // 初期エネルギー
+		public double E_init { get; private set; }       // 初期エネルギー
 
 		// ラウンドごとにリセット
-		public StatusEnum Status { get; set; }
+		public StatusEnum Status { get; set; }  // ノードの状態
 		public int CHID { get; set; }    // クラスタヘッドID
 		public bool IsCH { get; set; }   // CHか否か
 		public int MemberNum { get; set; }  // 自身がCHの場合、メンバノード数(自信を含む）
@@ -57,28 +54,28 @@ namespace VisualizeNetwork
 		// 次ラウンドに引き継ぐ
 		public double E_r { get; set; }     // 残量エネルギー
 		public bool IsAlive { get; set; }   // 生存しているか否か
-		public int HasCHCnt { get; set; }           // CHになった回数
+		public int HasCHCnt { get; private set; }           // CHになった回数
 		public int UnqualifiedRound { get; set; }   // あと何ラウンドCHになる資格がないか
 
-		public Node(int ID, double X, double Y, int CHID = -1, double initEnergy = Sim.E_init) : this()
+		public Node(int ID, double X, double Y) : this()
 		{
 			this.ID = ID;
 			this.X = X;
 			this.Y = Y;
-			this.CHID = CHID;
-			E_init = initEnergy;
-			Initialize();
 		}
 
-		public void Initialize()    // シミュレーション前に１度だけ行うパラメータの初期化
+		// シミュレーション前に１度だけ行うパラメータの初期化
+		public void Initialize(double E_init = Sim.E_init)
 		{
+			this.E_init = E_init;
 			E_r = E_init;
 			IsAlive = true;
 			HasCHCnt = 0;
 			UnqualifiedRound = 0;
 		}
 
-		public void ResetParameter()    // ラウンドごとに行うパラメータの初期化処理
+		// ラウンドごとに行うパラメータの初期化処理
+		public void ResetParameter()
 		{
 			Status = StatusEnum.normal;
 			CHID = -1;

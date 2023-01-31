@@ -36,12 +36,11 @@ namespace VisualizeNetwork
 			}
 		}
 
-		protected override List<Node> OneRound(List<Node> nodes)
+		protected override void OneRound(List<Node> nodes)
 		{
 			Initialize(nodes);
 			Repeat(nodes);
 			Finalize_(nodes);
-			return nodes;
 		}
 
 		private void Initialize(List<Node> nodes)

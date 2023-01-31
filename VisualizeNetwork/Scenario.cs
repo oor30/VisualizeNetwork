@@ -43,10 +43,7 @@ namespace VisualizeNetwork
 			get
 			{
 				double sum = 0;
-				foreach (int i in FDN)
-				{
-					sum += i;
-				}
+				foreach (int i in FDN) sum += i;
 				return sum / FDN.Count;
 			}
 		}
@@ -55,10 +52,7 @@ namespace VisualizeNetwork
 			get
 			{
 				double sum = 0;
-				foreach (int i in LDN)
-				{
-					sum += i;
-				}
+				foreach (int i in LDN) sum += i;
 				return sum / FDN.Count;
 			}
 		}

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
@@ -130,6 +131,22 @@
 			this.textBoxLog = new System.Windows.Forms.TextBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.labelScenario = new System.Windows.Forms.Label();
+			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.nodeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.xDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.yDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.einitDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.cHIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.isCHDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.memberNumDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.piDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.cmsEnergyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.erDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.isAliveDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.hasCHCntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.unqualifiedRoundDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarRound)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPlaySpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.resultTable)).BeginInit();
@@ -169,6 +186,8 @@
 			this.tabResultTable.SuspendLayout();
 			this.tabLog.SuspendLayout();
 			this.panel2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nodeBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelCoordinate
@@ -264,7 +283,7 @@
 			this.resultTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1598, 194);
+			this.resultTable.Size = new System.Drawing.Size(1598, 180);
 			this.resultTable.TabIndex = 8;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -386,6 +405,7 @@
 			// 
 			this.Simulation.AutoScroll = true;
 			this.Simulation.BackColor = System.Drawing.Color.Transparent;
+			this.Simulation.Controls.Add(this.dataGridView1);
 			this.Simulation.Controls.Add(this.roundTable);
 			this.Simulation.Controls.Add(this.pictureBoxNodeMap);
 			this.Simulation.Controls.Add(this.cmbBoxAlgo);
@@ -1087,7 +1107,7 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-			this.menuStrip1.Size = new System.Drawing.Size(1616, 35);
+			this.menuStrip1.Size = new System.Drawing.Size(1616, 36);
 			this.menuStrip1.TabIndex = 15;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -1100,7 +1120,7 @@
             this.jsonToolStripMenuItem,
             this.SaveToolStripMenuItem});
 			this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-			this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 29);
+			this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(98, 30);
 			this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
 			// 
 			// toolStripMenuItemOpen
@@ -1143,7 +1163,7 @@
             this.d400ToolStripMenuItem,
             this.d600ToolStripMenuItem});
 			this.シナリオToolStripMenuItem.Name = "シナリオToolStripMenuItem";
-			this.シナリオToolStripMenuItem.Size = new System.Drawing.Size(113, 29);
+			this.シナリオToolStripMenuItem.Size = new System.Drawing.Size(113, 30);
 			this.シナリオToolStripMenuItem.Text = "100シナリオ";
 			// 
 			// d100ToolStripMenuItem1
@@ -1249,7 +1269,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
 			this.splitContainer1.Size = new System.Drawing.Size(1616, 1138);
-			this.splitContainer1.SplitterDistance = 886;
+			this.splitContainer1.SplitterDistance = 900;
 			this.splitContainer1.SplitterWidth = 10;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1262,7 +1282,7 @@
 			this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(1614, 240);
+			this.tabControl1.Size = new System.Drawing.Size(1614, 226);
 			this.tabControl1.TabIndex = 9;
 			// 
 			// tabResultTable
@@ -1272,7 +1292,7 @@
 			this.tabResultTable.Margin = new System.Windows.Forms.Padding(4);
 			this.tabResultTable.Name = "tabResultTable";
 			this.tabResultTable.Padding = new System.Windows.Forms.Padding(4);
-			this.tabResultTable.Size = new System.Drawing.Size(1606, 202);
+			this.tabResultTable.Size = new System.Drawing.Size(1606, 188);
 			this.tabResultTable.TabIndex = 0;
 			this.tabResultTable.Text = "結果";
 			this.tabResultTable.UseVisualStyleBackColor = true;
@@ -1286,7 +1306,7 @@
 			this.tabLog.Margin = new System.Windows.Forms.Padding(4);
 			this.tabLog.Name = "tabLog";
 			this.tabLog.Padding = new System.Windows.Forms.Padding(4);
-			this.tabLog.Size = new System.Drawing.Size(1606, 202);
+			this.tabLog.Size = new System.Drawing.Size(1606, 188);
 			this.tabLog.TabIndex = 1;
 			this.tabLog.Text = "ログ";
 			this.tabLog.UseVisualStyleBackColor = true;
@@ -1294,7 +1314,7 @@
 			// progressBar1
 			// 
 			this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.progressBar1.Location = new System.Drawing.Point(4, 188);
+			this.progressBar1.Location = new System.Drawing.Point(4, 180);
 			this.progressBar1.Name = "progressBar1";
 			this.progressBar1.Size = new System.Drawing.Size(1598, 10);
 			this.progressBar1.Step = 1;
@@ -1313,7 +1333,7 @@
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ReadOnly = true;
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxLog.Size = new System.Drawing.Size(1598, 194);
+			this.textBoxLog.Size = new System.Drawing.Size(1598, 186);
 			this.textBoxLog.TabIndex = 0;
 			// 
 			// panel2
@@ -1342,6 +1362,169 @@
 			this.labelScenario.Size = new System.Drawing.Size(113, 25);
 			this.labelScenario.TabIndex = 11;
 			this.labelScenario.Text = "シナリオ：なし";
+			// 
+			// dataGridView1
+			// 
+			this.dataGridView1.AllowUserToAddRows = false;
+			this.dataGridView1.AllowUserToOrderColumns = true;
+			this.dataGridView1.AllowUserToResizeColumns = false;
+			this.dataGridView1.AllowUserToResizeRows = false;
+			this.dataGridView1.AutoGenerateColumns = false;
+			this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.iDDataGridViewTextBoxColumn,
+            this.xDataGridViewTextBoxColumn,
+            this.yDataGridViewTextBoxColumn,
+            this.einitDataGridViewTextBoxColumn,
+            this.statusDataGridViewTextBoxColumn,
+            this.cHIDDataGridViewTextBoxColumn,
+            this.isCHDataGridViewCheckBoxColumn,
+            this.memberNumDataGridViewTextBoxColumn,
+            this.piDataGridViewTextBoxColumn,
+            this.cmsEnergyDataGridViewTextBoxColumn,
+            this.erDataGridViewTextBoxColumn,
+            this.isAliveDataGridViewCheckBoxColumn,
+            this.hasCHCntDataGridViewTextBoxColumn,
+            this.unqualifiedRoundDataGridViewTextBoxColumn});
+			this.dataGridView1.DataSource = this.nodeBindingSource;
+			this.dataGridView1.Location = new System.Drawing.Point(824, 82);
+			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.ReadOnly = true;
+			this.dataGridView1.RowHeadersWidth = 62;
+			this.dataGridView1.RowTemplate.Height = 27;
+			this.dataGridView1.Size = new System.Drawing.Size(838, 687);
+			this.dataGridView1.TabIndex = 7;
+			// 
+			// nodeBindingSource
+			// 
+			this.nodeBindingSource.DataSource = typeof(VisualizeNetwork.Node);
+			// 
+			// iDDataGridViewTextBoxColumn
+			// 
+			this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+			this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+			this.iDDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+			this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+			this.iDDataGridViewTextBoxColumn.Width = 66;
+			// 
+			// xDataGridViewTextBoxColumn
+			// 
+			this.xDataGridViewTextBoxColumn.DataPropertyName = "X";
+			this.xDataGridViewTextBoxColumn.HeaderText = "X";
+			this.xDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.xDataGridViewTextBoxColumn.Name = "xDataGridViewTextBoxColumn";
+			this.xDataGridViewTextBoxColumn.ReadOnly = true;
+			this.xDataGridViewTextBoxColumn.Width = 59;
+			// 
+			// yDataGridViewTextBoxColumn
+			// 
+			this.yDataGridViewTextBoxColumn.DataPropertyName = "Y";
+			this.yDataGridViewTextBoxColumn.HeaderText = "Y";
+			this.yDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.yDataGridViewTextBoxColumn.Name = "yDataGridViewTextBoxColumn";
+			this.yDataGridViewTextBoxColumn.ReadOnly = true;
+			this.yDataGridViewTextBoxColumn.Width = 58;
+			// 
+			// einitDataGridViewTextBoxColumn
+			// 
+			this.einitDataGridViewTextBoxColumn.DataPropertyName = "E_init";
+			this.einitDataGridViewTextBoxColumn.HeaderText = "初期E";
+			this.einitDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.einitDataGridViewTextBoxColumn.Name = "einitDataGridViewTextBoxColumn";
+			this.einitDataGridViewTextBoxColumn.ReadOnly = true;
+			this.einitDataGridViewTextBoxColumn.Width = 93;
+			// 
+			// statusDataGridViewTextBoxColumn
+			// 
+			this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+			this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+			this.statusDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+			this.statusDataGridViewTextBoxColumn.ReadOnly = true;
+			this.statusDataGridViewTextBoxColumn.Width = 97;
+			// 
+			// cHIDDataGridViewTextBoxColumn
+			// 
+			this.cHIDDataGridViewTextBoxColumn.DataPropertyName = "CHID";
+			this.cHIDDataGridViewTextBoxColumn.HeaderText = "CHID";
+			this.cHIDDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.cHIDDataGridViewTextBoxColumn.Name = "cHIDDataGridViewTextBoxColumn";
+			this.cHIDDataGridViewTextBoxColumn.ReadOnly = true;
+			this.cHIDDataGridViewTextBoxColumn.Width = 90;
+			// 
+			// isCHDataGridViewCheckBoxColumn
+			// 
+			this.isCHDataGridViewCheckBoxColumn.DataPropertyName = "IsCH";
+			this.isCHDataGridViewCheckBoxColumn.HeaderText = "IsCH";
+			this.isCHDataGridViewCheckBoxColumn.MinimumWidth = 8;
+			this.isCHDataGridViewCheckBoxColumn.Name = "isCHDataGridViewCheckBoxColumn";
+			this.isCHDataGridViewCheckBoxColumn.ReadOnly = true;
+			this.isCHDataGridViewCheckBoxColumn.Width = 55;
+			// 
+			// memberNumDataGridViewTextBoxColumn
+			// 
+			this.memberNumDataGridViewTextBoxColumn.DataPropertyName = "MemberNum";
+			this.memberNumDataGridViewTextBoxColumn.HeaderText = "メンバー数";
+			this.memberNumDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.memberNumDataGridViewTextBoxColumn.Name = "memberNumDataGridViewTextBoxColumn";
+			this.memberNumDataGridViewTextBoxColumn.ReadOnly = true;
+			this.memberNumDataGridViewTextBoxColumn.Width = 119;
+			// 
+			// piDataGridViewTextBoxColumn
+			// 
+			this.piDataGridViewTextBoxColumn.DataPropertyName = "Pi";
+			this.piDataGridViewTextBoxColumn.HeaderText = "CH確率";
+			this.piDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.piDataGridViewTextBoxColumn.Name = "piDataGridViewTextBoxColumn";
+			this.piDataGridViewTextBoxColumn.ReadOnly = true;
+			this.piDataGridViewTextBoxColumn.Width = 108;
+			// 
+			// cmsEnergyDataGridViewTextBoxColumn
+			// 
+			this.cmsEnergyDataGridViewTextBoxColumn.DataPropertyName = "CmsEnergy";
+			this.cmsEnergyDataGridViewTextBoxColumn.HeaderText = "消費E";
+			this.cmsEnergyDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.cmsEnergyDataGridViewTextBoxColumn.Name = "cmsEnergyDataGridViewTextBoxColumn";
+			this.cmsEnergyDataGridViewTextBoxColumn.ReadOnly = true;
+			this.cmsEnergyDataGridViewTextBoxColumn.Width = 93;
+			// 
+			// erDataGridViewTextBoxColumn
+			// 
+			this.erDataGridViewTextBoxColumn.DataPropertyName = "E_r";
+			this.erDataGridViewTextBoxColumn.HeaderText = "残量E";
+			this.erDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.erDataGridViewTextBoxColumn.Name = "erDataGridViewTextBoxColumn";
+			this.erDataGridViewTextBoxColumn.ReadOnly = true;
+			this.erDataGridViewTextBoxColumn.Width = 93;
+			// 
+			// isAliveDataGridViewCheckBoxColumn
+			// 
+			this.isAliveDataGridViewCheckBoxColumn.DataPropertyName = "IsAlive";
+			this.isAliveDataGridViewCheckBoxColumn.HeaderText = "IsAlive";
+			this.isAliveDataGridViewCheckBoxColumn.MinimumWidth = 8;
+			this.isAliveDataGridViewCheckBoxColumn.Name = "isAliveDataGridViewCheckBoxColumn";
+			this.isAliveDataGridViewCheckBoxColumn.ReadOnly = true;
+			this.isAliveDataGridViewCheckBoxColumn.Width = 69;
+			// 
+			// hasCHCntDataGridViewTextBoxColumn
+			// 
+			this.hasCHCntDataGridViewTextBoxColumn.DataPropertyName = "HasCHCnt";
+			this.hasCHCntDataGridViewTextBoxColumn.HeaderText = "CH回数";
+			this.hasCHCntDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.hasCHCntDataGridViewTextBoxColumn.Name = "hasCHCntDataGridViewTextBoxColumn";
+			this.hasCHCntDataGridViewTextBoxColumn.ReadOnly = true;
+			this.hasCHCntDataGridViewTextBoxColumn.Width = 108;
+			// 
+			// unqualifiedRoundDataGridViewTextBoxColumn
+			// 
+			this.unqualifiedRoundDataGridViewTextBoxColumn.DataPropertyName = "UnqualifiedRound";
+			this.unqualifiedRoundDataGridViewTextBoxColumn.HeaderText = "CH資格";
+			this.unqualifiedRoundDataGridViewTextBoxColumn.MinimumWidth = 8;
+			this.unqualifiedRoundDataGridViewTextBoxColumn.Name = "unqualifiedRoundDataGridViewTextBoxColumn";
+			this.unqualifiedRoundDataGridViewTextBoxColumn.ReadOnly = true;
+			this.unqualifiedRoundDataGridViewTextBoxColumn.Width = 108;
 			// 
 			// Form1
 			// 
@@ -1403,6 +1586,8 @@
 			this.tabLog.PerformLayout();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nodeBindingSource)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -1499,6 +1684,22 @@
 		private System.Windows.Forms.TextBox textBoxLog;
 		private System.Windows.Forms.GroupBox groupBox5;
 		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.BindingSource nodeBindingSource;
+		private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn xDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn yDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn einitDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn cHIDDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn isCHDataGridViewCheckBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn memberNumDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn piDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn cmsEnergyDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn erDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn isAliveDataGridViewCheckBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn hasCHCntDataGridViewTextBoxColumn;
+		private System.Windows.Forms.DataGridViewTextBoxColumn unqualifiedRoundDataGridViewTextBoxColumn;
 	}
 }
 

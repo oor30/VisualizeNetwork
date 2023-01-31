@@ -94,6 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Direct.cs" />
+    <Compile Include="Form1Canvas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1Chart.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1Event.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,6 +142,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Node.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

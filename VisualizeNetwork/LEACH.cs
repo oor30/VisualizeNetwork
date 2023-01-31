@@ -16,12 +16,11 @@ namespace VisualizeNetwork
 			AlgoName = "LEACH";
 		}
 
-		protected override List<Node> OneRound(List<Node> nodes)
+		protected override void OneRound(List<Node> nodes)
 		{
 			CHElection(nodes);
 			ClusterFormation(nodes);
 			SteadyState(nodes);
-			return nodes;
 		}
 
 		protected virtual void ResetUnqualifiedRound(List<Node> nodes)
@@ -57,7 +56,6 @@ namespace VisualizeNetwork
 		protected virtual void CHElection(List<Node> nodes)
 		{
 			CHIDs.Clear();
-			CHNum = 0;
 			ResetUnqualifiedRound(nodes);
 			for (int i = 0; i < nodes.Count; i++)
 			{
@@ -96,7 +94,7 @@ namespace VisualizeNetwork
 		/// <param name="nodes">構造体Nodeのリスト</param>
 		private void ForceElection(List<Node> nodes)
 		{
-			int CHnum = 1 + aliveNum / 20;
+			int CHnum = 1 + AliveNum / 20;
 			for (int ii = 0; ii < CHnum; ii++)
 			{
 				int max = -1;

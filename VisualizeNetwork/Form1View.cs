@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace VisualizeNetwork
 {
@@ -64,79 +61,57 @@ namespace VisualizeNetwork
 		}
 
 		/// <summary>
-		/// グラフを描画
+		/// 表示するアルゴリズムを変更する関数
 		/// </summary>
-		private void DrawChart()
+		/// <param name="sim">アルゴリズム</param>
+		/// <param name="senderName">コンポーネントの名前</param>
+		private void ChangeEnabledAlgorithm(Sim sim, string senderName = "")
 		{
-			PrintConsole("グラフを描画");
-			int maxRound = 0;
-			foreach (Sim sim in scenario.algorithms)
+			changingEnabledAlgorithm = true;
+			enabledAlgorithm = sim;
+			if (senderName != cmbBoxAlgo.Name)
 			{
-				if (maxRound < sim.LDN) maxRound = sim.LDN;
-				if (sim.LDN == 0)
+				for (int i = 0; i < cmbBoxAlgo.Items.Count; i++)
 				{
-					maxRound = Sim.R;
-					break;
+					if (cmbBoxAlgo.Items[i].ToString() == sim.AlgoName)
+					{
+						cmbBoxAlgo.SelectedIndex = i;
+						break;
+					}
 				}
 			}
-			maxRound = ((maxRound / 100) + 1) * 100;
-
-			List<Chart> charts = new List<Chart>
+			if (senderName != resultTable.Name)
 			{
-				chartAliveNums,
-				chartNumCH,
-				chartReceivedData,
-				chartTotalEnergyConsumption
-			};
-
-			List<string> yTitles = new List<string>
-			{
-				"Number of nodes alive",
-				"Number of CH",
-				"Number of received data as BS",
-				"Total Energy Consumption of the Network(J)"
-			};
-
-			for (int i = 0; i < charts.Count; i++)
-			{
-				Chart chart = charts[i];
-				string yTitle = yTitles[i];
-				chart.ChartAreas.Clear();
-				chart.Series.Clear();
-				ChartArea chartArea = new ChartArea("chartArea");
-				chartArea.AxisX.Minimum = 0;
-				chartArea.AxisX.Maximum = maxRound;
-				chartArea.AxisX.Title = "Number of rounds";
-				chartArea.AxisY.Title = yTitle;
-				chartArea.AxisX.ScaleView.Size = 1000;
-				chartArea.AxisX.IsMarginVisible = false;
-				chart.ChartAreas.Add(chartArea);
-			}
-
-			foreach (Sim sim in scenario.algorithms)
-			{
-				List<Series> seriesList = new List<Series>
+				for (int i = 0; i < resultTable.RowCount; i++)
 				{
-					CreateNewSeries(sim.AlgoName),
-					CreateNewSeries(sim.AlgoName),
-					CreateNewSeries(sim.AlgoName),
-					CreateNewSeries(sim.AlgoName)
-				};
-
-				// 生存ノード数のグラフを描く
-				for (int i = 0; i < sim.AliveNumList.Count; i++)
-				{
-					seriesList[0].Points.AddXY(i, sim.AliveNumList[i]);
-					if (i % 50 == 0)
-						seriesList[1].Points.AddXY(i, sim.CHNumList[i]);
-					seriesList[2].Points.AddXY(i, sim.CollectedDataNumList[i]);
-					seriesList[3].Points.AddXY(i, sim.TotalEnergyConsumptionList[i]);
-				}
-				for (int i = 0; i < charts.Count; i++)
-				{
-					charts[i].Series.Add(seriesList[i]);
+					if (resultTable.Rows[i].Cells[0].Value.ToString() == sim.AlgoName)
+					{
+						resultTable.Rows[i].Selected = true;
+						break;
+					}
 				}
 			}
+			ChangeRound(round);
+			changingEnabledAlgorithm = false;
+		}
+
+		/// <summary>
+		/// ノード図とラウンドテーブルを更新する関数
+		/// </summary>
+		/// <param name="r">ラウンド</param>
+		/// <param name="senderName">コンポーネントの名前</param>
+		private void ChangeRound(int r, string senderName = "")
+		{
+			round = r;
+			if (senderName != trackBarRound.Name)
+			{
+				trackBarRound.Value = round;
+			}
+			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}",
+				enabledAlgorithm.AlgoName, round));
+			labelRound.Text = "ラウンド：" + round;
+			RefreshNodeMap(EnabledNodes);
+			if (!isPlaying) RefreshRoundTable(EnabledNodes);
 		}
 
 		/// <summary>
@@ -159,8 +134,8 @@ namespace VisualizeNetwork
 					node.Status == StatusEnum.dead ? "-" : node.CHID.ToString(),
 					Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
 					node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
-				if (node.Status == StatusEnum.dead )
-					roundTable.Rows[roundTable.Rows.Count-1].Cells[1].Style.ForeColor= Color.Red;
+				if (node.Status == StatusEnum.dead)
+					roundTable.Rows[roundTable.Rows.Count - 1].Cells[1].Style.ForeColor = Color.Red;
 				if (node.UnqualifiedRound != 0)
 					roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
 				sumEnergy += node.E_r;
@@ -174,193 +149,8 @@ namespace VisualizeNetwork
 				enabledAlgorithm.CHNumList[SafeRound - 1] + "個",
 				Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
 				sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
-		}
 
-		/// <summary>
-		/// Seriesを作成する(DrawChartの補助)
-		/// </summary>
-		/// <param name="algoName">アルゴリズムの名前</param>
-		/// <returns>グラフのSeries</returns>
-		private Series CreateNewSeries(string algoName)
-		{
-			Series series = new Series
-			{
-				ChartType = SeriesChartType.Line,
-				LegendText = algoName
-			};
-			return series;
-		}
-
-		/// <summary>
-		/// ノード図を更新する
-		/// </summary>
-		/// <param name="nodes">ノードリスト</param>
-		private void RefreshPaint(List<Node> nodes)
-		{
-			// 座標リストからノードを描画する
-			Graphics g = Graphics.FromImage(pictureBoxNodeMap.Image);
-			g.Clear(Color.White);
-			PaintLine(g);
-			PaintEdges(g, nodes);
-			PaintNodes(g, nodes);
-			pictureBoxNodeMap.Invalidate();
-			pictureBoxNodeMap.Refresh();
-			g.Dispose();
-		}
-
-		/// <summary>
-		/// ノードを描画する
-		/// </summary>
-		/// <param name="g">キャンバスのGraphics</param>
-		/// <param name="nodes">ノードリスト</param>
-		private void PaintNodes(Graphics g, List<Node> nodes)
-		{
-			Pen pen = new Pen(Color.Black);
-			Brush brush = Brushes.Gray;
-			foreach (Node node in nodes)
-			{
-				pen.Width = 1;
-				if (node.IsAlive)
-				{
-					if (node.IsCH && node.CHID != -1)
-					{
-						pen.Color = Color.Green;
-						brush = Brushes.Green;
-					}
-					else if (node.IsCH)
-					{
-						pen.Color = Color.Blue;
-						brush = Brushes.Blue;
-					}
-					else
-					{
-						pen.Color = Color.Black;
-						brush = Brushes.Black;
-					}
-				}
-				else pen.Color = Color.Red;
-				if (node.ID == selectedNodeID)
-				{
-					pen.Width = 4;
-					pen.Color = Color.LightBlue;
-				}
-				Point p = Normalize(node);
-				lock (g)
-				{
-					g.DrawEllipse(pen, (p.X - 5), p.Y - 5, 10, 10);
-					if (node.IsAlive)
-						g.FillPie(brush, (p.X - 5), (p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
-				}
-			}
-			return;
-		}
-
-		/// <summary>
-		/// エッジを描画する
-		/// </summary>
-		/// <param name="g">キャンバスのGraphics</param>
-		/// <param name="nodes">ノードリスト</param>
-		private void PaintEdges(Graphics g, List<Node> nodes)
-		{
-			Pen pen = new Pen(Color.Black);
-			foreach (Node node in nodes)
-			{
-				if (node.Status == StatusEnum.dead) continue;
-
-				Node head;
-				if (node.CHID == -1)
-				{
-					//head = Sim.BS;
-					continue;
-				}
-				else
-				{
-					head = nodes[node.CHID];
-				}
-				if (node.ID != head.ID)
-				{
-					if (node.IsCH) pen.Color = Color.Green;
-					else pen.Color = Color.Black;
-					g.DrawLine(pen, Normalize(node), Normalize(head));
-				}
-			}
-			return;
-		}
-
-		/// <summary>
-		/// x軸,y軸と目盛りを描画する
-		/// </summary>
-		/// <param name="g">キャンバスのGraphics</param>
-		private void PaintLine(Graphics g)
-		{
-			Pen pen = new Pen(Color.Gray);
-			for (int i = (int)(scenario.minX - 10) / 50; i <= (scenario.maxX + 10); i += 50)
-			{
-				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, p.X, 0, p.X, scenario.canvasH);
-				g.DrawString(i.ToString(), this.Font, Brushes.Black, p.X, 0);
-			}
-			for (int i = (int)(scenario.minY - 10) / 50; i <= (scenario.maxY + 10); i += 50)
-			{
-				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, 0, p.Y, scenario.canvasW, p.Y);
-				g.DrawString(i.ToString(), this.Font, Brushes.Black, 0, p.Y);
-			}
-		}
-
-		/// <summary>
-		/// ノードの座標をノード図のピクセルに変換する
-		/// </summary>
-		/// <param name="node">ノード</param>
-		/// <returns>ポイント</returns>
-		private Point Normalize(Node node)
-		{
-			return new Point((int)((node.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
-				(int)((node.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
-		}
-
-		/// <summary>
-		/// ノードの座標をノード図のピクセルに変換する
-		/// </summary>
-		/// <param name="point">ポイント</param>
-		/// <returns>ポイント</returns>
-		private Point Normalize(Point point)
-		{
-			Point p = new Point((int)((point.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
-				(int)((point.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
-			return p;
-		}
-
-		/// <summary>
-		/// ノード図のピクセルをノードの座標に変換する
-		/// </summary>
-		/// <param name="p">ポイント</param>
-		/// <returns>ポイント</returns>
-		private Point RevNormalize(Point p)
-		{
-			return new Point((int)((p.X - scenario.canvasW * 0.025) / scenario.rw / 0.95 + scenario.minX),
-				(int)((p.Y - scenario.canvasH * 0.025) / scenario.rh / 0.95 + scenario.minY));
-		}
-
-		/// <summary>
-		/// ノード図を並列処理で再生する
-		/// </summary>
-		/// <param name="ct"></param>
-		/// <returns></returns>
-		private async Task<int> PlayClustering(CancellationToken ct)
-		{
-
-			for (int i = round; i <= enabledAlgorithm.NodesList.Count; i++)
-			{
-				//ct.ThrowIfCancellationRequested();
-				if (ct.IsCancellationRequested) return -1;
-
-				ChangeRound(i);
-				//trackBarRound.Value = round;
-				await Task.Delay(1000 / playSpeed);
-			}
-			//round = 100;
-			return 0;
+			dataGridView1.DataSource = nodes;
 		}
 	}
 }

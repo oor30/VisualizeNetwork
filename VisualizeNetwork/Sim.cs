@@ -6,14 +6,15 @@ namespace VisualizeNetwork
 	[Serializable()]
 	internal abstract class Sim
 	{
-		// 変数
+		// 定数
 		public string AlgoName { get; protected set; }     // アルゴリズム名
-		public int Round { get; private set; } = 0;   // 現在のラウンド数
 		public const int R = 3500;          // 最大シミュレーションラウンド数
+		// 変数
+		public int Round { get; private set; }   // 現在のラウンド数
 		[NonSerialized]
-		protected int CHNum = 0;        // CH数
-		protected int aliveNum;     // 生存ノード数
-		private double EnergyConsumption = 0;   // エネルギー消費量
+		protected int CHNum;        // CH数
+		protected int AliveNum { get; private set; }     // 生存ノード数
+		private double EnergyConsumption;   // エネルギー消費量
 
 		// シミュレーションを評価する指標
 		public int FDN { get; private set; } = 0;
@@ -31,18 +32,19 @@ namespace VisualizeNetwork
 		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
 
 		// パラメーター(Form1.csで設定)
-		public static List<Node> initialNodes = new List<Node>();   // 初期ノード(CnvIntToNodes)
+		public static List<Node> initialNodes;   // 初期ノード(CnvIntToNodes)
 		public static double[,] distTable;  // 各ノード間の距離(CnvIntToNodes)
-		public static Node BS = new Node(-1, 50, 125, -1);	// BS(ResetParameters)
+		public static Node BS;	// BS(ResetParameters)
 		public static double[] distBSList;  // 各ノードからBSまでの距離(ResetParameters)
-		public static double P = 0.05;      // CHの割合(ResetParameters)
-		public static int N { get { return initialNodes.Count; } }	// ノード数
+		public static double P;      // CHの割合(ResetParameters)
+		public static int N => initialNodes.Count;	// ノード数
 		//public const int k = 5;             // クラスタヘッド数
 		//public const int INTERVAL = 20;     // (s/Round)
 
 		public void Run(List<Node> initialNodes)
 		{
-			aliveNum = N;
+			Round = 0;
+			AliveNum = N;
 			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)
 			{
@@ -56,17 +58,18 @@ namespace VisualizeNetwork
 				}
 
 				Round++;
+				CHNum = 0;
 				EnergyConsumption = 0;
-				nodes = OneRound(nodes);
+				OneRound(nodes);
 				NodesList.Add(nodes);
-				AliveNumList.Add(aliveNum);
 				CHNumList.Add(CHNum);
-				CollectedDataNum += aliveNum;
+				AliveNumList.Add(AliveNum);
+				CollectedDataNum += AliveNum;
 				CollectedDataNumList.Add(CollectedDataNum);
 				if (i == 0) TotalEnergyConsumptionList.Add(EnergyConsumption);
 				else TotalEnergyConsumptionList.Add(TotalEnergyConsumptionList[i - 1] + EnergyConsumption);
 
-				if (aliveNum == 0) break;
+				if (AliveNum == 0) break;
 			}
 			FinalizeSimulation();
 		}
@@ -76,7 +79,7 @@ namespace VisualizeNetwork
 		/// </summary>
 		/// <param name="nodes">ノードリスト</param>
 		/// <returns>ノードリスト</returns>
-		protected abstract List<Node> OneRound(List<Node> nodes);
+		protected abstract void OneRound(List<Node> nodes);
 
 		//エネルギー消費モデル
 		public const double E_init = 0.5;         //(J)ノードの初期エネルギー
@@ -156,9 +159,9 @@ namespace VisualizeNetwork
 			{
 				node.IsAlive = false;
 				//node.Status = StatusEnum.dead;
-				aliveNum--;
-				if (aliveNum == N - 1) FDN = Round;
-				else if (aliveNum == 0) LDN = Round;
+				AliveNum--;
+				if (AliveNum == N - 1) FDN = Round;
+				else if (AliveNum == 0) LDN = Round;
 				//node.CHID = node.ID;
 			}
 		}

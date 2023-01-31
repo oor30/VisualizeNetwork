@@ -49,53 +49,6 @@ namespace VisualizeNetwork
 			scenario = new Scenario();
 		}
 
-
-		// 表示するアルゴリズムを変更する関数
-		private void ChangeEnabledAlgorithm(Sim sim, string senderName = "")
-		{
-			changingEnabledAlgorithm = true;
-			enabledAlgorithm = sim;
-			if (senderName != cmbBoxAlgo.Name)
-			{
-				for (int i = 0; i < cmbBoxAlgo.Items.Count; i++)
-				{
-					if (cmbBoxAlgo.Items[i].ToString() == sim.AlgoName)
-					{
-						cmbBoxAlgo.SelectedIndex = i;
-						break;
-					}
-				}
-			}
-			if (senderName != resultTable.Name)
-			{
-				for (int i = 0; i < resultTable.RowCount; i++)
-				{
-					if (resultTable.Rows[i].Cells[0].Value.ToString() == sim.AlgoName)
-					{
-						resultTable.Rows[i].Selected = true;
-						break;
-					}
-				}
-			}
-			ChangeRound(round);
-			changingEnabledAlgorithm = false;
-		}
-
-		// ノード図とラウンドテーブルを更新する関数
-		private void ChangeRound(int r, string senderName = "")
-		{
-			round = r;
-			if (senderName != trackBarRound.Name)
-			{
-				trackBarRound.Value = round;
-			}
-			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}", 
-				enabledAlgorithm.AlgoName, round));
-			labelRound.Text = "ラウンド：" + round;
-			RefreshPaint(EnabledNodes);
-			if (!isPlaying) RefreshRoundTable(EnabledNodes);
-		}
-
 		// 1シミュレーション全体を実行する関数
 		private void WholeSimulationProcess()
 		{
@@ -170,11 +123,8 @@ namespace VisualizeNetwork
 			List<Node> initialNodes = new List<Node>();
 			for (int j = 0; j < integers.Count; j++)
 			{
-				double initEnergy;
-				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
-				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
-				Node node = new Node(j, integers[j] % scenario.widthHeight, integers[j] / scenario.widthHeight,
-					initEnergy: initEnergy);
+				Node node = new Node(j, integers[j] % scenario.widthHeight, 
+					integers[j] / scenario.widthHeight);
 				initialNodes.Add(node);
 			}
 			Sim.initialNodes = initialNodes;
@@ -189,10 +139,7 @@ namespace VisualizeNetwork
 					double dist;
 					if (i == j) dist = 0;
 					else if (i > j) dist = distTable[j, i];
-					else
-					{
-						dist = Math.Sqrt(Sim.Dist2(initialNodes[i], initialNodes[j]));
-					}
+					else dist = Math.Sqrt(Sim.Dist2(initialNodes[i], initialNodes[j]));
 					distTable[i, j] = dist;
 				}
 			}
@@ -238,7 +185,7 @@ namespace VisualizeNetwork
 			// 1ラウンドあたりの送信パケットサイズ
 			Sim.packetSize = (int)numericUpDownPacketSize.Value;
 			// BSの座標
-			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value, -1)
+			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
 			{
 				Status = StatusEnum.BS
 			};
@@ -249,15 +196,14 @@ namespace VisualizeNetwork
 				distBSList[i] = dist;
 			}
 			Sim.distBSList = distBSList;
-			// ノードの初期エネルギー
+			// ノードを初期化
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{
 				Node node = scenario.initialNodes[i];
-				node.Initialize();
 				double initEnergy;
 				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
 				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
-				node.E_init = initEnergy;
+				node.Initialize(initEnergy);
 				scenario.initialNodes[i] = node;
 			}
 		}

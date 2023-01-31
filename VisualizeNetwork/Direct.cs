@@ -10,10 +10,9 @@ namespace VisualizeNetwork
 		{
 			AlgoName = "Direct";
 		}
-		protected override List<Node> OneRound(List<Node> nodes)
+		protected override void OneRound(List<Node> nodes)
 		{
 			SteadyState(nodes);
-			return nodes;
 		}
 
 		private void SteadyState(List<Node> nodes)
