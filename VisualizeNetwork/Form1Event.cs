@@ -312,6 +312,9 @@ namespace VisualizeNetwork
 				selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
 				RefreshNodeMap(EnabledNodes);
 			}
+			if (dataGridView1.SelectedRows.Count == 0) return;
+			selectedNodeID = (int)dataGridView1.SelectedRows[0].Cells[0].Value;
+			RefreshNodeMap(EnabledNodes);
 		}
 
 		// ラウンドテーブルの１列目をソートから外す

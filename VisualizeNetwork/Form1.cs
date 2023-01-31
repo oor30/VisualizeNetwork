@@ -225,7 +225,7 @@ namespace VisualizeNetwork
 			foreach (Sim sim in scenario.algorithms)
 			{
 				PrintConsole(sim.AlgoName + ": シミュレーションを開始");
-				sim.Run(scenario.initialNodes);
+				sim.Run();
 			}
 			PrintConsole("シミュレーションが終了しました。");
 		}

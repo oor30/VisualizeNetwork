@@ -6,8 +6,6 @@ namespace VisualizeNetwork
 	[Serializable()]
 	internal class LEACH : Sim
 	{
-		//protected static double P = (double)k / N;
-		//protected static double P = 0.05;
 		protected Random rand = new Random();
 		protected List<int> CHIDs = new List<int>();    //CHのリスト
 

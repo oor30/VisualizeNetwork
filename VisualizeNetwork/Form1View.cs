@@ -56,6 +56,8 @@ namespace VisualizeNetwork
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 
+			dataGridView2.DataSource = scenario.algorithms;
+
 			DrawChart();
 			ChangeEnabledAlgorithm(scenario.algorithms[0]);
 		}

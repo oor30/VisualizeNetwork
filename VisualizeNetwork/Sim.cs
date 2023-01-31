@@ -34,14 +34,14 @@ namespace VisualizeNetwork
 		// パラメーター(Form1.csで設定)
 		public static List<Node> initialNodes;   // 初期ノード(CnvIntToNodes)
 		public static double[,] distTable;  // 各ノード間の距離(CnvIntToNodes)
-		public static Node BS;	// BS(ResetParameters)
+		public static Node BS;				// BS(ResetParameters)
 		public static double[] distBSList;  // 各ノードからBSまでの距離(ResetParameters)
-		public static double P;      // CHの割合(ResetParameters)
-		public static int N => initialNodes.Count;	// ノード数
-		//public const int k = 5;             // クラスタヘッド数
+		public static double P;				// CHの割合(ResetParameters)
+		public static int N => initialNodes.Count;  // ノード数
+		public static int K => (int)(N * P);			// クラスタヘッド数
 		//public const int INTERVAL = 20;     // (s/Round)
 
-		public void Run(List<Node> initialNodes)
+		public void Run()
 		{
 			Round = 0;
 			AliveNum = N;
@@ -88,9 +88,9 @@ namespace VisualizeNetwork
 		public const double d_0 = 87.0;         //(m)
 		public const double e_fs = 10.0e-12;    //(pj/bit/m^2)
 		public const double e_mp = 0.0013e-12;  //(pj/bit/m^4)
+		public static double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 		//public const double bandwidth = 1.0e6;  //(Mb/s)
 		//public const double bandwidth = 4000;    //(bits/s)
-		public static double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 
 		/// <summary>
 		/// 送信エネルギーを計算する
@@ -158,11 +158,9 @@ namespace VisualizeNetwork
 			if (node.E_r <= 0)
 			{
 				node.IsAlive = false;
-				//node.Status = StatusEnum.dead;
 				AliveNum--;
 				if (AliveNum == N - 1) FDN = Round;
 				else if (AliveNum == 0) LDN = Round;
-				//node.CHID = node.ID;
 			}
 		}
 
