@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
 	internal class HEED : Sim

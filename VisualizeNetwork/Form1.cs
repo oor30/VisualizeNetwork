@@ -7,6 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows.Forms;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
@@ -123,15 +125,15 @@ namespace VisualizeNetwork
 			List<Node> initialNodes = new List<Node>();
 			for (int j = 0; j < integers.Count; j++)
 			{
-				Node node = new Node(j, integers[j] % scenario.widthHeight, 
+				Node node = new Node(j, integers[j] % scenario.widthHeight,
 					integers[j] / scenario.widthHeight);
 				initialNodes.Add(node);
 			}
-			Sim.initialNodes = initialNodes;
+			INITIAL_NODES = initialNodes;
 
 			PrintConsole("各ノード間の距離を計算中");
 			double[,] distTable = new double[initialNodes.Count, initialNodes.Count];
-			//List<List<double>> distTable = new List<List<double>>();
+			//List<List<double>> DIST_TABLE = new List<List<double>>();
 			for (int i = 0; i < initialNodes.Count; i++)
 			{
 				for (int j = 0; j < initialNodes.Count; j++)
@@ -143,7 +145,7 @@ namespace VisualizeNetwork
 					distTable[i, j] = dist;
 				}
 			}
-			Sim.distTable = distTable;
+			DIST_TABLE = distTable;
 			return initialNodes;
 		}
 
@@ -181,21 +183,21 @@ namespace VisualizeNetwork
 			scenario.rh = scenario.canvasH / h;
 
 			// CH割合
-			Sim.P = (double)numericUpDownP.Value;
+			P = (double)numericUpDownP.Value;
 			// 1ラウンドあたりの送信パケットサイズ
-			Sim.packetSize = (int)numericUpDownPacketSize.Value;
+			PACKET_SIZE = (int)numericUpDownPacketSize.Value;
 			// BSの座標
-			Sim.BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
+			BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
 			{
 				Status = StatusEnum.BS
 			};
-			double[] distBSList = new double[Sim.N];
+			double[] distBSList = new double[N];
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{
-				double dist = Math.Sqrt(Sim.Dist2(scenario.initialNodes[i], Sim.BS));
+				double dist = Sim.Dist2(scenario.initialNodes[i], BS).Sqrt();
 				distBSList[i] = dist;
 			}
-			Sim.distBSList = distBSList;
+			DIST_BS_LIST = distBSList;
 			// ノードを初期化
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{

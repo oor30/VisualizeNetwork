@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
 	[Serializable()]
@@ -31,21 +33,21 @@ namespace VisualizeNetwork
 		// 全ラウンド分のノードリスト
 		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
 
-		// パラメーター(Form1.csで設定)
-		public static List<Node> initialNodes;   // 初期ノード(CnvIntToNodes)
-		public static double[,] distTable;  // 各ノード間の距離(CnvIntToNodes)
-		public static Node BS;				// BS(ResetParameters)
-		public static double[] distBSList;  // 各ノードからBSまでの距離(ResetParameters)
-		public static double P;				// CHの割合(ResetParameters)
-		public static int N => initialNodes.Count;  // ノード数
-		public static int K => (int)(N * P);			// クラスタヘッド数
-		//public const int INTERVAL = 20;     // (s/Round)
+		//// パラメーター(Form1.csで設定)
+		//public static List<Node> INITIAL_NODES;   // 初期ノード(CnvIntToNodes)
+		//public static double[,] DIST_TABLE;  // 各ノード間の距離(CnvIntToNodes)
+		//public static Node BS;				// BS(ResetParameters)
+		//public static double[] DIST_BS_LIST;  // 各ノードからBSまでの距離(ResetParameters)
+		//public static double P;				// CHの割合(ResetParameters)
+		//public static int N => INITIAL_NODES.Count;  // ノード数
+		//public static int K => (int)(N * P);			// クラスタヘッド数
+		////public const int INTERVAL = 20;     // (s/Round)
 
 		public void Run()
 		{
 			Round = 0;
 			AliveNum = N;
-			List<Node> nodes = new List<Node>(initialNodes);
+			List<Node> nodes = new List<Node>(INITIAL_NODES);
 			for (int i = 0; i < R; i++)
 			{
 				nodes = new List<Node>(nodes);
@@ -88,7 +90,7 @@ namespace VisualizeNetwork
 		public const double d_0 = 87.0;         //(m)
 		public const double e_fs = 10.0e-12;    //(pj/bit/m^2)
 		public const double e_mp = 0.0013e-12;  //(pj/bit/m^4)
-		public static double packetSize = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
+		//public static double PACKET_SIZE = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
 		//public const double bandwidth = 1.0e6;  //(Mb/s)
 		//public const double bandwidth = 4000;    //(bits/s)
 
@@ -124,7 +126,7 @@ namespace VisualizeNetwork
 		/// <returns>消費エネルギー量</returns>
 		protected static double CalcEnergyConsumption(Node node, List<Node> nodes)
 		{
-			double sendMessageBit = packetSize;
+			double sendMessageBit = PACKET_SIZE;
 			double energy;
 
 			Node addressNode;

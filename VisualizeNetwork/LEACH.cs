@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
 	[Serializable()]
@@ -130,7 +132,7 @@ namespace VisualizeNetwork
 				{
 					Node tmp = nodes[headID];
 					//double dist = Dist2(tmp, node);
-					double dist = distTable[tmp.ID, node.ID];
+					double dist = DIST_TABLE[tmp.ID, node.ID];
 					if (dist < distMin)
 					{
 						head = tmp;

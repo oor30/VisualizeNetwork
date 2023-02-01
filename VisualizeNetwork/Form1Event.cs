@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
@@ -127,7 +129,7 @@ namespace VisualizeNetwork
 							//using(StreamWriter writer = new StreamWriter(fbDialog.SelectedPath ))
 							try
 							{
-								records = new Records(record, Sim.BS);
+								records = new Records(record, BS);
 								string jsonStr = JsonSerializer.Serialize(records);
 								writer.WriteLine(jsonStr);
 							}
@@ -306,14 +308,14 @@ namespace VisualizeNetwork
 		// ラウンドテーブルで違うノードが選択されたら、そのノードをハイライトする
 		private void RoundTable_SelectionChanged(object sender, EventArgs e)
 		{
-			if (roundTable.SelectedRows.Count > 0)
-			{
-				if (roundTable.SelectedRows[0].Index == 0) return;
-				selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
-				RefreshNodeMap(EnabledNodes);
-			}
-			if (dataGridView1.SelectedRows.Count == 0) return;
-			selectedNodeID = (int)dataGridView1.SelectedRows[0].Cells[0].Value;
+			//if (roundTable.SelectedRows.Count > 0)
+			//{
+			//	if (roundTable.SelectedRows[0].Index == 0) return;
+			//	selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
+			//	RefreshNodeMap(EnabledNodes);
+			//}
+			if (roundTable.SelectedRows.Count == 0) return;
+			selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
 			RefreshNodeMap(EnabledNodes);
 		}
 
@@ -327,9 +329,21 @@ namespace VisualizeNetwork
 		private void ResultTable_SelectionChanged(object sender, EventArgs e)
 		{
 			if (changingEnabledAlgorithm) return;
+			//if (resultTable.SelectedRows.Count > 0)
+			//{
+			//	string algoName = (string)resultTable.SelectedRows[0].Cells[1].Value;
+			//	foreach (Sim sim in scenario.algorithms)
+			//	{
+			//		if (sim.AlgoName == algoName)
+			//		{
+			//			ChangeEnabledAlgorithm(sim, resultTable.Name);
+			//			return;
+			//		}
+			//	}
+			//}
 			if (resultTable.SelectedRows.Count > 0)
 			{
-				string algoName = (string)resultTable.SelectedRows[0].Cells[1].Value;
+				string algoName = (string)resultTable.SelectedRows[0].Cells[0].Value;
 				foreach (Sim sim in scenario.algorithms)
 				{
 					if (sim.AlgoName == algoName)

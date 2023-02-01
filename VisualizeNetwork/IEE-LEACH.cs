@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static VisualizeNetwork.Config;
+
 namespace VisualizeNetwork
 {
     enum Mode
@@ -75,10 +77,10 @@ namespace VisualizeNetwork
                     if (mode == Mode.My_IEE_LEACH && headID == node.ID) continue;
                     Node tmp = nodes[headID];
                     //double dist = Dist2(tmp, node);
-					double dist = distTable[tmp.ID, node.ID];
+					double dist = DIST_TABLE[tmp.ID, node.ID];
 					if (dist < distMin)
                     {
-                        if (mode == Mode.My_IEE_LEACH && node.IsCH && distBSList[node.ID] <= distBSList[tmp.ID])
+                        if (mode == Mode.My_IEE_LEACH && node.IsCH && DIST_BS_LIST[node.ID] <= DIST_BS_LIST[tmp.ID])
                         //if (mode == Mode.My_IEE_LEACH && node.IsCH && Dist2(node, BS) <= Dist2(tmp, BS))
                         {
                             continue;
@@ -91,7 +93,7 @@ namespace VisualizeNetwork
                 // CH候補が自分自身なら、スキップ
                 if (node.ID == head.ID) continue;
                 // CH候補よりもBSのほうが近ければ直接送る
-                else if (distBSList[node.ID] < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                else if (DIST_BS_LIST[node.ID] < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 //else if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 {
                     node.CHID = -1;
@@ -107,7 +109,7 @@ namespace VisualizeNetwork
                 else
                 {
                     node.CHID = head.ID;
-                    if (node.IsCH) node.Status = StatusEnum.member_CH;
+                    if (node.IsCH) node.Status = StatusEnum.member | StatusEnum.CH;
                     else node.Status = StatusEnum.member;
                     nodes[i] = node;
                     head.MemberNum += 1;
@@ -119,12 +121,12 @@ namespace VisualizeNetwork
         private bool DirectIsMoreEfficient(Node node, Node head)
         {
             double energyDirect, energyViaCH;
-            double distDirect = distBSList[node.ID];
+            double distDirect = DIST_BS_LIST[node.ID];
             //double distDirect = Math.Sqrt(Dist2(BS, node));
-			double distToCH = distTable[head.ID, node.ID];
+			double distToCH = DIST_TABLE[head.ID, node.ID];
             //double distToCH = Math.Sqrt(Dist2(head, node));
-            energyDirect = E_TX(packetSize, distDirect);
-            energyViaCH = E_TX(packetSize, distToCH) + E_DA * packetSize + E_RX(packetSize);
+            energyDirect = E_TX(PACKET_SIZE, distDirect);
+            energyViaCH = E_TX(PACKET_SIZE, distToCH) + E_DA * PACKET_SIZE + E_RX(PACKET_SIZE);
             if (mode == Mode.My_IEE_LEACH)
             {
                 energyDirect /= node.E_r;

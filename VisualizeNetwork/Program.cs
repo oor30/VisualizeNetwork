@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace VisualizeNetwork
@@ -15,19 +16,38 @@ namespace VisualizeNetwork
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Form1());
 		}
+
+		internal static double Sqrt(this double value)
+		{
+			return Math.Sqrt(value);
+		}
+	}
+
+	internal static class Config
+	{
+		// パラメーター(Form1.csで設定)
+		public static List<Node> INITIAL_NODES;   // 初期ノード(CnvIntToNodes)
+		public static double[,] DIST_TABLE;  // 各ノード間の距離(CnvIntToNodes)
+		public static Node BS;              // BS(ResetParameters)
+		public static double[] DIST_BS_LIST;  // 各ノードからBSまでの距離(ResetParameters)
+		public static double P;             // CHの割合(ResetParameters)
+		public static int N => INITIAL_NODES.Count;  // ノード数
+		public static int K => (int)(N * P);            // クラスタヘッド数
+		public static double PACKET_SIZE = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
+		//public const int INTERVAL = 20;     // (s/Round)
 	}
 
 	/// <summary>
 	/// ノードの状態
 	/// </summary>
+	[Flags]
 	public enum StatusEnum
 	{
-		dead,
-		normal,
-		member,
-		CH,
-		member_CH,
-		BS
+		dead = 0,
+		normal = 1,
+		member = 2,
+		CH = 4,
+		BS = 8
 	}
 
 	/// <summary>

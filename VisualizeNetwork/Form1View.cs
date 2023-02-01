@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace VisualizeNetwork
@@ -42,21 +41,20 @@ namespace VisualizeNetwork
 			labelScenario.Text = "シナリオ：" + scenario.scenarioFile;
 			trackBarRound.Value = 1;
 			trackBarRound.Maximum = maxRound;
-			resultTable.Rows.Clear();
+			//resultTable.Rows.Clear();
 			cmbBoxAlgo.Items.Clear();
-			selectedNodeID = 0;
 			changingEnabledAlgorithm = true;
 
 			// 結果表にシミュレーション結果を追加・コンボボックスにアルゴリズムを追加
 			foreach (Sim sim in scenario.algorithms)
 			{
-				resultTable.Rows.Add((resultTable.Rows.Count + 1).ToString(), sim.AlgoName,
-					sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
-					Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
+				//resultTable.Rows.Add((resultTable.Rows.Count + 1).ToString(), sim.AlgoName,
+				//	sim.FDN, sim.LDN, Math.Round(sim.CHMean, 2), Math.Round(sim.CHSD, 2),
+				//	Math.Round(sim.AveEnergyConsumption, 4), sim.CollectedDataNum);
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 
-			dataGridView2.DataSource = scenario.algorithms;
+			resultTable.DataSource = scenario.algorithms;
 
 			DrawChart();
 			ChangeEnabledAlgorithm(scenario.algorithms[0]);
@@ -122,37 +120,37 @@ namespace VisualizeNetwork
 		/// <param name="nodes">ノードリスト</param>
 		private void RefreshRoundTable(List<Node> nodes)
 		{
-			roundTable.Rows.Clear();
-			double sumEnergy = 0;
-			double sumCmsEnergy = 0;
-			double sumHasCHCnt = 0;
-			int qualifiedNodeNum = 0;
-			double sumPi = 0;
-			for (int i = 0; i < scenario.N; i++)
-			{
-				Node node = nodes[i];
+			//roundTable.Rows.Clear();
+			//double sumEnergy = 0;
+			//double sumCmsEnergy = 0;
+			//double sumHasCHCnt = 0;
+			//int qualifiedNodeNum = 0;
+			//double sumPi = 0;
+			//for (int i = 0; i < scenario.N; i++)
+			//{
+			//	Node node = nodes[i];
 
-				roundTable.Rows.Add(i, node.Status.ToString(),
-					node.Status == StatusEnum.dead ? "-" : node.CHID.ToString(),
-					Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
-					node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
-				if (node.Status == StatusEnum.dead)
-					roundTable.Rows[roundTable.Rows.Count - 1].Cells[1].Style.ForeColor = Color.Red;
-				if (node.UnqualifiedRound != 0)
-					roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
-				sumEnergy += node.E_r;
-				sumCmsEnergy += node.CmsEnergy;
-				sumHasCHCnt += node.HasCHCnt;
-				sumPi += node.Pi;
-				if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
-			}
-			roundTable.Rows.Insert(0, "計" + Sim.N + "個",
-				"生存" + enabledAlgorithm.AliveNumList[SafeRound - 1] + "個",
-				enabledAlgorithm.CHNumList[SafeRound - 1] + "個",
-				Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
-				sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
+			//	roundTable.Rows.Add(i, node.Status.ToString(),
+			//		node.Status == StatusEnum.dead ? "-" : node.CHID.ToString(),
+			//		Math.Round(node.E_r, 5), Math.Round(node.CmsEnergy, 5),
+			//		node.HasCHCnt, node.UnqualifiedRound, Math.Round(node.Pi, 4));
+			//	if (node.Status == StatusEnum.dead)
+			//		roundTable.Rows[roundTable.Rows.Count - 1].Cells[1].Style.ForeColor = Color.Red;
+			//	if (node.UnqualifiedRound != 0)
+			//		roundTable.Rows[roundTable.Rows.Count - 1].Cells[6].Style.ForeColor = Color.Red;
+			//	sumEnergy += node.E_r;
+			//	sumCmsEnergy += node.CmsEnergy;
+			//	sumHasCHCnt += node.HasCHCnt;
+			//	sumPi += node.Pi;
+			//	if (node.UnqualifiedRound == 0) qualifiedNodeNum++;
+			//}
+			//roundTable.Rows.Insert(0, "計" + Sim.N + "個",
+			//	"生存" + enabledAlgorithm.AliveNumList[SafeRound - 1] + "個",
+			//	enabledAlgorithm.CHNumList[SafeRound - 1] + "個",
+			//	Math.Round(sumEnergy, 5), Math.Round(sumCmsEnergy, 5),
+			//	sumHasCHCnt, qualifiedNodeNum, Math.Round(sumPi, 4));
 
-			dataGridView1.DataSource = nodes;
+			roundTable.DataSource = nodes;
 		}
 	}
 }
