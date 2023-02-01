@@ -56,7 +56,7 @@ namespace VisualizeNetwork
 		}
 
 		// ★★★100回のシミュレーションを実行するボタン
-		private void D100ToolStripMenuItem_Click(object sender, EventArgs e)
+		private async void D100ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
@@ -73,48 +73,51 @@ namespace VisualizeNetwork
 						progressBar1.Value = 0;
 						progressBar1.Visible = true;
 						labelProcessing.Visible = true;
+
 						for (int i = 0; i < 10; i++)
 						{
 							progressBar1.PerformStep();
-							progressBar1.Update();
 							labelProcessing.Text = (i + 1).ToString() + " / 100";
 							labelProcessing.Update();
 
-							string path = "D100.Data" + i.ToString() + ".txt";
-							var assm = Assembly.GetExecutingAssembly();
-							var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
-							using (StreamReader sr = new StreamReader(stream))
+							await Task.Run(() =>
 							{
-								List<int> integers;
-								try
+								string path = "D100.Data" + i.ToString() + ".txt";
+								var assm = Assembly.GetExecutingAssembly();
+								var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
+								using (StreamReader sr = new StreamReader(stream))
 								{
-									integers = GetIntegers(sr);
-								}
-								catch
-								{
-									return;
-								}
-								scenario.initialNodes = CnvIntToNodes(integers);
-								scenario.scenarioFile = "\\Data" + i.ToString();
-								WholeSimulationProcess();
-								Application.DoEvents();
+									List<int> integers;
+									try
+									{
+										integers = GetIntegers(sr);
+									}
+									catch
+									{
+										return;
+									}
+									scenario.initialNodes = CnvIntToNodes(integers);
+									scenario.scenarioFile = "\\Data" + i.ToString();
+									WholeSimulationProcess();
+									Application.DoEvents();
 
-								if (record == null)
-								{
-									record = new Dictionary<string, Record>();
+									if (record == null)
+									{
+										record = new Dictionary<string, Record>();
+										foreach (Sim sim in scenario.algorithms)
+										{
+											record.Add(sim.AlgoName, new Record());
+										}
+									}
 									foreach (Sim sim in scenario.algorithms)
 									{
-										record.Add(sim.AlgoName, new Record());
+										record[sim.AlgoName].Add(sim.FDN, sim.LDN);
 									}
-								}
-								foreach (Sim sim in scenario.algorithms)
-								{
-									record[sim.AlgoName].Add(sim.FDN, sim.LDN);
-								}
 
-								//string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
-								//SaveScenario(fileName);
-							}
+									//string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
+									//SaveScenario(fileName);
+								}
+							});
 						}
 						progressBar1.Visible = false;
 						labelProcessing.Visible = false;
@@ -126,7 +129,6 @@ namespace VisualizeNetwork
 						using (StreamWriter writer = new StreamWriter(
 							fbDialog.SelectedPath + "\\シミュレーション結果.json", false))
 						{
-							//using(StreamWriter writer = new StreamWriter(fbDialog.SelectedPath ))
 							try
 							{
 								records = new Records(record, BS);
@@ -234,7 +236,7 @@ namespace VisualizeNetwork
 		// ノード図上でカーソルが動いたとき、座標を変更する
 		private void PictureBoxNodeMap_MouseMove(object sender, MouseEventArgs e)
 		{
-			Point p = RevNormalize(new Point(e.Location.X, e.Location.Y));
+			Point p = nodeMap.RevNormalize(new Point(e.Location.X, e.Location.Y));
 			labelCoordinate.Text = "座標：(" + p.X + ", " + p.Y + ")";
 		}
 
@@ -267,11 +269,8 @@ namespace VisualizeNetwork
 		// 表示するアルゴリズムを選択するコンボボックス
 		private void CmbBoxAlgo_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			//enabledNodesList = algorithms[cmbBoxAlgo.SelectedIndex].nodesList;
-			//enabledAlgorithm = algorithms[cmbBoxAlgo.SelectedIndex];
 			if (changingEnabledAlgorithm) return;
 			ChangeEnabledAlgorithm(scenario.algorithms[cmbBoxAlgo.SelectedIndex], cmbBoxAlgo.Name);
-			//ChangeRound();
 		}
 
 		private void ChartReceivedData_MouseMove(object sender, MouseEventArgs e)
@@ -308,15 +307,9 @@ namespace VisualizeNetwork
 		// ラウンドテーブルで違うノードが選択されたら、そのノードをハイライトする
 		private void RoundTable_SelectionChanged(object sender, EventArgs e)
 		{
-			//if (roundTable.SelectedRows.Count > 0)
-			//{
-			//	if (roundTable.SelectedRows[0].Index == 0) return;
-			//	selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
-			//	RefreshNodeMap(EnabledNodes);
-			//}
 			if (roundTable.SelectedRows.Count == 0) return;
 			selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
-			RefreshNodeMap(EnabledNodes);
+			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID);
 		}
 
 		// ラウンドテーブルの１列目をソートから外す
@@ -329,18 +322,6 @@ namespace VisualizeNetwork
 		private void ResultTable_SelectionChanged(object sender, EventArgs e)
 		{
 			if (changingEnabledAlgorithm) return;
-			//if (resultTable.SelectedRows.Count > 0)
-			//{
-			//	string algoName = (string)resultTable.SelectedRows[0].Cells[1].Value;
-			//	foreach (Sim sim in scenario.algorithms)
-			//	{
-			//		if (sim.AlgoName == algoName)
-			//		{
-			//			ChangeEnabledAlgorithm(sim, resultTable.Name);
-			//			return;
-			//		}
-			//	}
-			//}
 			if (resultTable.SelectedRows.Count > 0)
 			{
 				string algoName = (string)resultTable.SelectedRows[0].Cells[0].Value;
@@ -390,8 +371,6 @@ namespace VisualizeNetwork
 		private void BtnBack_Click(object sender, EventArgs e)
 		{
 			if (round == 1) return;
-			//round--;
-			//trackBarRound.Value = round;
 			ChangeRound(round - 1);
 		}
 
@@ -399,8 +378,6 @@ namespace VisualizeNetwork
 		private void BtnNext_Click(object sender, EventArgs e)
 		{
 			if (round == enabledAlgorithm.NodesList.Count) return;
-			//round++;
-			//trackBarRound.Value = round;
 			ChangeRound(round + 1);
 		}
 	}

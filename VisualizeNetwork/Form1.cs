@@ -24,14 +24,6 @@ namespace VisualizeNetwork
 				else return enabledAlgorithm.NodesList[enabledAlgorithm.NodesList.Count - 1];
 			}
 		}
-		private int SafeRound
-		{
-			get
-			{
-				if (round > enabledAlgorithm.LDN) return enabledAlgorithm.LDN;
-				else return round;
-			}
-		}
 
 		private int round = 1;
 		private int playSpeed = 1;
@@ -49,11 +41,18 @@ namespace VisualizeNetwork
 			pictureBoxNodeMap.Image = new Bitmap(pictureBoxNodeMap.Width, pictureBoxNodeMap.Height);
 			trackBarPlaySpeed.Maximum = 50;
 			scenario = new Scenario();
+			nodeMap = new NodeMap(pictureBoxNodeMap);
 		}
 
 		// 1シミュレーション全体を実行する関数
 		private void WholeSimulationProcess()
 		{
+			if (InvokeRequired)
+			{
+				Invoke(new Action(WholeSimulationProcess));
+				return;
+			}
+			tabCtrlBottom.SelectedTab = tabLog;
 			ResetParameters();
 			RunSimulation();
 		}
@@ -154,34 +153,6 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("シミュレーションの準備中");
 
-			tabControl1.SelectedTab = tabLog;
-
-			// 座標を正規化する
-			scenario.canvasW = pictureBoxNodeMap.Size.Width;
-			scenario.canvasH = pictureBoxNodeMap.Size.Height;
-
-			double maxX = double.MinValue;
-			double minX = double.MaxValue;
-			double maxY = double.MinValue;
-			double minY = double.MaxValue;
-
-			foreach (Node node in scenario.initialNodes)
-			{
-				if (maxX < node.X) maxX = node.X;
-				if (minX > node.X) minX = node.X;
-				if (maxY < node.Y) maxY = node.Y;
-				if (minY > node.Y) minY = node.Y;
-			}
-
-			scenario.maxX = maxX;
-			scenario.minX = minX;
-			scenario.maxY = maxY;
-			scenario.minY = minY;
-			double w = maxX - minX;
-			double h = maxY - minY;
-			scenario.rw = scenario.canvasW / w;
-			scenario.rh = scenario.canvasH / h;
-
 			// CH割合
 			P = (double)numericUpDownP.Value;
 			// 1ラウンドあたりの送信パケットサイズ
@@ -235,12 +206,22 @@ namespace VisualizeNetwork
 		// コンソールとフォーム下部に出力
 		internal void PrintConsole(string content, bool writeTime = true)
 		{
+			if (InvokeRequired)
+			{
+				Invoke(new Action<string, bool>(PrintConsole), content, writeTime);
+				return;
+			}
 			//labelProcessing.Text = content;
 			//labelProcessing.Refresh();
 			if (writeTime) content = string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content;
 			Console.WriteLine(content);
 			textBoxLog.AppendText(content + Environment.NewLine);
 		}
+
+		//public void PrintLog(string content)
+		//{
+		//	textBoxLog.AppendText(content + Environment.NewLine);
+		//}
 
 		// シミュレーションシナリオを保存
 		private void SaveScenario(string path)

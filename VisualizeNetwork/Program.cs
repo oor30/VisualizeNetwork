@@ -17,12 +17,25 @@ namespace VisualizeNetwork
 			Application.Run(new Form1());
 		}
 
+		// doubleの拡張メソッド
 		internal static double Sqrt(this double value)
 		{
 			return Math.Sqrt(value);
 		}
+
+		internal static T GetSafety<T>(this List<T> list, int index)
+		{
+			if (list == null) throw new ArgumentNullException("list");
+
+			if (index >= list.Count) return list[list.Count - 1];
+			else if (index < 0) return list[0];
+			else return list[index];
+		}
 	}
 
+	/// <summary>
+	/// シミュレーションの設定
+	/// </summary>
 	internal static class Config
 	{
 		// パラメーター(Form1.csで設定)
@@ -34,7 +47,7 @@ namespace VisualizeNetwork
 		public static int N => INITIAL_NODES.Count;  // ノード数
 		public static int K => (int)(N * P);            // クラスタヘッド数
 		public static double PACKET_SIZE = 4000;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
-		//public const int INTERVAL = 20;     // (s/Round)
+													  //public const int INTERVAL = 20;     // (s/Round)
 	}
 
 	/// <summary>

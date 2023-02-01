@@ -14,11 +14,7 @@ namespace VisualizeNetwork
 		// 2.integersからノードリストへ変換時
 		public List<Node> initialNodes;
 		public string scenarioFile = "なし";
-		// 3.ResetParameters()内
-		public float canvasW, canvasH;
-		public double minX, maxX, minY, maxY;
-		public double rw, rh;
-		// 4.RunSimulation()内
+		// 3.RunSimulation()内
 		internal List<Sim> algorithms = new List<Sim>();
 	}
 

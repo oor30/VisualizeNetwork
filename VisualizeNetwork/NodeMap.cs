@@ -1,48 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace VisualizeNetwork
 {
-	public partial class Form1 : Form
+	internal class NodeMap
 	{
-		/// <summary>
-		/// ノード図を並列処理で再生する
-		/// </summary>
-		/// <param name="ct"></param>
-		/// <returns></returns>
-		private async Task<int> PlayClustering(CancellationToken ct)
+		private readonly PictureBox canvas;
+		private float CanvasW { get { return canvas.Width; } }
+		private float CanvasH { get { return canvas.Height; } }
+		private double minX, maxX, minY, maxY;
+		private double rw, rh;
+
+		internal NodeMap(PictureBox pictureBox)
 		{
+			canvas = pictureBox;
+		}
 
-			for (int i = round; i <= enabledAlgorithm.NodesList.Count; i++)
+		internal void SetParameters(List<Node> initialNodes)
+		{
+			maxX = double.MinValue;
+			minX = double.MaxValue;
+			maxY = double.MinValue;
+			minY = double.MaxValue;
+
+			foreach (Node node in initialNodes)
 			{
-				//ct.ThrowIfCancellationRequested();
-				if (ct.IsCancellationRequested) return -1;
-
-				ChangeRound(i);
-				//trackBarRound.Value = round;
-				await Task.Delay(1000 / playSpeed);
+				if (maxX < node.X) maxX = node.X;
+				if (minX > node.X) minX = node.X;
+				if (maxY < node.Y) maxY = node.Y;
+				if (minY > node.Y) minY = node.Y;
 			}
-			//round = 100;
-			return 0;
+
+			double w = maxX - minX;
+			double h = maxY - minY;
+			rw = CanvasW / w;
+			rh = CanvasH / h;
 		}
 
 		/// <summary>
 		/// ノード図を更新する
 		/// </summary>
 		/// <param name="nodes">ノードリスト</param>
-		private void RefreshNodeMap(List<Node> nodes)
+		internal void RefreshNodeMap(List<Node> nodes, int selectedNodeID)
 		{
 			// 座標リストからノードを描画する
-			Graphics g = Graphics.FromImage(pictureBoxNodeMap.Image);
+			Graphics g = Graphics.FromImage(canvas.Image);
 			g.Clear(Color.White);
 			PaintLines(g);
 			PaintEdges(g, nodes);
-			PaintNodes(g, nodes);
-			pictureBoxNodeMap.Invalidate();
-			pictureBoxNodeMap.Refresh();
+			PaintNodes(g, nodes, selectedNodeID);
+			canvas.Invalidate();
+			canvas.Refresh();
 			g.Dispose();
 		}
 
@@ -51,7 +60,7 @@ namespace VisualizeNetwork
 		/// </summary>
 		/// <param name="g">キャンバスのGraphics</param>
 		/// <param name="nodes">ノードリスト</param>
-		private void PaintNodes(Graphics g, List<Node> nodes)
+		private void PaintNodes(Graphics g, List<Node> nodes, int selectedNodeID)
 		{
 			Pen pen = new Pen(Color.Black);
 			Brush brush = Brushes.Gray;
@@ -132,17 +141,17 @@ namespace VisualizeNetwork
 		private void PaintLines(Graphics g)
 		{
 			Pen pen = new Pen(Color.Gray);
-			for (int i = (int)(scenario.minX - 10) / 50; i <= (scenario.maxX + 10); i += 50)
+			for (int i = (int)(minX - 10) / 50; i <= (maxX + 10); i += 50)
 			{
 				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, p.X, 0, p.X, scenario.canvasH);
-				g.DrawString(i.ToString(), this.Font, Brushes.Black, p.X, 0);
+				g.DrawLine(pen, p.X, 0, p.X, CanvasH);
+				g.DrawString(i.ToString(), canvas.Font, Brushes.Black, p.X, 0);
 			}
-			for (int i = (int)(scenario.minY - 10) / 50; i <= (scenario.maxY + 10); i += 50)
+			for (int i = (int)(minY - 10) / 50; i <= (maxY + 10); i += 50)
 			{
 				var p = Normalize(new Point(i, i));
-				g.DrawLine(pen, 0, p.Y, scenario.canvasW, p.Y);
-				g.DrawString(i.ToString(), this.Font, Brushes.Black, 0, p.Y);
+				g.DrawLine(pen, 0, p.Y, CanvasW, p.Y);
+				g.DrawString(i.ToString(), canvas.Font, Brushes.Black, 0, p.Y);
 			}
 		}
 
@@ -153,8 +162,8 @@ namespace VisualizeNetwork
 		/// <returns>ポイント</returns>
 		private Point Normalize(Node node)
 		{
-			return new Point((int)((node.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
-				(int)((node.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
+			return new Point((int)((node.X - minX) * rw * 0.95 + CanvasW * 0.025),
+				(int)((node.Y - minY) * rh * 0.95 + CanvasH * 0.025));
 		}
 
 		/// <summary>
@@ -164,8 +173,8 @@ namespace VisualizeNetwork
 		/// <returns>ポイント</returns>
 		private Point Normalize(Point point)
 		{
-			Point p = new Point((int)((point.X - scenario.minX) * scenario.rw * 0.95 + scenario.canvasW * 0.025),
-				(int)((point.Y - scenario.minY) * scenario.rh * 0.95 + scenario.canvasH * 0.025));
+			Point p = new Point((int)((point.X - minX) * rw * 0.95 + CanvasW * 0.025),
+				(int)((point.Y - minY) * rh * 0.95 + CanvasH * 0.025));
 			return p;
 		}
 
@@ -174,10 +183,10 @@ namespace VisualizeNetwork
 		/// </summary>
 		/// <param name="p">ポイント</param>
 		/// <returns>ポイント</returns>
-		private Point RevNormalize(Point p)
+		internal Point RevNormalize(Point p)
 		{
-			return new Point((int)((p.X - scenario.canvasW * 0.025) / scenario.rw / 0.95 + scenario.minX),
-				(int)((p.Y - scenario.canvasH * 0.025) / scenario.rh / 0.95 + scenario.minY));
+			return new Point((int)((p.X - CanvasW * 0.025) / rw / 0.95 + minX),
+				(int)((p.Y - CanvasH * 0.025) / rh / 0.95 + minY));
 		}
 	}
 }

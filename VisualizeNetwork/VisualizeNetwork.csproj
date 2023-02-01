@@ -94,9 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Direct.cs" />
-    <Compile Include="Form1Canvas.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="NodeMap.cs" />
     <Compile Include="Form1Chart.cs">
       <SubType>Form</SubType>
     </Compile>
