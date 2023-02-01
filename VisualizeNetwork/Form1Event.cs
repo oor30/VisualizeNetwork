@@ -15,9 +15,13 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
+		private bool processing = false;
+
 		// ★★★ノード配置のファイルを開くボタン
 		private void BtnOpenFile_Click(object sender, EventArgs e)
 		{
+			if (processing) return;
+
 			OpenFileDialog ofDialog = new OpenFileDialog
 			{
 				Title = "座標ファイルを選択",
@@ -43,6 +47,7 @@ namespace VisualizeNetwork
 						}
 						scenario.initialNodes = CnvIntToNodes(integers);
 						scenario.scenarioFile = Path.GetFileNameWithoutExtension(fileName);
+						tabCtrlBottom.SelectedTab = tabLog;
 						WholeSimulationProcess();
 						ResetView();
 					}
@@ -71,14 +76,15 @@ namespace VisualizeNetwork
 						progressBar1.Minimum = 0;
 						progressBar1.Maximum = 10;
 						progressBar1.Value = 0;
+						progressBar1.Step = 1;
 						progressBar1.Visible = true;
-						labelProcessing.Visible = true;
+						tabCtrlBottom.SelectedTab = tabLog;
 
 						for (int i = 0; i < 10; i++)
 						{
 							progressBar1.PerformStep();
 							labelProcessing.Text = (i + 1).ToString() + " / 100";
-							labelProcessing.Update();
+							processing = true;
 
 							await Task.Run(() =>
 							{
@@ -119,8 +125,10 @@ namespace VisualizeNetwork
 								}
 							});
 						}
+
+						processing = false;
 						progressBar1.Visible = false;
-						labelProcessing.Visible = false;
+						labelProcessing.Text = "準備完了";
 						foreach (KeyValuePair<string, Record> kvp in record)
 						{
 							PrintConsole(kvp.Key + "：：" + kvp.Value.GetMean(), false);
@@ -141,24 +149,25 @@ namespace VisualizeNetwork
 									"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 							}
 						}
-
+						ResetView();
 					}
 					else
 					{
 						PrintConsole("キャンセルされました。");
 					}
 				}
-				ResetView();
 			}
 		}
 
 		// ★★★ノード配置を無作為に生成してシミュレーションするボタン
 		private void MenuItemCreate_Click(object sender, EventArgs e)
 		{
+			if (processing) return;
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
 				scenario.initialNodes = CnvIntToNodes(CreateIntegers());
 				scenario.scenarioFile = "無作為";
+				tabCtrlBottom.SelectedTab = tabLog;
 				WholeSimulationProcess();
 				ResetView();
 			}
@@ -167,6 +176,7 @@ namespace VisualizeNetwork
 		// ★設定を適用するボタン
 		private void BtnApply_Click(object sender, EventArgs e)
 		{
+			if (processing) return;
 			if (scenario.algorithms.Count == 0)
 			{
 				MessageBox.Show("表示するシミュレーションシナリオがありません。",
@@ -184,6 +194,7 @@ namespace VisualizeNetwork
 		// ★シナリオファイルを読み込むボタン
 		private void OpenScenarioToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (processing) return;
 			using (OpenFileDialog ofDialog = new OpenFileDialog
 			{
 				Title = "シナリオファイルを選択",
@@ -209,6 +220,7 @@ namespace VisualizeNetwork
 		// シナリオファイルを保存するボタン
 		private void SaveScenarioToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (processing) return;
 			using (SaveFileDialog sfDialog = new SaveFileDialog
 			{
 				Title = "ファイルを保存する",
@@ -344,14 +356,14 @@ namespace VisualizeNetwork
 				isPlaying = !isPlaying;
 				//btnPlayPose.Text = "再生";
 				btnPlayPose.BackgroundImage = Properties.Resources.再生ボタン;
-				ChangeRound(round);
+				ChangeRound(Round);
 				cts.Cancel();
 			}
 			else    //再生が押されたとき
 			{
-				if (round >= enabledAlgorithm.NodesList.Count)
+				if (Round >= enabledAlgorithm.NodesList.Count)
 				{
-					round = 1;
+					Round = 1;
 				}
 				isPlaying = !isPlaying;
 				//btnPlayPose.Text = "停止";
@@ -370,15 +382,15 @@ namespace VisualizeNetwork
 		// 次ボタン
 		private void BtnBack_Click(object sender, EventArgs e)
 		{
-			if (round == 1) return;
-			ChangeRound(round - 1);
+			if (Round == 1) return;
+			ChangeRound(Round - 1);
 		}
 
 		// 前ボタン
 		private void BtnNext_Click(object sender, EventArgs e)
 		{
-			if (round == enabledAlgorithm.NodesList.Count) return;
-			ChangeRound(round + 1);
+			if (Round == enabledAlgorithm.NodesList.Count) return;
+			ChangeRound(Round + 1);
 		}
 	}
 }

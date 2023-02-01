@@ -20,12 +20,12 @@ namespace VisualizeNetwork
 		{
 			get
 			{
-				if (round < enabledAlgorithm.NodesList.Count) return enabledAlgorithm.NodesList[round - 1];
+				if (Round < enabledAlgorithm.NodesList.Count) return enabledAlgorithm.NodesList[Round - 1];
 				else return enabledAlgorithm.NodesList[enabledAlgorithm.NodesList.Count - 1];
 			}
 		}
 
-		private int round = 1;
+		public int Round { get; set; } = 1;
 		private int playSpeed = 1;
 		private bool isPlaying = false;
 		private int selectedNodeID = 0;
@@ -42,17 +42,12 @@ namespace VisualizeNetwork
 			trackBarPlaySpeed.Maximum = 50;
 			scenario = new Scenario();
 			nodeMap = new NodeMap(pictureBoxNodeMap);
+			form1BindingSource.DataSource = Round;
 		}
 
 		// 1シミュレーション全体を実行する関数
 		private void WholeSimulationProcess()
 		{
-			if (InvokeRequired)
-			{
-				Invoke(new Action(WholeSimulationProcess));
-				return;
-			}
-			tabCtrlBottom.SelectedTab = tabLog;
 			ResetParameters();
 			RunSimulation();
 		}
@@ -128,23 +123,24 @@ namespace VisualizeNetwork
 					integers[j] / scenario.widthHeight);
 				initialNodes.Add(node);
 			}
-			INITIAL_NODES = initialNodes;
+			//INITIAL_NODES = initialNodes;
+			ResetInitialNodes(initialNodes);
 
-			PrintConsole("各ノード間の距離を計算中");
-			double[,] distTable = new double[initialNodes.Count, initialNodes.Count];
-			//List<List<double>> DIST_TABLE = new List<List<double>>();
-			for (int i = 0; i < initialNodes.Count; i++)
-			{
-				for (int j = 0; j < initialNodes.Count; j++)
-				{
-					double dist;
-					if (i == j) dist = 0;
-					else if (i > j) dist = distTable[j, i];
-					else dist = Math.Sqrt(Sim.Dist2(initialNodes[i], initialNodes[j]));
-					distTable[i, j] = dist;
-				}
-			}
-			DIST_TABLE = distTable;
+			//PrintConsole("各ノード間の距離を計算中");
+			//double[,] distTable = new double[initialNodes.Count, initialNodes.Count];
+			////List<List<double>> DIST_TABLE = new List<List<double>>();
+			//for (int i = 0; i < initialNodes.Count; i++)
+			//{
+			//	for (int j = 0; j < initialNodes.Count; j++)
+			//	{
+			//		double dist;
+			//		if (i == j) dist = 0;
+			//		else if (i > j) dist = distTable[j, i];
+			//		else dist = Math.Sqrt(Program.Dist2(initialNodes[i], initialNodes[j]));
+			//		distTable[i, j] = dist;
+			//	}
+			//}
+			//DIST_TABLE = distTable;
 			return initialNodes;
 		}
 
@@ -153,22 +149,27 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("シミュレーションの準備中");
 
-			// CH割合
-			P = (double)numericUpDownP.Value;
-			// 1ラウンドあたりの送信パケットサイズ
-			PACKET_SIZE = (int)numericUpDownPacketSize.Value;
-			// BSの座標
-			BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
-			{
-				Status = StatusEnum.BS
-			};
-			double[] distBSList = new double[N];
-			for (int i = 0; i < scenario.initialNodes.Count; i++)
-			{
-				double dist = Sim.Dist2(scenario.initialNodes[i], BS).Sqrt();
-				distBSList[i] = dist;
-			}
-			DIST_BS_LIST = distBSList;
+			Config.ResetParameter(new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value),
+				(double)numericUpDownP.Value, (int)numericUpDownPacketSize.Value, radioBtnConstInitEnergy.Checked,
+				(double)numericUpDownInitialEnergy.Value, (double)numericUpDownRange.Value);
+
+			//// CH割合
+			//P = (double)numericUpDownP.Value;
+			//// 1ラウンドあたりの送信パケットサイズ
+			//PACKET_SIZE = (int)numericUpDownPacketSize.Value;
+			//// BSの座標
+			//BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
+			//{
+			//	Status = StatusEnum.BS
+			//};
+			//double[] distBSList = new double[N];
+			//for (int i = 0; i < scenario.initialNodes.Count; i++)
+			//{
+			//	double dist = Program.Dist2(scenario.initialNodes[i], BS).Sqrt();
+			//	distBSList[i] = dist;
+			//}
+			//DIST_BS_LIST = distBSList;
+			ResetDistBSList();
 			// ノードを初期化
 			for (int i = 0; i < scenario.initialNodes.Count; i++)
 			{
@@ -211,17 +212,10 @@ namespace VisualizeNetwork
 				Invoke(new Action<string, bool>(PrintConsole), content, writeTime);
 				return;
 			}
-			//labelProcessing.Text = content;
-			//labelProcessing.Refresh();
 			if (writeTime) content = string.Format("{0:HH:mm:ss.fff} : ", DateTime.Now) + content;
 			Console.WriteLine(content);
 			textBoxLog.AppendText(content + Environment.NewLine);
 		}
-
-		//public void PrintLog(string content)
-		//{
-		//	textBoxLog.AppendText(content + Environment.NewLine);
-		//}
 
 		// シミュレーションシナリオを保存
 		private void SaveScenario(string path)

@@ -40,12 +40,12 @@ namespace VisualizeNetwork
 			// 変数を初期化
 			tabCtrlMiddle.SelectedTab = Simulation;
 			tabCtrlBottom.SelectedTab = tabResultTable;
-			round = 1;
+			Round = 1;
 			playSpeed = 1;
 			trackBarPlaySpeed.Value = playSpeed;
 			isPlaying = false;
 			selectedNodeID = 0;
-			labelRound.Text = "ラウンド：" + round;
+			labelRound.Text = "ラウンド：" + Round;
 			labelScenario.Text = "シナリオ：" + scenario.scenarioFile;
 			trackBarRound.Value = 1;
 			trackBarRound.Maximum = maxRound;
@@ -58,7 +58,7 @@ namespace VisualizeNetwork
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 
-			resultTable.DataSource = scenario.algorithms;
+			simBindingSource.DataSource = scenario.algorithms;
 
 			DrawChart();
 			ChangeEnabledAlgorithm(scenario.algorithms[0]);
@@ -95,7 +95,7 @@ namespace VisualizeNetwork
 					}
 				}
 			}
-			ChangeRound(round);
+			ChangeRound(Round);
 			changingEnabledAlgorithm = false;
 		}
 
@@ -106,17 +106,16 @@ namespace VisualizeNetwork
 		/// <param name="senderName">コンポーネントの名前</param>
 		private void ChangeRound(int r, string senderName = "")
 		{
-			round = r;
+			Round = r;
 			if (senderName != trackBarRound.Name)
 			{
-				trackBarRound.Value = round;
+				trackBarRound.Value = Round;
 			}
 			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}",
-				enabledAlgorithm.AlgoName, round));
-			labelRound.Text = "ラウンド：" + round;
+				enabledAlgorithm.AlgoName, Round));
+			labelRound.Text = "ラウンド：" + Round;
 			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID);
-			//if (!isPlaying) RefreshRoundTable(EnabledNodes);
-			if (!isPlaying) roundTable.DataSource = EnabledNodes;
+			if (!isPlaying) nodeBindingSource.DataSource = EnabledNodes;
 		}
 
 		/// <summary>
@@ -127,7 +126,7 @@ namespace VisualizeNetwork
 		private async Task<int> PlayClustering(CancellationToken ct)
 		{
 
-			for (int i = round; i <= enabledAlgorithm.NodesList.Count; i++)
+			for (int i = Round; i <= enabledAlgorithm.NodesList.Count; i++)
 			{
 				//ct.ThrowIfCancellationRequested();
 				if (ct.IsCancellationRequested) return -1;

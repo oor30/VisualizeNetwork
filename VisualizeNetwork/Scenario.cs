@@ -68,22 +68,21 @@ namespace VisualizeNetwork
 	public class Waiting : IDisposable
 	{
 		private readonly Form1 form1;
-		private readonly Label labelProcessing;
+		private readonly ToolStripStatusLabel labelProcessing;
 		private readonly DateTime start;
-		public Waiting(Form1 form1, Label labelProcessing)
+		public Waiting(Form1 form1, ToolStripStatusLabel labelProcessing)
 		{
 			this.form1 = form1;
 			form1.Cursor = Cursors.WaitCursor;
 			this.labelProcessing = labelProcessing;
 			labelProcessing.Text = "...";
-			labelProcessing.Visible = true;
 			start = DateTime.Now;
 		}
 
 		public void Dispose()
 		{
 			form1.Cursor = Cursors.Default;
-			labelProcessing.Visible = false;
+			labelProcessing.Text = "準備完了";
 			DateTime end = DateTime.Now;
 			TimeSpan throughput = end - start;
 			form1.PrintConsole(string.Format("合計処理時間 : {0:#.####}s", throughput.TotalSeconds), false);

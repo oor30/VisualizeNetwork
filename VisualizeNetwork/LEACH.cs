@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using static VisualizeNetwork.Config;
+using static VisualizeNetwork.EnergyModel;
 
 namespace VisualizeNetwork
 {
@@ -29,7 +30,6 @@ namespace VisualizeNetwork
 			{
 				for (int i = 0; i < N; i++)
 				{
-					//hasBeenCH[i] = 0;   // CHになる確立を等しくする
 					Node node = nodes[i];
 					node.UnqualifiedRound = 0;
 					nodes[i] = node;
@@ -66,14 +66,10 @@ namespace VisualizeNetwork
 				if (node.IsAlive) node.Pi = GetPi(nodes, i);
 				if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
 				{
-					//node.MemberNum = 1;
 					node.UnqualifiedRound = CalcUnqualifiedRound(node);
 					CHIDs.Add(node.ID);
 					CHNum++;
 					node.SetCH();
-					//node.IsCH = true;
-					//node.HasCHCnt++;
-					//node.Status = "CH";
 				}
 				//}
 				if (node.UnqualifiedRound > 0) // CHの資格なし

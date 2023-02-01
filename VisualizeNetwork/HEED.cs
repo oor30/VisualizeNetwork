@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using static VisualizeNetwork.Config;
+using static VisualizeNetwork.EnergyModel;
 
 namespace VisualizeNetwork
 {
@@ -25,7 +26,7 @@ namespace VisualizeNetwork
 				for (int j = 0; j < initialNodes.Count; j++)
 				{
 					if (i == j) continue;
-					if (Math.Sqrt(Dist2(initialNodes[i], initialNodes[j])) <= ClusterRadius)
+					if (Math.Sqrt(Program.Dist2(initialNodes[i], initialNodes[j])) <= ClusterRadius)
 					{
 						num++;
 						withinMyClusterRangeList[i].Add(j);
@@ -122,7 +123,7 @@ namespace VisualizeNetwork
 			foreach (int headID in CHIDs)
 			{
 				Node tmp = nodes[headID];
-				double dist = Dist2(tmp, node);
+				double dist = Program.Dist2(tmp, node);
 				if (dist < distMin)
 				{
 					head = tmp.ID;

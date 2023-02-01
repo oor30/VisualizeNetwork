@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using static VisualizeNetwork.Config;
+using static VisualizeNetwork.EnergyModel;
 
 namespace VisualizeNetwork
 {
@@ -46,7 +47,7 @@ namespace VisualizeNetwork
             double E_a = E_t / N;
             //double E_a = (E_t * (1 - (double)Round/rand))/CH_candidate;
             double Pi = P * (nodes[i].E_r / E_a);
-            //double Pi = P * CH_candidate * node.E_r * Sim.E_init / (E_t * E_a);
+            //double Pi = P * CH_candidate * node.E_r * Sim.E_INIT / (E_t * E_a);
             Pi = Math.Min(1, Pi);
             return Pi;
         }
@@ -126,7 +127,7 @@ namespace VisualizeNetwork
 			double distToCH = DIST_TABLE[head.ID, node.ID];
             //double distToCH = Math.Sqrt(Dist2(head, node));
             energyDirect = E_TX(PACKET_SIZE, distDirect);
-            energyViaCH = E_TX(PACKET_SIZE, distToCH) + E_DA * PACKET_SIZE + E_RX(PACKET_SIZE);
+            energyViaCH = E_TX(PACKET_SIZE, distToCH) + E_DA(PACKET_SIZE) + E_RX(PACKET_SIZE);
             if (mode == Mode.My_IEE_LEACH)
             {
                 energyDirect /= node.E_r;

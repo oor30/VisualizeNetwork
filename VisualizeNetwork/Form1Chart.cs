@@ -80,6 +80,8 @@ namespace VisualizeNetwork
 					charts[i].Series.Add(seriesList[i]);
 				}
 			}
+
+
 		}
 
 		/// <summary>

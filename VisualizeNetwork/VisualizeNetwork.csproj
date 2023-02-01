@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Direct.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="NodeMap.cs" />
     <Compile Include="Form1Chart.cs">
       <SubType>Form</SubType>
@@ -123,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="Sim.cs" />
+    <Compile Include="SimMaster.cs" />
     <EmbeddedResource Include="ConfigFileDialog.resx">
       <DependentUpon>ConfigFileDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -139,7 +141,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Form1.datasource" />
     <None Include="Properties\DataSources\Node.datasource" />
     <None Include="Properties\DataSources\Records.datasource" />
     <None Include="Properties\DataSources\Sim.datasource" />
