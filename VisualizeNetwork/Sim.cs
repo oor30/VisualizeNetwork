@@ -13,8 +13,7 @@ namespace VisualizeNetwork
 		public const int R = 3500;          // 最大シミュレーションラウンド数
 		// 変数
 		protected int Round { get; private set; }   // 現在のラウンド数
-		[NonSerialized]
-		protected int CHNum;        // CH数
+		protected int CHNum { get; private set; }        // CH数
 		protected int AliveNum { get; private set; }     // 生存ノード数
 		private double EnergyConsumption;   // エネルギー消費量
 
@@ -33,11 +32,11 @@ namespace VisualizeNetwork
 		// 全ラウンド分のノードリスト
 		public List<List<Node>> NodesList { get; } = new List<List<Node>>();
 
-		public void Run()
+		public void Run(List<Node> initialNodes)
 		{
 			Round = 0;
 			AliveNum = N;
-			List<Node> nodes = new List<Node>(INITIAL_NODES);
+			List<Node> nodes = new List<Node>(initialNodes);
 			for (int i = 0; i < R; i++)
 			{
 				nodes = new List<Node>(nodes);
@@ -92,6 +91,19 @@ namespace VisualizeNetwork
 				if (AliveNum == N - 1) FDN = Round;
 				else if (AliveNum == 0) LDN = Round;
 			}
+		}
+
+		protected void SetCH(ref Node node)
+		{
+			CHNum++;
+			node.SetCH();
+		}
+
+		protected void SetMN(ref Node node, ref Node head)
+		{
+			node.CHID = head.ID;
+			node.Status = (node.Status | StatusEnum.member) & ~StatusEnum.normal;
+			head.MemberNum += 1;
 		}
 
 		/// <summary>

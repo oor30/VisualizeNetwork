@@ -78,10 +78,10 @@ namespace VisualizeNetwork
                     if (mode == Mode.My_IEE_LEACH && headID == node.ID) continue;
                     Node tmp = nodes[headID];
                     //double dist = Dist2(tmp, node);
-					double dist = DIST_TABLE[tmp.ID, node.ID];
-					if (dist < distMin)
+                    double dist = SimMaster.DistTable[tmp.ID, node.ID];
+                    if (dist < distMin)
                     {
-                        if (mode == Mode.My_IEE_LEACH && node.IsCH && DIST_BS_LIST[node.ID] <= DIST_BS_LIST[tmp.ID])
+                        if (mode == Mode.My_IEE_LEACH && node.IsCH && SimMaster.DistBSList[node.ID] <= SimMaster.DistBSList[tmp.ID])
                         //if (mode == Mode.My_IEE_LEACH && node.IsCH && Dist2(node, BS) <= Dist2(tmp, BS))
                         {
                             continue;
@@ -94,7 +94,7 @@ namespace VisualizeNetwork
                 // CH候補が自分自身なら、スキップ
                 if (node.ID == head.ID) continue;
                 // CH候補よりもBSのほうが近ければ直接送る
-                else if (DIST_BS_LIST[node.ID] < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
+                else if (SimMaster.DistBSList[node.ID] < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 //else if (Dist2(BS, node) < distMin && (mode == Mode.IEE_LEACH || mode == Mode.IEE_LEACH_B))
                 {
                     node.CHID = -1;
@@ -109,11 +109,12 @@ namespace VisualizeNetwork
                 // CH候補をCHに設定
                 else
                 {
-                    node.CHID = head.ID;
-                    if (node.IsCH) node.Status = StatusEnum.member | StatusEnum.CH;
-                    else node.Status = StatusEnum.member;
+                    //               node.CHID = head.ID;
+                    //if (node.IsCH) node.Status = StatusEnum.member | StatusEnum.CH;
+                    //else node.Status = StatusEnum.member;
+                    //head.MemberNum += 1;
+                    SetMN(ref node, ref head);
                     nodes[i] = node;
-                    head.MemberNum += 1;
                     nodes[node.CHID] = head;
                 }
             }
@@ -122,9 +123,9 @@ namespace VisualizeNetwork
         private bool DirectIsMoreEfficient(Node node, Node head)
         {
             double energyDirect, energyViaCH;
-            double distDirect = DIST_BS_LIST[node.ID];
+            double distDirect = SimMaster.DistBSList[node.ID];
             //double distDirect = Math.Sqrt(Dist2(BS, node));
-			double distToCH = DIST_TABLE[head.ID, node.ID];
+            double distToCH = SimMaster.DistTable[head.ID, node.ID];
             //double distToCH = Math.Sqrt(Dist2(head, node));
             energyDirect = E_TX(PACKET_SIZE, distDirect);
             energyViaCH = E_TX(PACKET_SIZE, distToCH) + E_DA(PACKET_SIZE) + E_RX(PACKET_SIZE);

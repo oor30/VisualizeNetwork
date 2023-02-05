@@ -53,60 +53,23 @@ namespace VisualizeNetwork
 	internal static class Config
 	{
 		// パラメーター(Form1.csで設定)
-		public static List<Node> INITIAL_NODES { get; private set; }   // 初期ノード(CnvIntToNodes)
-		public static Node BS { get; private set; }              // BS(ResetParameters)
-		public static double P { get; private set; }             // CHの割合(ResetParameters)
-		public static int N => INITIAL_NODES.Count;  // ノード数
+		public static Node BS;              // BS(ResetParameters)
+		public static double P;             // CHの割合(ResetParameters)
+		public static int N => SimMaster.InitialNodes.Count;  // ノード数
 		public static int K => (int)(N * P);            // クラスタヘッド数
-		public static double PACKET_SIZE { get; private set; }      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
-		public static bool CONST_E_INIT { get; private set; }
-		public static double E_INIT { get; private set; }         //(J)ノードの初期エネルギー
-		public static double E_INIT_RANGE { get; private set; }
-		public static double[,] DIST_TABLE { get; private set; }  // 各ノード間の距離(CnvIntToNodes)
-		public static double[] DIST_BS_LIST { get; private set; }  // 各ノードからBSまでの距離(ResetParameters)
-																   //public const int INTERVAL = 20;     // (s/Round)
+		public static double PACKET_SIZE;      //(bits/node/Round)1ラウンド毎に1ノードが送信するデータサイズ
+		public static bool CONST_E_INIT;
+		public static double E_INIT;         //(J)ノードの初期エネルギー
+		public static double E_INIT_RANGE;
+		public static double AREA;
 
-		public static bool ready = false;
-
-		public static void ResetInitialNodes(List<Node> initialNodes)
-		{
-			INITIAL_NODES = initialNodes;
-
-			//PrintConsole("各ノード間の距離を計算中");
-			DIST_TABLE = new double[INITIAL_NODES.Count, INITIAL_NODES.Count];
-			for (int i = 0; i < INITIAL_NODES.Count; i++)
-			{
-				for (int j = 0; j < INITIAL_NODES.Count; j++)
-				{
-					double dist;
-					if (i == j) dist = 0;
-					else if (i > j) dist = DIST_TABLE[j, i];
-					else dist = Math.Sqrt(Program.Dist2(INITIAL_NODES[i], INITIAL_NODES[j]));
-					DIST_TABLE[i, j] = dist;
-				}
-			}
-		}
-
-		public static void ResetParameter(Node bs, double p, double packetSize, bool constEInit, double E_init, double E_initRange)
-		{
-			BS = bs;
-			P = p;
-			PACKET_SIZE = packetSize;
-			CONST_E_INIT = constEInit;
-			E_INIT = E_init;
-			E_INIT_RANGE = E_initRange;
-		}
-
-		public static void ResetDistBSList()
-		{
-			DIST_BS_LIST = new double[N];
-			for (int i = 0; i < INITIAL_NODES.Count; i++)
-			{
-				double dist = Program.Dist2(INITIAL_NODES[i], BS).Sqrt();
-				DIST_BS_LIST[i] = dist;
-			}
-			ready = true;
-		}
+		public static bool CHECKED_Direct;
+		public static bool CHECKED_LEACH;
+		public static bool CHECKED_IEE_LEACH;
+		public static bool CHECKED_IEE_LEACH_A;
+		public static bool CHECKED_IEE_LEACH_B;
+		public static bool CHECKED_My_IEE_LEACH_B;
+		public static bool CHECKED_My_IEE_LEACH;
 	}
 
 	//エネルギー消費モデル

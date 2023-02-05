@@ -13,7 +13,7 @@ namespace VisualizeNetwork
 		{
 			PrintConsole("グラフを描画");
 			int maxRound = 0;
-			foreach (Sim sim in scenario.algorithms)
+			foreach (Sim sim in algorithms)
 			{
 				if (maxRound < sim.LDN) maxRound = sim.LDN;
 				if (sim.LDN == 0)
@@ -56,7 +56,7 @@ namespace VisualizeNetwork
 				chart.ChartAreas.Add(chartArea);
 			}
 
-			foreach (Sim sim in scenario.algorithms)
+			foreach (Sim sim in algorithms)
 			{
 				List<Series> seriesList = new List<Series>
 				{

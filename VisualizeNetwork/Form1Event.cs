@@ -1,15 +1,16 @@
-﻿using System;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Text.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-
-using static VisualizeNetwork.Config;
 
 namespace VisualizeNetwork
 {
@@ -36,19 +37,11 @@ namespace VisualizeNetwork
 					string fileName = ofDialog.FileName;
 					using (StreamReader sr = new StreamReader(fileName))
 					{
-						List<int> integers;
-						try
-						{
-							integers = GetIntegers(sr);
-						}
-						catch
-						{
-							return;
-						}
-						scenario.initialNodes = CnvIntToNodes(integers);
-						scenario.scenarioFile = Path.GetFileNameWithoutExtension(fileName);
+						if (!master.TryGetIntegers(sr, out List<int> integers)) return;
+
 						tabCtrlBottom.SelectedTab = tabLog;
-						WholeSimulationProcess();
+						ResetConfig();
+						algorithms = master.Run(integers, Path.GetFileNameWithoutExtension(fileName));
 						ResetView();
 					}
 				}
@@ -65,20 +58,24 @@ namespace VisualizeNetwork
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				using (FolderBrowserDialog fbDialog = new FolderBrowserDialog()
+				using (SaveFileDialog sfDialog = new SaveFileDialog()
 				{
-					Description = "保存場所を選択"
+					Title = "シミュレーション結果の保存",
+					FileName = @"シミュレーション結果" + DateTime.Now.ToString("yyMMdd_HHmmss") + ".csv",
+					Filter = "CSVファイル|*.csv"
 				})
 				{
-					if (fbDialog.ShowDialog() == DialogResult.OK)
+					if (sfDialog.ShowDialog() == DialogResult.OK)
 					{
 						Dictionary<string, Record> record = null;
+						//List<Record> record = null;
 						progressBar1.Minimum = 0;
 						progressBar1.Maximum = 10;
 						progressBar1.Value = 0;
 						progressBar1.Step = 1;
 						progressBar1.Visible = true;
 						tabCtrlBottom.SelectedTab = tabLog;
+						ResetConfig();
 
 						for (int i = 0; i < 10; i++)
 						{
@@ -89,38 +86,29 @@ namespace VisualizeNetwork
 							await Task.Run(() =>
 							{
 								string path = "D100.Data" + i.ToString() + ".txt";
-								var assm = Assembly.GetExecutingAssembly();
-								var stream = assm.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
+								Assembly assembly = Assembly.GetExecutingAssembly();
+								Stream stream = assembly.GetManifestResourceStream("VisualizeNetwork.Resources.配置データ." + path);
 								using (StreamReader sr = new StreamReader(stream))
 								{
-									List<int> integers;
-									try
-									{
-										integers = GetIntegers(sr);
-									}
-									catch
-									{
-										return;
-									}
-									scenario.initialNodes = CnvIntToNodes(integers);
-									scenario.scenarioFile = "\\Data" + i.ToString();
-									WholeSimulationProcess();
+									if (!master.TryGetIntegers(sr, out List<int> integers)) return;
+
+									algorithms = master.Run(integers, "\\Data" + i.ToString());
 									Application.DoEvents();
 
 									if (record == null)
 									{
 										record = new Dictionary<string, Record>();
-										foreach (Sim sim in scenario.algorithms)
+										foreach (Sim sim in algorithms)
 										{
-											record.Add(sim.AlgoName, new Record());
+											record.Add(sim.AlgoName, new Record(sim.AlgoName));
 										}
 									}
-									foreach (Sim sim in scenario.algorithms)
+									foreach (Sim sim in algorithms)
 									{
-										record[sim.AlgoName].Add(sim.FDN, sim.LDN);
+										record[sim.AlgoName].Add(sim.FDN, sim.LDN, sim.CollectedDataNum);
 									}
 
-									//string fileName = fbDialog.SelectedPath + scenario.scenarioFile + ".vns";
+									//string fileName = sfDialog.SelectedPath + scenario.scenarioFile + ".vns";
 									//SaveScenario(fileName);
 								}
 							});
@@ -135,13 +123,28 @@ namespace VisualizeNetwork
 						}
 						//string jsonStr = JsonSerializer.Serialize(record);
 						using (StreamWriter writer = new StreamWriter(
-							fbDialog.SelectedPath + "\\シミュレーション結果.json", false))
+							sfDialog.FileName, false, Encoding.UTF8))
 						{
 							try
 							{
-								records = new Records(record, BS);
-								string jsonStr = JsonSerializer.Serialize(records);
-								writer.WriteLine(jsonStr);
+								var config = new CsvConfiguration(CultureInfo.GetCultureInfo("ja-jp"))
+								{
+									// 全てダブルクォートで囲む
+									Quote = '"',
+									ShouldQuote = context => true,
+									Encoding = Encoding.UTF8
+								};
+								var csv = new CsvWriter(writer, config);
+								csv.WriteHeader<Record>();
+								csv.NextRecord();
+								foreach (var v in record.Values)
+								{
+									csv.WriteRecord(v);
+									csv.NextRecord();
+								}
+								//records = new Records(record, BS);
+								//string jsonStr = JsonSerializer.Serialize(records);
+								//writer.WriteLine(jsonStr);
 							}
 							catch
 							{
@@ -165,10 +168,10 @@ namespace VisualizeNetwork
 			if (processing) return;
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				scenario.initialNodes = CnvIntToNodes(CreateIntegers());
-				scenario.scenarioFile = "無作為";
 				tabCtrlBottom.SelectedTab = tabLog;
-				WholeSimulationProcess();
+				ResetConfig();
+				List<int> integers = master.CreateIntegers((int)numericUpDownN.Value);
+				algorithms = master.Run(integers, "無作為");
 				ResetView();
 			}
 		}
@@ -177,7 +180,7 @@ namespace VisualizeNetwork
 		private void BtnApply_Click(object sender, EventArgs e)
 		{
 			if (processing) return;
-			if (scenario.algorithms.Count == 0)
+			if (algorithms.Count == 0)
 			{
 				MessageBox.Show("表示するシミュレーションシナリオがありません。",
 					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -186,7 +189,9 @@ namespace VisualizeNetwork
 
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
-				WholeSimulationProcess();
+				tabCtrlBottom.SelectedTab = tabLog;
+				ResetConfig();
+				algorithms = master.WholeSimulationProcess(SimMaster.InitialNodes);
 				ResetView();
 			}
 		}
@@ -224,7 +229,8 @@ namespace VisualizeNetwork
 			using (SaveFileDialog sfDialog = new SaveFileDialog
 			{
 				Title = "ファイルを保存する",
-				FileName = scenario.scenarioFile + ".vns",
+				//FileName = scenario.scenarioFile + ".vns",
+				FileName = master.SimName + ".vns",
 				Filter = "シナリオファイル(*.vns)|*.vns"
 			})
 			{
@@ -282,7 +288,7 @@ namespace VisualizeNetwork
 		private void CmbBoxAlgo_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (changingEnabledAlgorithm) return;
-			ChangeEnabledAlgorithm(scenario.algorithms[cmbBoxAlgo.SelectedIndex], cmbBoxAlgo.Name);
+			ChangeEnabledAlgorithm(algorithms[cmbBoxAlgo.SelectedIndex], cmbBoxAlgo.Name);
 		}
 
 		private void ChartReceivedData_MouseMove(object sender, MouseEventArgs e)
@@ -308,7 +314,7 @@ namespace VisualizeNetwork
 			//if (!chartReceivedData.ClientRectangle.Contains(chartReceivedData.Mouse)) return;
 			//var x = (int)Math.Round(chartReceivedData.ChartAreas[0].AxisX.PixelPositionToValue(pos.X));
 			//var str = "x : " + x + "\n";
-			//foreach (Sim sim in algorithms)
+			//foreach (Sim sim in Algorithms)
 			//{
 			//    var l = sim.CollectedDataNumList;
 			//    str += sim.AlgoName + " : " + l[x] + "\n";
@@ -337,7 +343,7 @@ namespace VisualizeNetwork
 			if (resultTable.SelectedRows.Count > 0)
 			{
 				string algoName = (string)resultTable.SelectedRows[0].Cells[0].Value;
-				foreach (Sim sim in scenario.algorithms)
+				foreach (Sim sim in algorithms)
 				{
 					if (sim.AlgoName == algoName)
 					{

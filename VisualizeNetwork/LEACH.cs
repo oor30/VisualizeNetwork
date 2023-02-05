@@ -68,8 +68,9 @@ namespace VisualizeNetwork
 				{
 					node.UnqualifiedRound = CalcUnqualifiedRound(node);
 					CHIDs.Add(node.ID);
-					CHNum++;
-					node.SetCH();
+					//CHNum++;
+					//node.SetCH();
+					SetCH(ref node);
 				}
 				//}
 				if (node.UnqualifiedRound > 0) // CHの資格なし
@@ -105,9 +106,11 @@ namespace VisualizeNetwork
 						imax = i;
 					}
 				}
+				Node node = nodes[imax];
 				CHIDs.Add(imax);
-				CHNum++;
-				nodes[imax].SetCH();
+				//CHNum++;
+				SetCH(ref node);
+				nodes[imax] = node;
 			}
 		}
 
@@ -128,17 +131,15 @@ namespace VisualizeNetwork
 				{
 					Node tmp = nodes[headID];
 					//double dist = Dist2(tmp, node);
-					double dist = DIST_TABLE[tmp.ID, node.ID];
+					double dist = SimMaster.DistTable[tmp.ID, node.ID];
 					if (dist < distMin)
 					{
 						head = tmp;
 						distMin = dist;
 					}
 				}
-				node.CHID = head.ID;
-				node.Status = StatusEnum.member;
+				SetMN(ref node, ref head);
 				nodes[i] = node;
-				head.MemberNum += 1;
 				nodes[node.CHID] = head;
 			}
 		}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows.Forms;
@@ -13,8 +12,8 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		private Scenario scenario;
 		private Records records;
+		private List<Sim> algorithms;
 		private Sim enabledAlgorithm;
 		private List<Node> EnabledNodes
 		{
@@ -34,174 +33,36 @@ namespace VisualizeNetwork
 		private readonly ToolTip tooltip = new ToolTip();
 		private static readonly Random rand = new Random();
 		private bool changingEnabledAlgorithm = true;
+		readonly SimMaster master;
 
 		public Form1()
 		{
 			InitializeComponent();
 			pictureBoxNodeMap.Image = new Bitmap(pictureBoxNodeMap.Width, pictureBoxNodeMap.Height);
 			trackBarPlaySpeed.Maximum = 50;
-			scenario = new Scenario();
+			//scenario = new Scenario();
 			nodeMap = new NodeMap(pictureBoxNodeMap);
 			form1BindingSource.DataSource = Round;
+			master = new SimMaster(PrintConsole, ResetConfig);
 		}
 
-		// 1シミュレーション全体を実行する関数
-		private void WholeSimulationProcess()
+		private void ResetConfig()
 		{
-			ResetParameters();
-			RunSimulation();
-		}
+			BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value);
+			P = (double)numericUpDownP.Value;
+			PACKET_SIZE = (int)numericUpDownPacketSize.Value;
+			CONST_E_INIT = radioBtnConstInitEnergy.Checked;
+			E_INIT = (double)numericUpDownInitialEnergy.Value;
+			E_INIT_RANGE = (double)numericUpDownRange.Value;
+			AREA = (int)numericUpDownWidth.Value;
 
-		// 座標数値をファイルから読み取る関数
-		private List<int> GetIntegers(StreamReader sr)
-		{
-			PrintConsole("座標を読み込み中");
-			List<int> integers = new List<int>();
-			// ファイルから座標を読み込む
-			try
-			{
-				string line = sr.ReadLine();
-				while (line != null && line != "-1")
-				{
-					int i = 0;
-					try
-					{
-						i = int.Parse(line);
-					}
-					catch
-					{
-						throw new Exception("数値に変換できませんでした。");
-					}
-					integers.Add(i);
-					line = sr.ReadLine();
-				}
-				if (integers.Count == 0) throw new Exception("数値が1つも読み込めませんでした。");
-				// ノード数
-				scenario.N = integers.Count;
-				// 一辺の長さ
-				scenario.widthHeight = (int)(Math.Ceiling(Math.Sqrt(integers.Max()) / 100) * 100);
-				PrintConsole("読み込み完了");
-				return integers;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("ファイルを読み込めませんでした : " + ex.Message);
-				MessageBox.Show("ファイルを読み込めませんでした。", "エラー",
-					MessageBoxButtons.OK, MessageBoxIcon.Error);
-				throw;
-			}
-		}
-
-		// 座標数値を無作為に生成する関数
-		private List<int> CreateIntegers()
-		{
-			PrintConsole("座標を作成中");
-			Random random = new Random();
-			List<int> integers = new List<int>();
-			// ノード数
-			scenario.N = (int)numericUpDownN.Value;
-			// 一辺の長さ
-			scenario.widthHeight = (int)numericUpDownWidth.Value;
-
-			for (int i = 0; i < scenario.N; i++)
-			{
-				integers.Add((int)(random.NextDouble() * Math.Pow(scenario.widthHeight, 2)));
-			}
-			integers.Sort();
-			PrintConsole("作成完了");
-			return integers;
-		}
-
-		// 座標数値をノードリストに変換する関数
-		private List<Node> CnvIntToNodes(List<int> integers)
-		{
-			PrintConsole("座標を変換中");
-			List<Node> initialNodes = new List<Node>();
-			for (int j = 0; j < integers.Count; j++)
-			{
-				Node node = new Node(j, integers[j] % scenario.widthHeight,
-					integers[j] / scenario.widthHeight);
-				initialNodes.Add(node);
-			}
-			//INITIAL_NODES = initialNodes;
-			ResetInitialNodes(initialNodes);
-
-			//PrintConsole("各ノード間の距離を計算中");
-			//double[,] distTable = new double[initialNodes.Count, initialNodes.Count];
-			////List<List<double>> DIST_TABLE = new List<List<double>>();
-			//for (int i = 0; i < initialNodes.Count; i++)
-			//{
-			//	for (int j = 0; j < initialNodes.Count; j++)
-			//	{
-			//		double dist;
-			//		if (i == j) dist = 0;
-			//		else if (i > j) dist = distTable[j, i];
-			//		else dist = Math.Sqrt(Program.Dist2(initialNodes[i], initialNodes[j]));
-			//		distTable[i, j] = dist;
-			//	}
-			//}
-			//DIST_TABLE = distTable;
-			return initialNodes;
-		}
-
-		// シミュレーション前の下準備
-		private void ResetParameters()
-		{
-			PrintConsole("シミュレーションの準備中");
-
-			Config.ResetParameter(new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value),
-				(double)numericUpDownP.Value, (int)numericUpDownPacketSize.Value, radioBtnConstInitEnergy.Checked,
-				(double)numericUpDownInitialEnergy.Value, (double)numericUpDownRange.Value);
-
-			//// CH割合
-			//P = (double)numericUpDownP.Value;
-			//// 1ラウンドあたりの送信パケットサイズ
-			//PACKET_SIZE = (int)numericUpDownPacketSize.Value;
-			//// BSの座標
-			//BS = new Node(-1, (int)numericUpDownBSX.Value, (int)numericUpDownBSY.Value)
-			//{
-			//	Status = StatusEnum.BS
-			//};
-			//double[] distBSList = new double[N];
-			//for (int i = 0; i < scenario.initialNodes.Count; i++)
-			//{
-			//	double dist = Program.Dist2(scenario.initialNodes[i], BS).Sqrt();
-			//	distBSList[i] = dist;
-			//}
-			//DIST_BS_LIST = distBSList;
-			ResetDistBSList();
-			// ノードを初期化
-			for (int i = 0; i < scenario.initialNodes.Count; i++)
-			{
-				Node node = scenario.initialNodes[i];
-				double initEnergy;
-				if (radioBtnConstInitEnergy.Checked) initEnergy = (double)numericUpDownInitialEnergy.Value;
-				else initEnergy = rand.NextDouble() * (double)numericUpDownRange.Value + (double)numericUpDownMin.Value;
-				node.Initialize(initEnergy);
-				scenario.initialNodes[i] = node;
-			}
-		}
-
-		// すべてのアルゴリズムのシミュレーションを実行
-		private void RunSimulation()
-		{
-			// 各アルゴリズムのインスタンスを生成してリストに格納
-			scenario.algorithms = new List<Sim>();
-			if (cbDirect.Checked) scenario.algorithms.Add(new Direct());
-			if (cbLEACH.Checked) scenario.algorithms.Add(new LEACH());
-			if (cbIEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH));
-			if (cbIEE_LEACH_A.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_A));
-			if (cbIEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.IEE_LEACH_B));
-			if (cbMy_IEE_LEACH_B.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH_B));
-			if (cbMy_IEE_LEACH.Checked) scenario.algorithms.Add(new IEE_LEACH(Mode.My_IEE_LEACH));
-
-			//クラスタリングをRラウンド実行
-			foreach (Sim sim in scenario.algorithms)
-			{
-				PrintConsole(sim.AlgoName + ": シミュレーションを開始");
-				sim.Run();
-			}
-			PrintConsole("シミュレーションが終了しました。");
+			if (cbDirect.Checked) CHECKED_Direct = true;
+			if (cbLEACH.Checked) CHECKED_LEACH = true;
+			if (cbIEE_LEACH.Checked) CHECKED_IEE_LEACH = true;
+			if (cbIEE_LEACH_A.Checked) CHECKED_IEE_LEACH_A = true;
+			if (cbIEE_LEACH_B.Checked) CHECKED_IEE_LEACH_B = true;
+			if (cbMy_IEE_LEACH_B.Checked) CHECKED_My_IEE_LEACH_B = true;
+			if (cbMy_IEE_LEACH.Checked) CHECKED_My_IEE_LEACH = true;
 		}
 
 		// コンソールとフォーム下部に出力
@@ -226,7 +87,7 @@ namespace VisualizeNetwork
 				try
 				{
 					BinaryFormatter bf = new BinaryFormatter();
-					bf.Serialize(fs, scenario);
+					bf.Serialize(fs, master.Algorithms);
 				}
 				catch
 				{
@@ -245,7 +106,7 @@ namespace VisualizeNetwork
 				try
 				{
 					BinaryFormatter bf = new BinaryFormatter();
-					scenario = (Scenario)bf.Deserialize(fs);
+					algorithms = (List<Sim>)bf.Deserialize(fs);
 				}
 				catch
 				{

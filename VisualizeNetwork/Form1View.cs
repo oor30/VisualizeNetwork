@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using static VisualizeNetwork.Config;
 
 namespace VisualizeNetwork
 {
@@ -17,9 +15,9 @@ namespace VisualizeNetwork
 		/// </summary>
 		private void ResetView()
 		{
-			nodeMap.SetParameters(INITIAL_NODES);
+			nodeMap.SetParameters(SimMaster.InitialNodes);
 
-			if (scenario.algorithms.Count == 0)
+			if (algorithms.Count == 0)
 			{
 				MessageBox.Show("表示するシミュレーションシナリオがありません。",
 					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -27,7 +25,7 @@ namespace VisualizeNetwork
 			}
 
 			int maxRound = 0;
-			foreach (Sim sim in scenario.algorithms)
+			foreach (Sim sim in algorithms)
 			{
 				if (maxRound < sim.LDN) maxRound = sim.LDN;
 				if (sim.LDN == 0)
@@ -46,22 +44,22 @@ namespace VisualizeNetwork
 			isPlaying = false;
 			selectedNodeID = 0;
 			labelRound.Text = "ラウンド：" + Round;
-			labelScenario.Text = "シナリオ：" + scenario.scenarioFile;
+			labelScenario.Text = "シナリオ：" + master.SimName;
 			trackBarRound.Value = 1;
 			trackBarRound.Maximum = maxRound;
 			cmbBoxAlgo.Items.Clear();
 			changingEnabledAlgorithm = true;
 
 			// 結果表にシミュレーション結果を追加・コンボボックスにアルゴリズムを追加
-			foreach (Sim sim in scenario.algorithms)
+			foreach (Sim sim in algorithms)
 			{
 				cmbBoxAlgo.Items.Add(sim.AlgoName);
 			}
 
-			simBindingSource.DataSource = scenario.algorithms;
+			simBindingSource.DataSource = algorithms;
 
 			DrawChart();
-			ChangeEnabledAlgorithm(scenario.algorithms[0]);
+			ChangeEnabledAlgorithm(algorithms[0]);
 		}
 
 		/// <summary>

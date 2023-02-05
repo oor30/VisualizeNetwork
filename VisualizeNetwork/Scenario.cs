@@ -1,23 +1,12 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace VisualizeNetwork
 {
-	[Serializable()]
-	public class Scenario
-	{
-		// 1.integers生成時
-		public int N;
-		public int widthHeight;
-		// 2.integersからノードリストへ変換時
-		public List<Node> initialNodes;
-		public string scenarioFile = "なし";
-		// 3.RunSimulation()内
-		internal List<Sim> algorithms = new List<Sim>();
-	}
-
 	public readonly struct Records
 	{
 		public Point BS { get; }
@@ -34,29 +23,27 @@ namespace VisualizeNetwork
 	{
 		public List<int> FDN = new List<int>();
 		public List<int> LDN = new List<int>();
-		public double FDNMean
+		public List<int> CollectedDataNum = new List<int>();
+
+		[Name("アルゴリズム")]
+		public string Name { get; }
+		[Name("FDN")]
+		public double FDNMean { get { return Math.Round(FDN.Average(), 1); } }
+		[Name("LDN")]
+		public double LDNMean { get { return Math.Round(LDN.Average(), 1); } }
+		[Name("収集データ数")]
+		public double CollectedDataNumMean { get { return Math.Round(CollectedDataNum.Average(), 1); } }
+
+		public Record(string name)
 		{
-			get
-			{
-				double sum = 0;
-				foreach (int i in FDN) sum += i;
-				return sum / FDN.Count;
-			}
-		}
-		public double LDNMean
-		{
-			get
-			{
-				double sum = 0;
-				foreach (int i in LDN) sum += i;
-				return sum / FDN.Count;
-			}
+			Name = name;
 		}
 
-		public void Add(int FDN, int LDN)
+		public void Add(int FDN, int LDN, int CollectedDataNum)
 		{
 			this.FDN.Add(FDN);
 			this.LDN.Add(LDN);
+			this.CollectedDataNum.Add(CollectedDataNum);
 		}
 
 		public string GetMean()
