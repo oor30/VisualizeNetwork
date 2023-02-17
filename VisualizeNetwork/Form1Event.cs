@@ -58,10 +58,13 @@ namespace VisualizeNetwork
 		{
 			using (Waiting waiting = new Waiting(this, labelProcessing))
 			{
+				ResetConfig();
 				using (SaveFileDialog sfDialog = new SaveFileDialog()
 				{
 					Title = "シミュレーション結果の保存",
-					FileName = @"シミュレーション結果" + DateTime.Now.ToString("yyMMdd_HHmmss") + ".csv",
+					FileName = @"BS(" + Config.BS.X.ToString() + "_" + Config.BS.Y.ToString()
+						+ ")_初期エネルギー" + Config.E_INIT + (Config.CONST_E_INIT ? "" : "_" + Config.E_INIT_RANGE.ToString())
+						+ "J_" + DateTime.Now.ToString("yyMMdd_HHmmss") + ".csv",
 					Filter = "CSVファイル|*.csv"
 				})
 				{
@@ -69,18 +72,18 @@ namespace VisualizeNetwork
 					{
 						Dictionary<string, Record> record = null;
 						//List<Record> record = null;
+						int cnt = 10;
 						progressBar1.Minimum = 0;
-						progressBar1.Maximum = 10;
+						progressBar1.Maximum = cnt;
 						progressBar1.Value = 0;
 						progressBar1.Step = 1;
 						progressBar1.Visible = true;
 						tabCtrlBottom.SelectedTab = tabLog;
-						ResetConfig();
 
-						for (int i = 0; i < 10; i++)
+						for (int i = 0; i < cnt; i++)
 						{
 							progressBar1.PerformStep();
-							labelProcessing.Text = (i + 1).ToString() + " / 100";
+							labelProcessing.Text = (i + 1).ToString() + " / " + cnt.ToString();
 							processing = true;
 
 							await Task.Run(() =>
@@ -130,8 +133,8 @@ namespace VisualizeNetwork
 								var config = new CsvConfiguration(CultureInfo.GetCultureInfo("ja-jp"))
 								{
 									// 全てダブルクォートで囲む
-									Quote = '"',
-									ShouldQuote = context => true,
+									//Quote = '"',
+									ShouldQuote = context => false,
 									Encoding = Encoding.UTF8
 								};
 								var csv = new CsvWriter(writer, config);
@@ -248,7 +251,6 @@ namespace VisualizeNetwork
 					Console.WriteLine("キャンセルされました。");
 				}
 			}
-
 		}
 
 		// ノード図上でカーソルが動いたとき、座標を変更する
@@ -327,7 +329,7 @@ namespace VisualizeNetwork
 		{
 			if (roundTable.SelectedRows.Count == 0) return;
 			selectedNodeID = (int)roundTable.SelectedRows[0].Cells[0].Value;
-			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID);
+			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID, checkBoxGrid.Checked);
 		}
 
 		// ラウンドテーブルの１列目をソートから外す
@@ -397,6 +399,31 @@ namespace VisualizeNetwork
 		{
 			if (Round == enabledAlgorithm.NodesList.Count) return;
 			ChangeRound(Round + 1);
+		}
+
+		// グリッド線のチェックボックス
+		private void CheckBoxGrid_CheckedChanged(object sender, EventArgs e)
+		{
+			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID, checkBoxGrid.Checked);
+		}
+
+		// ノードマップを画像で保存するボタン
+		private void ButtonSaveNodeMap_Click(object sender, EventArgs e)
+		{
+			using (SaveFileDialog sfd = new SaveFileDialog()
+			{
+				Title = "画像の保存",
+				FileName = "ノード配置図.svg",
+				Filter = "SVGファイル|*.svg"
+			})
+			{
+				if (sfd.ShowDialog() == DialogResult.OK)
+				{
+					//nodeMap.canvas.Image.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+
+					nodeMap.svgDoc.Write(sfd.FileName);
+				}
+			}
 		}
 	}
 }

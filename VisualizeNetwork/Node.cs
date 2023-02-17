@@ -72,7 +72,7 @@ namespace VisualizeNetwork
 
 		public void SetCH()
 		{
-			MemberNum = 1;
+			MemberNum = 0;
 			IsCH = true;
 			HasCHCnt++;
 			Status = StatusEnum.CH;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -112,7 +111,7 @@ namespace VisualizeNetwork
 			PrintConsole(String.Format("ノード配置図を描画：{0}, ラウンド：{1}",
 				enabledAlgorithm.AlgoName, Round));
 			labelRound.Text = "ラウンド：" + Round;
-			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID);
+			nodeMap.RefreshNodeMap(EnabledNodes, selectedNodeID, checkBoxGrid.Checked);
 			if (!isPlaying) nodeBindingSource.DataSource = EnabledNodes;
 		}
 
@@ -134,15 +133,6 @@ namespace VisualizeNetwork
 			}
 			//round = 100;
 			return 0;
-		}
-
-		/// <summary>
-		/// ラウンドテーブルを更新する
-		/// </summary>
-		/// <param name="nodes">ノードリスト</param>
-		private void RefreshRoundTable(List<Node> nodes)
-		{
-			roundTable.DataSource = nodes;
 		}
 	}
 }

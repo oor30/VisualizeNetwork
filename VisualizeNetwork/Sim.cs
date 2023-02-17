@@ -10,7 +10,7 @@ namespace VisualizeNetwork
 	{
 		// 定数
 		public string AlgoName { get; protected set; }     // アルゴリズム名
-		public const int R = 3500;          // 最大シミュレーションラウンド数
+		public const int R = 5000;          // 最大シミュレーションラウンド数
 		// 変数
 		protected int Round { get; private set; }   // 現在のラウンド数
 		protected int CHNum { get; private set; }        // CH数

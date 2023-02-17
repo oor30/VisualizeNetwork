@@ -61,7 +61,7 @@ namespace VisualizeNetwork
 		public static bool CONST_E_INIT;
 		public static double E_INIT;         //(J)ノードの初期エネルギー
 		public static double E_INIT_RANGE;
-		public static double AREA;
+		public static int AREA;
 
 		public static bool CHECKED_Direct;
 		public static bool CHECKED_LEACH;

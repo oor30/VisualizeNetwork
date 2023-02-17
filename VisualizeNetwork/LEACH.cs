@@ -124,6 +124,7 @@ namespace VisualizeNetwork
 			for (int i = 0; i < nodes.Count; i++)
 			{
 				if (!nodes[i].IsAlive) continue;
+				if (nodes[i].IsCH) continue;
 				Node node = nodes[i];
 				Node head = node;
 				double distMin = double.MaxValue;

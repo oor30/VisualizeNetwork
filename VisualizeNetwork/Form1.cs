@@ -12,7 +12,6 @@ namespace VisualizeNetwork
 {
 	public partial class Form1 : Form
 	{
-		private Records records;
 		private List<Sim> algorithms;
 		private Sim enabledAlgorithm;
 		private List<Node> EnabledNodes
@@ -31,7 +30,6 @@ namespace VisualizeNetwork
 		private CancellationTokenSource cts;
 		private Point? prevPosition = null;
 		private readonly ToolTip tooltip = new ToolTip();
-		private static readonly Random rand = new Random();
 		private bool changingEnabledAlgorithm = true;
 		readonly SimMaster master;
 
