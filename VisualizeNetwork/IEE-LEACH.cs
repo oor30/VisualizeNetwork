@@ -77,12 +77,10 @@ namespace VisualizeNetwork
 				{
 					if (mode == Mode.My_IEE_LEACH && headID == node.ID) continue;
 					Node tmp = nodes[headID];
-					//double dist = Dist2(tmp, node);
 					double dist = SimMaster.DistTable[tmp.ID, node.ID];
 					if (dist < distMin)
 					{
 						if (mode == Mode.My_IEE_LEACH && node.IsCH && SimMaster.DistBSList[node.ID] <= SimMaster.DistBSList[tmp.ID])
-						//if (mode == Mode.My_IEE_LEACH && node.IsCH && Dist2(node, BS) <= Dist2(tmp, BS))
 						{
 							continue;
 						}
@@ -98,7 +96,6 @@ namespace VisualizeNetwork
 				{
 					if (SimMaster.DistBSList[node.ID] < distMin)
 					{
-						node.CHID = -1;
 						nodes[i] = node;
 						continue;
 					}
@@ -109,15 +106,10 @@ namespace VisualizeNetwork
 					if (DirectIsMoreEfficient(node, head))
 					{
 						nodes[i] = node;
-						node.CHID = -1;
 						continue;
 					}
 				}
 				// CH候補をCHに設定
-				//               node.CHID = head.ID;
-				//if (node.IsCH) node.Status = StatusEnum.member | StatusEnum.CH;
-				//else node.Status = StatusEnum.member;
-				//head.MemberNum += 1;
 				SetMN(ref node, ref head);
 				nodes[i] = node;
 				nodes[node.CHID] = head;

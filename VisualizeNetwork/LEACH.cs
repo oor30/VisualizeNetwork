@@ -61,15 +61,13 @@ namespace VisualizeNetwork
 			{
 				Node node = nodes[i];
 				if (!node.IsAlive) continue;// ノードが死んでたら次
-
+				
 				// ラウンド数に応じたCH選出確立を計算
-				if (node.IsAlive) node.Pi = GetPi(nodes, i);
+				if (node.IsAlive) node.Pi = (float)GetPi(nodes, i);
 				if (node.Pi > rand.NextDouble())  // 確立T(0<=T<=1)でCHになる
 				{
-					node.UnqualifiedRound = CalcUnqualifiedRound(node);
+					node.UnqualifiedRound = (short)CalcUnqualifiedRound(node);
 					CHIDs.Add(node.ID);
-					//CHNum++;
-					//node.SetCH();
 					SetCH(ref node);
 				}
 				//}

@@ -217,7 +217,7 @@
 			this.trackBarRound.MaximumSize = new System.Drawing.Size(1178, 68);
 			this.trackBarRound.Minimum = 1;
 			this.trackBarRound.Name = "trackBarRound";
-			this.trackBarRound.Size = new System.Drawing.Size(182, 69);
+			this.trackBarRound.Size = new System.Drawing.Size(183, 69);
 			this.trackBarRound.TabIndex = 3;
 			this.trackBarRound.Value = 1;
 			this.trackBarRound.Scroll += new System.EventHandler(this.TrackBarRound_Scroll);
@@ -295,7 +295,7 @@
 			this.tabCtrlMiddle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.tabCtrlMiddle.Name = "tabCtrlMiddle";
 			this.tabCtrlMiddle.SelectedIndex = 0;
-			this.tabCtrlMiddle.Size = new System.Drawing.Size(1417, 544);
+			this.tabCtrlMiddle.Size = new System.Drawing.Size(1418, 604);
 			this.tabCtrlMiddle.TabIndex = 14;
 			// 
 			// Simulation
@@ -307,7 +307,7 @@
 			this.Simulation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.Simulation.Name = "Simulation";
 			this.Simulation.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.Simulation.Size = new System.Drawing.Size(1409, 506);
+			this.Simulation.Size = new System.Drawing.Size(1410, 566);
 			this.Simulation.TabIndex = 0;
 			this.Simulation.Text = "Simulation";
 			// 
@@ -326,7 +326,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.roundTable);
-			this.splitContainer2.Size = new System.Drawing.Size(1405, 455);
+			this.splitContainer2.Size = new System.Drawing.Size(1406, 515);
 			this.splitContainer2.SplitterDistance = 520;
 			this.splitContainer2.SplitterWidth = 6;
 			this.splitContainer2.TabIndex = 8;
@@ -339,7 +339,7 @@
 			this.panel3.Location = new System.Drawing.Point(0, 0);
 			this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(520, 455);
+			this.panel3.Size = new System.Drawing.Size(520, 515);
 			this.panel3.TabIndex = 8;
 			// 
 			// pictureBoxNodeMap
@@ -388,7 +388,7 @@
 			this.roundTable.RowHeadersWidth = 30;
 			this.roundTable.RowTemplate.Height = 27;
 			this.roundTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.roundTable.Size = new System.Drawing.Size(879, 455);
+			this.roundTable.Size = new System.Drawing.Size(880, 515);
 			this.roundTable.TabIndex = 7;
 			this.roundTable.SelectionChanged += new System.EventHandler(this.RoundTable_SelectionChanged);
 			this.roundTable.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.RoundTable_SortCompare);
@@ -527,7 +527,7 @@
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 3);
 			this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(1405, 45);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(1406, 45);
 			this.flowLayoutPanel2.TabIndex = 8;
 			// 
 			// buttonSaveNodeMap
@@ -565,7 +565,7 @@
 			this.Chart1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.Chart1.Name = "Chart1";
 			this.Chart1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.Chart1.Size = new System.Drawing.Size(1408, 412);
+			this.Chart1.Size = new System.Drawing.Size(1410, 458);
 			this.Chart1.TabIndex = 1;
 			this.Chart1.Text = "Chart1";
 			this.Chart1.UseVisualStyleBackColor = true;
@@ -577,7 +577,7 @@
 			this.Chart2.Location = new System.Drawing.Point(4, 34);
 			this.Chart2.Name = "Chart2";
 			this.Chart2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-			this.Chart2.Size = new System.Drawing.Size(1408, 412);
+			this.Chart2.Size = new System.Drawing.Size(1410, 458);
 			this.Chart2.TabIndex = 2;
 			this.Chart2.Text = "Chart2";
 			this.Chart2.UseVisualStyleBackColor = true;
@@ -628,7 +628,7 @@
 			this.設定.Location = new System.Drawing.Point(4, 34);
 			this.設定.Name = "設定";
 			this.設定.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-			this.設定.Size = new System.Drawing.Size(1408, 412);
+			this.設定.Size = new System.Drawing.Size(1410, 458);
 			this.設定.TabIndex = 3;
 			this.設定.Text = "設定";
 			this.設定.UseVisualStyleBackColor = true;
@@ -1110,7 +1110,7 @@
 			this.resultTable.RowHeadersWidth = 62;
 			this.resultTable.RowTemplate.Height = 27;
 			this.resultTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.resultTable.Size = new System.Drawing.Size(1401, 131);
+			this.resultTable.Size = new System.Drawing.Size(1402, 159);
 			this.resultTable.TabIndex = 7;
 			this.resultTable.SelectionChanged += new System.EventHandler(this.ResultTable_SelectionChanged);
 			// 
@@ -1200,7 +1200,7 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-			this.menuStrip1.Size = new System.Drawing.Size(1419, 35);
+			this.menuStrip1.Size = new System.Drawing.Size(1420, 35);
 			this.menuStrip1.TabIndex = 15;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -1327,7 +1327,7 @@
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1419, 920);
+			this.panel1.Size = new System.Drawing.Size(1420, 1008);
 			this.panel1.TabIndex = 17;
 			// 
 			// splitContainer1
@@ -1349,8 +1349,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabCtrlBottom);
-			this.splitContainer1.Size = new System.Drawing.Size(1419, 740);
-			this.splitContainer1.SplitterDistance = 546;
+			this.splitContainer1.Size = new System.Drawing.Size(1420, 828);
+			this.splitContainer1.SplitterDistance = 606;
 			this.splitContainer1.SplitterWidth = 15;
 			this.splitContainer1.TabIndex = 11;
 			// 
@@ -1363,7 +1363,7 @@
 			this.tabCtrlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.tabCtrlBottom.Name = "tabCtrlBottom";
 			this.tabCtrlBottom.SelectedIndex = 0;
-			this.tabCtrlBottom.Size = new System.Drawing.Size(1417, 177);
+			this.tabCtrlBottom.Size = new System.Drawing.Size(1418, 205);
 			this.tabCtrlBottom.TabIndex = 9;
 			// 
 			// tabResultTable
@@ -1373,7 +1373,7 @@
 			this.tabResultTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.tabResultTable.Name = "tabResultTable";
 			this.tabResultTable.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.tabResultTable.Size = new System.Drawing.Size(1409, 139);
+			this.tabResultTable.Size = new System.Drawing.Size(1410, 167);
 			this.tabResultTable.TabIndex = 0;
 			this.tabResultTable.Text = "結果";
 			this.tabResultTable.UseVisualStyleBackColor = true;
@@ -1385,7 +1385,7 @@
 			this.tabLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.tabLog.Name = "tabLog";
 			this.tabLog.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.tabLog.Size = new System.Drawing.Size(1408, 228);
+			this.tabLog.Size = new System.Drawing.Size(1410, 270);
 			this.tabLog.TabIndex = 1;
 			this.tabLog.Text = "ログ";
 			this.tabLog.UseVisualStyleBackColor = true;
@@ -1401,7 +1401,7 @@
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ReadOnly = true;
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBoxLog.Size = new System.Drawing.Size(1400, 220);
+			this.textBoxLog.Size = new System.Drawing.Size(1402, 262);
 			this.textBoxLog.TabIndex = 0;
 			// 
 			// panelControl
@@ -1419,7 +1419,7 @@
 			this.panelControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
 			this.panelControl.Name = "panelControl";
 			this.panelControl.Padding = new System.Windows.Forms.Padding(0, 33, 0, 0);
-			this.panelControl.Size = new System.Drawing.Size(1419, 180);
+			this.panelControl.Size = new System.Drawing.Size(1420, 180);
 			this.panelControl.TabIndex = 0;
 			// 
 			// labelScenario
@@ -1437,10 +1437,10 @@
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelProcessing,
             this.progressBar1});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 920);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 1008);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 14, 0);
-			this.statusStrip1.Size = new System.Drawing.Size(1419, 32);
+			this.statusStrip1.Size = new System.Drawing.Size(1420, 32);
 			this.statusStrip1.TabIndex = 8;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -1475,14 +1475,14 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1419, 952);
+			this.ClientSize = new System.Drawing.Size(1420, 1040);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.statusStrip1);
 			this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-			this.MinimumSize = new System.Drawing.Size(1424, 809);
+			this.MinimumSize = new System.Drawing.Size(1422, 800);
 			this.Name = "Form1";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
 			this.Text = "VisualizeNetwork";

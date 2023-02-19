@@ -81,12 +81,10 @@ namespace VisualizeNetwork
 		{
 			if (!node.IsAlive) return;
 			energy = Math.Min(energy, node.E_r);
-			node.E_r -= energy;
-			node.CmsEnergy += energy;
+			node.Consume(energy);
 			EnergyConsumption += energy;
-			if (node.E_r <= 0)
+			if (!node.IsAlive)
 			{
-				node.IsAlive = false;
 				AliveNum--;
 				if (AliveNum == N - 1) FDN = Round;
 				else if (AliveNum == 0) LDN = Round;
@@ -101,9 +99,7 @@ namespace VisualizeNetwork
 
 		protected void SetMN(ref Node node, ref Node head)
 		{
-			node.CHID = head.ID;
-			node.Status = (node.Status | StatusEnum.member) & ~StatusEnum.normal;
-			head.MemberNum += 1;
+			node.SetMN(ref node, ref head);
 		}
 
 		/// <summary>
@@ -116,7 +112,7 @@ namespace VisualizeNetwork
 				CHMean += CHNumList[j];
 				foreach (Node node in NodesList[j])
 				{
-					AveEnergyConsumption += node.CmsEnergy;
+					AveEnergyConsumption += node.CnsEnergy;
 				}
 			}
 			CHMean /= FDN;

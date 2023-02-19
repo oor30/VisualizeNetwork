@@ -111,7 +111,9 @@
   <ItemGroup>
     <Compile Include="Direct.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="NodeMap.cs" />
+    <Compile Include="NodeMap.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Form1Chart.cs">
       <SubType>Form</SubType>
     </Compile>

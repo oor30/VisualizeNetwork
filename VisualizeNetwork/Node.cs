@@ -29,18 +29,18 @@ namespace VisualizeNetwork
 		public double E_init { get; private set; }       // 初期エネルギー
 
 		// ラウンドごとにリセット
-		public StatusEnum Status { get; set; }  // ノードの状態
-		public int CHID { get; set; }    // クラスタヘッドID
-		public bool IsCH { get; set; }   // CHか否か
-		public int MemberNum { get; set; }  // 自身がCHの場合、メンバノード数(自信を含む）
-		public double Pi { get; set; }              // CH選出確立
-		public double CmsEnergy { get; set; }       // ラウンド時の消費エネルギー
+		public StatusEnum Status { get; private set; }  // ノードの状態
+		public short CHID { get; private set; }    // クラスタヘッドID
+		public bool IsCH { get; private set; }   // CHか否か
+		public short MemberNum { get; private set; }  // 自身がCHの場合、メンバノード数(自信を含む）
+		public float Pi { get; set; }              // CH選出確立
+		public float CnsEnergy { get; private set; }       // ラウンド時の消費エネルギー
 
 		// 次ラウンドに引き継ぐ
-		public double E_r { get; set; }     // 残量エネルギー
-		public bool IsAlive { get; set; }   // 生存しているか否か
-		public int HasCHCnt { get; private set; }           // CHになった回数
-		public int UnqualifiedRound { get; set; }   // あと何ラウンドCHになる資格がないか
+		public float E_r { get; private set; }     // 残量エネルギー
+		public bool IsAlive { get; private set; }   // 生存しているか否か
+		public short HasCHCnt { get; private set; }           // CHになった回数
+		public short UnqualifiedRound { get; set; }   // あと何ラウンドCHになる資格がないか
 
 		public Node(int ID, double X, double Y) : this()
 		{
@@ -53,7 +53,7 @@ namespace VisualizeNetwork
 		public void Initialize(double E_init)
 		{
 			this.E_init = E_init;
-			E_r = E_init;
+			E_r = (float)E_init;
 			IsAlive = true;
 			HasCHCnt = 0;
 			UnqualifiedRound = 0;
@@ -66,7 +66,7 @@ namespace VisualizeNetwork
 			CHID = -1;
 			IsCH = false;
 			MemberNum = 0;
-			CmsEnergy = 0;
+			CnsEnergy = 0;
 			Pi = 0;
 		}
 
@@ -78,6 +78,13 @@ namespace VisualizeNetwork
 			Status = StatusEnum.CH;
 		}
 
+		public void SetMN(ref Node node, ref Node head)
+		{
+			node.CHID = (short)head.ID;
+			node.Status = (node.Status | StatusEnum.member) & ~StatusEnum.normal;
+			head.MemberNum += 1;
+		}
+
 		public void SetDead()
 		{
 			Status = StatusEnum.dead;
@@ -85,8 +92,22 @@ namespace VisualizeNetwork
 			IsCH = false;
 			MemberNum = 0;
 			Pi = 0;
-			CmsEnergy = 0;
+			CnsEnergy = 0;
 			UnqualifiedRound = 0;
+		}
+
+		public void Consume(double energy)
+		{
+			if (energy > E_r)
+			{
+				throw new Exception("引数が残量エネルギーを超えています。");
+			}
+			E_r -= (float)energy;
+			CnsEnergy += (float)energy;
+			if (E_r <= 0)
+			{
+				IsAlive = false;
+			}
 		}
 	}
 

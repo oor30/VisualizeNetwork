@@ -5,7 +5,7 @@ using Svg;
 
 namespace VisualizeNetwork
 {
-	internal class NodeMap
+	internal class NodeMap : PictureBox
 	{
 		internal readonly PictureBox canvas;
 		private float CanvasW { get { return canvas.Width; } }
@@ -53,18 +53,10 @@ namespace VisualizeNetwork
 		internal void RefreshNodeMap(List<Node> nodes, int selectedNodeID, bool enabledGrid)
 		{
 			// 座標リストからノードを描画する
-			Graphics g = Graphics.FromImage(canvas.Image);
-			//g.Clear(Color.White);
-			//g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
 			svgDoc.Children.Clear();
-			if (enabledGrid) PaintLines(g);
-			PaintEdges(g, nodes);
-			PaintNodes(g, nodes, selectedNodeID);
-			canvas.Invalidate();
-			canvas.Refresh();
-			g.Dispose();
-
+			if (enabledGrid) PaintLines();
+			PaintEdges(nodes);
+			PaintNodes(nodes, selectedNodeID);
 			canvas.Image = svgDoc.Draw();
 		}
 
@@ -73,62 +65,65 @@ namespace VisualizeNetwork
 		/// </summary>
 		/// <param name="g">キャンバスのGraphics</param>
 		/// <param name="nodes">ノードリスト</param>
-		private void PaintNodes(Graphics g, List<Node> nodes, int selectedNodeID)
+		private void PaintNodes(List<Node> nodes, int selectedNodeID)
 		{
 			var group = new SvgGroup();
 			svgDoc.Children.Add(group);
-			SvgColourServer scs = new SvgColourServer();
+			SvgColourServer scsFill;
+			SvgColourServer scsStroke;
+			SvgColourServer scsText = new SvgColourServer(Color.White);
 
-			//Pen pen = new Pen(Color.Black);
-			//Brush brush = Brushes.Gray;
 			foreach (Node node in nodes)
 			{
-				//pen.Width = 1;
+				scsFill = new SvgColourServer();
+				scsStroke = new SvgColourServer();
 				if (node.IsAlive)
 				{
 					if (node.IsCH && node.CHID != -1)
 					{
-						//pen.Color = Color.Green;
-						//brush = Brushes.Green;
-
-						scs = new SvgColourServer(Color.Green);
+						scsFill.Colour = Color.Green;
 					}
 					else if (node.IsCH)
 					{
-						//pen.Color = Color.Blue;
-						//brush = Brushes.Blue;
-
-						scs = new SvgColourServer(Color.Blue);
+						scsFill.Colour = Color.Blue;
 					}
 					else
 					{
-						//pen.Color = Color.Black;
-						//brush = Brushes.Black;
-
-						scs = new SvgColourServer(Color.Black);
+						scsFill.Colour = Color.Black;
 					}
 				}
-				//else pen.Color = Color.Red;
+				else
+				{
+					scsFill.Colour = Color.Red;
+				}
+
 				if (node.ID == selectedNodeID)
 				{
-					//pen.Width = 4;
-					//pen.Color = Color.LightBlue;
+					scsStroke = new SvgColourServer(Color.DeepPink);
 				}
-				//Point p = Normalize(node);
-				//lock (g)
-				//{
-				//	g.DrawEllipse(pen, (p.X - 5), p.Y - 5, 10, 10);
-				//	if (node.IsAlive)
-				//		g.FillPie(brush, (p.X - 5), (p.Y - 5), 10, 10, 0, (int)(node.E_r / node.E_init * 360));
-				//}
+				else
+				{
+					scsStroke = scsFill;
+				}
 
 				group.Children.Add(new SvgCircle
 				{
 					CenterX = (int)node.X * 10,
 					CenterY = (int)node.Y * 10,
 					Radius = 10,
-					Fill = scs,
-					Stroke = scs,
+					Fill = scsFill,
+					Stroke = scsStroke,
+					StrokeWidth = 1,
+				});
+
+				group.Children.Add(new SvgText()
+				{
+					Nodes = { new SvgContentNode { Content = node.ID.ToString() } },
+					X = { (int)node.X * 10 - 10 },
+					Y = { (int)node.Y * 10 + 7 },
+					Fill = scsText,
+					FontSize = 15,
+					FontFamily = "sans-serif",
 				});
 			}
 			return;
@@ -139,13 +134,12 @@ namespace VisualizeNetwork
 		/// </summary>
 		/// <param name="g">キャンバスのGraphics</param>
 		/// <param name="nodes">ノードリスト</param>
-		private void PaintEdges(Graphics g, List<Node> nodes)
+		private void PaintEdges(List<Node> nodes)
 		{
 			var group = new SvgGroup();
 			svgDoc.Children.Add(group);
 			SvgColourServer scs;
 
-			//Pen pen = new Pen(Color.Black);
 			foreach (Node node in nodes)
 			{
 				if (node.Status == StatusEnum.dead) continue;
@@ -161,10 +155,6 @@ namespace VisualizeNetwork
 
 				if (node.ID != head.ID)
 				{
-					//if (node.IsCH) pen.Color = Color.Green;
-					//else pen.Color = Color.Black;
-					//g.DrawLine(pen, Normalize(node), Normalize(head));
-
 					if (node.IsCH) scs = new SvgColourServer(Color.Green);
 					else scs = new SvgColourServer(Color.Black);
 					group.Children.Add(new SvgLine()
@@ -185,23 +175,18 @@ namespace VisualizeNetwork
 		/// x軸,y軸と目盛りを描画する
 		/// </summary>
 		/// <param name="g">キャンバスのGraphics</param>
-		private void PaintLines(Graphics g)
+		private void PaintLines()
 		{
 			var group = new SvgGroup();
 			svgDoc.Children.Add(group);
 			SvgColourServer scs = new SvgColourServer(Color.Gray);
 
-			//Pen pen = new Pen(Color.Gray);
 			for (int i = (int)(minX - 10) / 50; i <= (maxX + 10); i += 50)
 			{
-				//var p = Normalize(new Point(i, i));
-				//g.DrawLine(pen, p.X, 0, p.X, CanvasH);
-				//g.DrawString(i.ToString(), canvas.Font, Brushes.Black, p.X, 0);
-
 				group.Children.Add(new SvgText()
 				{
 					Nodes = { new SvgContentNode { Content = i.ToString() } },
-					X = { i*10 },
+					X = { i * 10 },
 					Y = { 0 },
 					Fill = scs,
 					FontSize = 30,
@@ -220,10 +205,6 @@ namespace VisualizeNetwork
 			}
 			for (int i = (int)(minY - 10) / 50; i <= (maxY + 10); i += 50)
 			{
-				//var p = Normalize(new Point(i, i));
-				//g.DrawLine(pen, 0, p.Y, CanvasW, p.Y);
-				//g.DrawString(i.ToString(), canvas.Font, Brushes.Black, 0, p.Y);
-
 				group.Children.Add(new SvgText()
 				{
 					Nodes = { new SvgContentNode { Content = i.ToString() } },
