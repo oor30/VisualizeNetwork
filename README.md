@@ -1,5 +1,5 @@
 # VisualizeNetwork
-Visual Studioのプロジェクト。
+Visual Studioのプロジェクト。<br>
 WSN（Wireless Sensor Network）におけるルーティングプロトコルを評価するため、ネットワーク図やグラフ、指標などを可視化するためのアプリケーション。<br><br>
 <img src="https://user-images.githubusercontent.com/66106684/227737687-c183d806-198f-4a47-ba0b-6812fa94e324.png" width="60%">
 
@@ -17,3 +17,11 @@ WSN（Wireless Sensor Network）におけるルーティングプロトコルを
 ## 環境
 - Visual Studio
 - C#
+
+## できること
+### シミュレーション再生
+各ラウンドごとのネットワークトポロジーの変化を、アニメーションで再生する。
+
+### グラフ
+ラウンドごとの生存ノード数などの推移をグラフ化。<br>
+<img src="https://user-images.githubusercontent.com/66106684/229350628-933623d7-1709-4a72-ad1e-d0932c44d711.png" width="60%">
