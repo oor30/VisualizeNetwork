@@ -1,7 +1,7 @@
 # VisualizeNetwork
 Visual Studioのプロジェクト。<br>
 WSN（Wireless Sensor Network）におけるルーティングプロトコルを評価するため、ネットワーク図やグラフ、指標などを可視化するためのアプリケーション。<br><br>
-<img src="https://user-images.githubusercontent.com/66106684/227737687-c183d806-198f-4a47-ba0b-6812fa94e324.png" width="60%">
+<img src="https://user-images.githubusercontent.com/66106684/227737687-c183d806-198f-4a47-ba0b-6812fa94e324.png" width="100%">
 
 ## WSNとは
 アドホックネットワークの一種で、あるエリアに配置された多数のセンサーが取得した情報を、センサー同士で構築した通信経路を使って1箇所に集めるためのネットワーク。<br>
@@ -24,4 +24,4 @@ WSN（Wireless Sensor Network）におけるルーティングプロトコルを
 
 ### グラフ
 ラウンドごとの生存ノード数などの推移をグラフ化。<br>
-<img src="https://user-images.githubusercontent.com/66106684/229350628-933623d7-1709-4a72-ad1e-d0932c44d711.png" width="60%">
+<img src="https://user-images.githubusercontent.com/66106684/229350628-933623d7-1709-4a72-ad1e-d0932c44d711.png" width="100%">
